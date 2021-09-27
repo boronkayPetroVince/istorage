@@ -9,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Model
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="model")
+ * @ORM\Table(name="modell")
  */
-class Model
+class Modell
 {
     /**
      * @var int
