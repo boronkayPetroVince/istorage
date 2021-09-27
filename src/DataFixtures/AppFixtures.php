@@ -6,7 +6,7 @@ use App\Entity\Elerhetoseg;
 use App\Entity\Felhasznalo;
 use App\Entity\Keszlet;
 use App\Entity\Marka;
-use App\Entity\Modell;
+use App\Entity\Model;
 use App\Entity\Raktar;
 use App\Entity\Rendeles;
 use App\Entity\Szallitasi_cim;
@@ -53,13 +53,13 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $marka->setMarka("Anyáááád");
         $this->em->persist($marka);
 
-        $modell = new Modell();
-        $modell->setModel("XI");
-        $modell->setMarkaID($marka);
-        $this->em->persist($modell);
+        $model = new Model();
+        $model->setModel("XI");
+        $model->setMarkaID($marka);
+        $this->em->persist($model);
 
         $telefon = new Telefon();
-        $telefon->setModelID($modell);
+        $telefon->setModelID($model);
         $telefon->setMeretGB(64);
         $telefon->setSzin("Fekete");
         $this->em->persist($telefon);
@@ -115,6 +115,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $rendeles->setTelefonID($telefon);
         $rendeles->setRendelDB(100);
         $rendeles->setEladAr(10000);
+        $rendeles->setMikor(new \DateTime());
         $rendeles->setStatusz("Átadva!");
         $this->em->persist($rendeles);
 
