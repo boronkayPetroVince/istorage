@@ -29,10 +29,11 @@ class Telefon
     private $model_ID;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=30, nullable=false)
+     * @var Szin
+     * @ORM\JoinColumn(name="szin_ID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Szin")
      */
-    private $szin;
+    private $szin_ID;
 
     /**
      * @var int
@@ -47,6 +48,7 @@ class Telefon
     {
         return $this->id;
     }
+
 
     /**
      * @return Model
@@ -65,19 +67,19 @@ class Telefon
     }
 
     /**
-     * @return string
+     * @return Szin
      */
-    public function getSzin(): string
+    public function getSzinID(): Szin
     {
-        return $this->szin;
+        return $this->szin_ID;
     }
 
     /**
-     * @param string $szin
+     * @param Szin $szin_ID
      */
-    public function setSzin(string $szin): void
+    public function setSzinID(Szin $szin_ID): void
     {
-        $this->szin = $szin;
+        $this->szin_ID = $szin_ID;
     }
 
     /**
@@ -95,6 +97,7 @@ class Telefon
     {
         $this->meretGB = $meretGB;
     }
+
 
 
 

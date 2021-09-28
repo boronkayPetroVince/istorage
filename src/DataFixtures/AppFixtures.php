@@ -7,10 +7,13 @@ use App\Entity\Felhasznalo;
 use App\Entity\Keszlet;
 use App\Entity\Marka;
 use App\Entity\Model;
+use App\Entity\Orszag;
 use App\Entity\Raktar;
 use App\Entity\Rendeles;
 use App\Entity\Szallitasi_cim;
+use App\Entity\Szin;
 use App\Entity\Telefon;
+use App\Entity\Telepules;
 use App\Entity\Ugyfel;
 use App\Kernel;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -50,7 +53,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
 
         // TELEFON
         $marka = new Marka();
-        $marka->setMarka("Anyáááád");
+        $marka->setMarka("IPhone");
         $this->em->persist($marka);
 
         $model = new Model();
@@ -58,10 +61,14 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $model->setMarkaID($marka);
         $this->em->persist($model);
 
+        $szin = new Szin();
+        $szin->setSzin("Fehér");
+        $this->em->persist($szin);
+
         $telefon = new Telefon();
         $telefon->setModelID($model);
         $telefon->setMeretGB(64);
-        $telefon->setSzin("Fekete");
+        $telefon->setSzinID($szin);
         $this->em->persist($telefon);
 
         // ÜGYFÉL
@@ -70,9 +77,18 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $ugyfel->setAdoszam(1234565-4-13);
         $this->em->persist($ugyfel);
 
+        $orszag = new Orszag();
+        $orszag->setOrszag("Magyarország");
+        $this->em->persist($orszag);
+
+        $telepules = new Telepules();
+        $telepules->setOrszagID($orszag);
+        $telepules->setIranyitoszam(2600);
+        $telepules->setTelepules("Vác");
+        $this->em->persist($telepules);
+
         $szallitasi_cim = new Szallitasi_cim();
-        $szallitasi_cim->setOrszag("Magyarország");
-        $szallitasi_cim->setVaros("Vác");
+        $szallitasi_cim->setTelepulesID($telepules);
         $szallitasi_cim->setUtcaHazszam("Bottyán utca 17.");
         $szallitasi_cim->setUgyfelID($ugyfel);
         $this->em->persist($szallitasi_cim);

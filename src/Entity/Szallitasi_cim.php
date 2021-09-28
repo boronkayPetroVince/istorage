@@ -29,16 +29,12 @@ class Szallitasi_cim
     private $ugyfel_ID;
 
     /**
-     * @var string|null
-     * @ORM\Column(type="string", length=30, nullable=true)
+     * @var Telepules
+     * @ORM\JoinColumn(name="telepules_ID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Telepules")
      */
-    private $orszag;
+    private $telepules_ID;
 
-    /**
-     * @var string|null
-     * @ORM\Column(type="string", length=40, nullable=true)
-     */
-    private $varos;
 
     /**
      * @var string|null
@@ -71,35 +67,19 @@ class Szallitasi_cim
     }
 
     /**
-     * @return string|null
+     * @return Telepules
      */
-    public function getOrszag(): ?string
+    public function getTelepulesID(): Telepules
     {
-        return $this->orszag;
+        return $this->telepules_ID;
     }
 
     /**
-     * @param string|null $orszag
+     * @param Telepules $telepules_ID
      */
-    public function setOrszag(?string $orszag): void
+    public function setTelepulesID(Telepules $telepules_ID): void
     {
-        $this->orszag = $orszag;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getVaros(): ?string
-    {
-        return $this->varos;
-    }
-
-    /**
-     * @param string|null $varos
-     */
-    public function setVaros(?string $varos): void
-    {
-        $this->varos = $varos;
+        $this->telepules_ID = $telepules_ID;
     }
 
     /**
@@ -117,6 +97,9 @@ class Szallitasi_cim
     {
         $this->utca_hazszam = $utca_hazszam;
     }
+
+
+
 
 
 
