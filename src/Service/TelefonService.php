@@ -43,6 +43,26 @@ class TelefonService extends CrudService
         $query = $qb->getQuery();
         return $query->getResult();
     }
+    public function getAllTelefonByMarka(int $markaID):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->select("telefon")
+            ->from(Telefon::class, "telefon")
+            ->innerJoin("telefon.model_ID", "model")
+            ->where("model.marka_ID =: markaID")
+            ->setParameter("markaID", $markaID);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+    public function removeAllTelefonByMarka(int $markaID):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->delete()
+            ->from(Telefon::class, "telefon")
+            ->innerJoin("telefon.model_ID", "model")
+            ->where("model.marka_ID =: markaID")
+            ->setParameter("markaID", $markaID);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
     public function removeAllTelefonByModel(int $modelID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->delete()
@@ -52,6 +72,7 @@ class TelefonService extends CrudService
         $query = $qb->getQuery();
         return $query->getResult();
     }
+
     public function removeAllTelefonBySzin(int $szinID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->delete()
