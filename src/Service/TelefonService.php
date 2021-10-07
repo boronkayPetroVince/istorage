@@ -1,0 +1,78 @@
+<?php
+
+
+namespace App\Service;
+
+
+use App\Entity\Telefon;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+
+class TelefonService extends CrudService
+{
+    public function __construct(EntityManagerInterface $em)
+    {
+        parent::__construct($em);
+    }
+
+    public function getRepo(): EntityRepository
+    {
+        return $this->em->getRepository(Telefon::class);
+    }
+
+    public function getAllTelefon():iterable{
+        return $this->getRepo()->findAll();
+    }
+
+    public function getAllTelefonByModel(int $modelID):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->select("telefon")
+            ->from(Telefon::class, "telefon")
+            ->where("telefon.model_ID =:modelID")
+            ->setParameter("modelID", $modelID);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
+    public function getAllTelefonBySzin(int $szinID):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->select("telefon")
+            ->from(Telefon::class, "telefon")
+            ->where("telefon.szin_ID =:szinID")
+            ->setParameter("szinID", $szinID);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+    public function removeAllTelefonByModel(int $modelID):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->delete()
+            ->from(Telefon::class, "telefon")
+            ->where("telefon.model_ID =:modelID")
+            ->setParameter("modelID", $modelID);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+    public function removeAllTelefonBySzin(int $szinID):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->delete()
+            ->from(Telefon::class, "telefon")
+            ->where("telefon.szin_ID =:szinID")
+            ->setParameter("szinID", $szinID);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+    public function getOneTelefonById(int $id):Telefon{
+        return $this->getRepo()->find($id);
+    }
+    public function addTelefon(Telefon $telefon):void{
+        $this->em->persist($telefon);
+        $this->em->flush();
+    }
+    public function removeTelefon(int $id):void{
+        $this->em->persist($this->getOneTelefonById($id));
+        $this->em->flush();
+    }
+
+
+
+}
