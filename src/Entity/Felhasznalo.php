@@ -4,14 +4,17 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 
 /**
  * Class Felhasznalo
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="felhasznalo")
+ * @method string getUserIdentifier()
  */
-class Felhasznalo
+class Felhasznalo implements UserInterface
 {
     /**
      * @var int
@@ -163,10 +166,29 @@ class Felhasznalo
         $this->roles = $roles;
     }
 
+    public function getPassword()
+    {
+        return $this->jelszo;
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUsername()
+    {
+        return $this->felhNev;
+    }
 
 
-
-
-
-
+    public function __call($name, $arguments)
+    {
+        // TODO: Implement @method string getUserIdentifier()
+    }
 }
