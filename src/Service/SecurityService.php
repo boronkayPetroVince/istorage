@@ -43,6 +43,11 @@ class SecurityService
         $this->em->persist($felhasznalo);
         $this->em->flush();
     }
+    public function updateFelhasznalo(int $id):void{
+        $felhasznalo = $this->getOneFelhasznaloById($id);
+        $this->em->persist($felhasznalo);
+        $this->em->flush();
+    }
     public function removeFelhasznalo(int $id):void{
         $this->em->remove($this->getOneFelhasznaloById($id));
         $this->em->flush();
