@@ -52,7 +52,7 @@ class SecurityService
         $this->em->remove($this->getOneFelhasznaloById($id));
         $this->em->flush();
     }
-    public function checkPassword(string $felhNev, string $jelszo):bool{
+    public function checkUsername(string $felhNev, string $jelszo):bool{
         $felhasznalo = $this->em->getRepository(Felhasznalo::class)->findOneBy(["felhNev"=>$felhNev]);
         if (!$felhasznalo) return false;
         return $this->encoder->isPasswordValid($felhasznalo, $jelszo);

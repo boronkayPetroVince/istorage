@@ -12,14 +12,15 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
-use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class LoginFormAuthenticator extends AbstractAuthenticator
+class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
     use TargetPathTrait;
     /** @var EntityManagerInterface */
@@ -30,47 +31,73 @@ class LoginFormAuthenticator extends AbstractAuthenticator
     private $passwordEncoder;
 
     /**
-     * @param Request $request
-     * @return bool|null
+     * LoginFormAuthenticator constructor.
+     * @param EntityManagerInterface $em
+     * @param RouterInterface $router
+     * @param UserPasswordEncoderInterface $passwordEncoder
      */
-    public function supports(Request $request): ?bool
+    public function __construct(EntityManagerInterface $em, RouterInterface $router, UserPasswordEncoderInterface $passwordEncoder)
     {
+        $this->em = $em;
+        $this->router = $router;
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
+    protected function getLoginUrl(){
+        return $this->router->generate("app_login");
+    }
+
+    public function supports(Request $request){
         return $request->attributes->get('_route') === 'app_login' && $request->isMethod("POST");
     }
 
-    /**
-     * @param Request $request
-     * @return PassportInterface
-     */
-    public function authenticate(Request $request): PassportInterface
-    {
+    public function getCredentials(Request $request){
+        $felhNev = $request->request->get('felhNev');
+        $request->getSession()->set(Security::LAST_USERNAME, $felhNev);
         $jelszo = $request->request->get('jelszo');
-        $felh = $request->request->get('felhNev');
-        return new Passport(
-            new UserBadge($felh),
-            new PasswordCredentials($jelszo)
-        );
+        return [
+            'felhNev' => $felhNev,
+            'jelszo' => $jelszo,
+        ];
+    }
+
+    public function getUser($credentials, UserProviderInterface $userProvider){
+        $felhNev = $credentials['felhNev'];
+        $felhasznalo = $userProvider->loadUserByUsername($felhNev);
+        if (!$felhasznalo){
+            throw new CustomUserMessageAuthenticationException("Rossz felhasználónév!");
+        }
+        return $felhasznalo;
     }
 
     /**
-     * @param Request $request
-     * @param TokenInterface $token
-     * @param string $firewallName
-     * @return Response|null
+     * @param mixed $credentials
+     * @param UserInterface $felhasznalo
+     * @return bool|void
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    public function checkCredentials($credentials, UserInterface $felhasznalo)
     {
-        $targetPath = $this->getTargetPath($request->getSession(), $firewallName);
+        $tisztaJelszo = $credentials['jelszo'];
+        if ($this->passwordEncoder->isPasswordValid($felhasznalo, $tisztaJelszo)){
+            return true;
+        }
+
+        throw new BadCredentialsException();
+    }
+
+
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
+    {
+        $targetPath = $this->getTargetPath($request->getSession(), $providerKey);
         if ($targetPath){
             return new RedirectResponse($targetPath);
         }
+
         return new RedirectResponse($this->router->generate("app_login"));
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
-    {
-        // TODO: Implement onAuthenticationFailure() method.
-    }
+
+
 
 
 }
