@@ -28,13 +28,13 @@ class Felhasznalo implements UserInterface
      * @var string
      * @ORM\Column(type="string", length=30, nullable=false)
      */
-    private $felhNev = "";
+    private $username = "";
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=1024, nullable=false)
      */
-    private $jelszo = "";
+    private $password = "";
 
     /**
      * @var string
@@ -60,8 +60,6 @@ class Felhasznalo implements UserInterface
      */
     private $roles = array();
 
-
-
     /**
      * @return int
      */
@@ -73,33 +71,33 @@ class Felhasznalo implements UserInterface
     /**
      * @return string
      */
-    public function getFelhNev(): string
+    public function getUsername(): string
     {
-        return $this->felhNev;
+        return $this->username;
     }
 
     /**
-     * @param string $felhNev
+     * @param string $username
      */
-    public function setFelhNev(string $felhNev): void
+    public function setUsername(string $username): void
     {
-        $this->felhNev = $felhNev;
+        $this->username = $username;
     }
 
     /**
      * @return string
      */
-    public function getJelszo(): string
+    public function getPassword(): string
     {
-        return $this->jelszo;
+        return $this->password;
     }
 
     /**
-     * @param string $jelszo
+     * @param string $password
      */
-    public function setJelszo(string $jelszo): void
+    public function setPassword(string $password): void
     {
-        $this->jelszo = $jelszo;
+        $this->password = $password;
     }
 
     /**
@@ -166,11 +164,6 @@ class Felhasznalo implements UserInterface
         $this->roles = $roles;
     }
 
-    public function getPassword()
-    {
-        return $this->jelszo;
-    }
-
     public function getSalt()
     {
         return null;
@@ -179,16 +172,5 @@ class Felhasznalo implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
-    }
-
-    public function getUsername()
-    {
-        return $this->felhNev;
-    }
-
-
-    public function __call($name, $arguments)
-    {
-        // TODO: Implement @method string getUserIdentifier()
     }
 }

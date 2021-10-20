@@ -32,10 +32,10 @@ class SecurityService
     public function getOneFelhasznaloById(int $id):Felhasznalo{
         return $this->em->getRepository(Felhasznalo::class)->find($id);
     }
-    public function addFelhasznalo(string $felh, string $jelszo, string $telNev, string $email, int $telefonszam, string $role):void{
+    public function addFelhasznalo(string $username, string $password, string $telNev, string $email, int $telefonszam, string $role):void{
         $felhasznalo = new Felhasznalo();
-        $felhasznalo->setFelhNev($felh);
-        $felhasznalo->setJelszo($this->encoder->encodePassword($felhasznalo, $jelszo));
+        $felhasznalo->setUsername($username);
+        $felhasznalo->setPassword($this->encoder->encodePassword($felhasznalo, $password));
         $felhasznalo->setTelNev($telNev);
         $felhasznalo->setEmail($email);
         $felhasznalo->setTelefonszam($telefonszam);
@@ -52,10 +52,10 @@ class SecurityService
         $this->em->remove($this->getOneFelhasznaloById($id));
         $this->em->flush();
     }
-    public function checkUsername(string $felhNev, string $jelszo):bool{
-        $felhasznalo = $this->em->getRepository(Felhasznalo::class)->findOneBy(["felhNev"=>$felhNev]);
+    public function checkPassword(string $username, string $password):bool{
+        $felhasznalo = $this->em->getRepository(Felhasznalo::class)->findOneBy(["username"=>$username]);
         if (!$felhasznalo) return false;
-        return $this->encoder->isPasswordValid($felhasznalo, $jelszo);
+        return $this->encoder->isPasswordValid($felhasznalo, $password);
     }
 
 

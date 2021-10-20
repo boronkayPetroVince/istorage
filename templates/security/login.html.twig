@@ -6,11 +6,14 @@
 
 {% block body %}
     <p>LOGIN</p>
-    <label for="inputUser">Felhasználó</label>
-    <input type="text" name="felhasznalo" id="inputUser">
-    <label for="password">Jelszó</label>
-    <input type="password" name="password" id="password">
-    <button type="submit">Sign In</button>
+    <form action="{{ path('app_login') }}" method="post">
+        <label for="inputUser">Felhasználó</label>
+        <input type="text" name="username" id="inputUser">
+        <label for="jelszo">Jelszó</label>
+        <input type="password" name="password" id="jelszo">
+        <button type="submit">Sign In</button>
+    </form>
+
 
 
 

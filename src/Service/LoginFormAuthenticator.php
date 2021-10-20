@@ -4,6 +4,7 @@
 namespace App\Service;
 
 
+use App\Entity\Felhasznalo;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,27 +44,42 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $this->passwordEncoder = $passwordEncoder;
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getLoginUrl(){
         return $this->router->generate("app_login");
     }
 
+    /**
+     * @inheritDoc
+     */
     public function supports(Request $request){
         return $request->attributes->get('_route') === 'app_login' && $request->isMethod("POST");
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getCredentials(Request $request){
-        $felhNev = $request->request->get('felhNev');
+        $felhNev = $request->request->get('username');
         $request->getSession()->set(Security::LAST_USERNAME, $felhNev);
-        $jelszo = $request->request->get('jelszo');
+        $jelszo = $request->request->get('password');
         return [
-            'felhNev' => $felhNev,
-            'jelszo' => $jelszo,
+            'username' => $felhNev,
+            'password' => $jelszo,
         ];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getUser($credentials, UserProviderInterface $userProvider){
-        $felhNev = $credentials['felhNev'];
-        $felhasznalo = $userProvider->loadUserByUsername($felhNev);
+        $felhNev = $credentials['username'];
+        file_put_contents("debug.txt", "$felhNev", FILE_APPEND);
+        /** @var Felhasznalo $felhasznalo */
+        $felhasznalo = $userProvider->loadUserByIdentifier($felhNev);
+        file_put_contents("debug.txt", "\n".$felhasznalo->getPassword()."\n", FILE_APPEND);
         if (!$felhasznalo){
             throw new CustomUserMessageAuthenticationException("Rossz felhasználónév!");
         }
@@ -71,14 +87,13 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * @param mixed $credentials
-     * @param UserInterface $felhasznalo
-     * @return bool|void
+     * @inheritDoc
      */
-    public function checkCredentials($credentials, UserInterface $felhasznalo)
+    public function checkCredentials($credentials, UserInterface $user)
     {
-        $tisztaJelszo = $credentials['jelszo'];
-        if ($this->passwordEncoder->isPasswordValid($felhasznalo, $tisztaJelszo)){
+        $plainPassword = $credentials['password'];
+        file_put_contents("debug.txt", "$plainPassword", FILE_APPEND);
+        if ($this->passwordEncoder->isPasswordValid($user,$plainPassword)){
             return true;
         }
 
@@ -86,13 +101,15 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
 
+    /**
+     * @inheritDoc
+     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
     {
         $targetPath = $this->getTargetPath($request->getSession(), $providerKey);
         if ($targetPath){
             return new RedirectResponse($targetPath);
         }
-
         return new RedirectResponse($this->router->generate("app_login"));
     }
 
