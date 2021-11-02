@@ -4,6 +4,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 
@@ -14,8 +15,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="felhasznalo")
  * @method string getUserIdentifier()
  */
-class Felhasznalo implements UserInterface
+class Felhasznalo implements UserInterface, JsonSerializable
 {
+
+    public function jsonSerialize()
+    {
+        return ["id" => $this->id,"username" => $this->username,"telNev" =>$this->telNev, "telSzam" => $this->telefonszam, "email" => $this->email , "role"=>$this->roles[0]];
+    }
+
     /**
      * @var int
      * @ORM\Column(type="integer")

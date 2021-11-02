@@ -81,6 +81,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $felhasznalo = $userProvider->loadUserByIdentifier($felhNev);
         file_put_contents("debug.txt", "\n".$felhasznalo->getPassword()."\n", FILE_APPEND);
         if (!$felhasznalo){
+            file_put_contents("debug.txt", "\nRossz felhasználónév!\n", FILE_APPEND);
             throw new CustomUserMessageAuthenticationException("Rossz felhasználónév!");
         }
         return $felhasznalo;
@@ -94,9 +95,10 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $plainPassword = $credentials['password'];
         file_put_contents("debug.txt", "$plainPassword", FILE_APPEND);
         if ($this->passwordEncoder->isPasswordValid($user,$plainPassword)){
+            file_put_contents("debug.txt", "\nJó jelszó!\n", FILE_APPEND);
             return true;
         }
-
+        file_put_contents("debug.txt", "\nRossz jelszó!\n", FILE_APPEND);
         throw new BadCredentialsException();
     }
 
@@ -104,13 +106,8 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     /**
      * @inheritDoc
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $providerKey)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        $targetPath = $this->getTargetPath($request->getSession(), $providerKey);
-        if ($targetPath){
-            return new RedirectResponse($targetPath);
-        }
-        return new RedirectResponse($this->router->generate("app_login"));
     }
 
 

@@ -49,7 +49,7 @@ class FelhasznaloController extends AbstractController
             }
             else return new Response("WRONG_APSSSWORD");
         }else{
-            return $this->render('security/register.html.twig');
+            return new Response("INVALID ACCESS");
         }
     }
 
@@ -72,9 +72,9 @@ class FelhasznaloController extends AbstractController
         /** @var Felhasznalo $user */
         $user = $this->getUser();
         if ($user){
-            return new Response("Sikeres");
+            return new JsonResponse(["result"=>$user]);
         }
-        else return $this->render("security/login.html.twig");
+        else return new JsonResponse(["result"=>false]);
     }
 
     /**
@@ -84,5 +84,46 @@ class FelhasznaloController extends AbstractController
      */
     public function logoutAction(Request $request): Response{
 
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return Response
+     * @Route(name="update_action", path="/update")
+     */
+    public function updateAction(Request $request): Response{
+        $user = $this->security->getOneFelhasznaloById($request->request->get("felhNev"));
+        /** @var Felhasznalo $currUser */
+        $currUser = $this->getUser();
+        //$users = $this->security->getAllFelhasznalo();
+        if ($this->checkFelhasznalo($request->request->get("felhNev"))===false){
+            $user->setTelNev($request->request->get("telNev"));
+            $user->setUsername($request->request->get("tesztFelh"));
+            $user->setEmail($request->request->get("email"));
+            $user->setTelefonszam((int)$request->request->get("telSzam"));
+            $this->security->updateFelhasznalo($user->getId());
+            return new JsonResponse(["nev" => $user]);
+        }
+        else return new JsonResponse(["nev" => "Létezik a felhasználónév"]);
+    }
+
+    /**
+     * @return Response
+     * @Route(name="allFelhasz", path="/allFelhasz")
+     */
+    public function getAllFelhasznalo():Response{
+        $users = $this->security->getAllFelhasznalo();
+        return new JsonResponse($this->getUser());
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route (path="/oneUser", name="getOneUser")
+     */
+    public function getOneUser(Request $request):Response{
+        $user = $this->security->getOneFelhasznaloById($request->request->get("felhNev"));
+        return new JsonResponse($user);
     }
 }
