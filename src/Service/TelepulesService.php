@@ -4,7 +4,7 @@
 namespace App\Service;
 
 
-use App\Entity\Telepules;
+use App\Entity\City;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -17,7 +17,7 @@ class TelepulesService extends CrudService
 
     public function getRepo(): EntityRepository
     {
-        return $this->em->getRepository(Telepules::class);
+        return $this->em->getRepository(City::class);
     }
     public function getAllTelepules():iterable{
 
@@ -25,7 +25,7 @@ class TelepulesService extends CrudService
     public function getAllTelepulesByOrszag(int $orszagID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("telepules")
-            ->from(Telepules::class, "telepules")
+            ->from(City::class, "telepules")
             ->where("telepules.orszag_ID =: orszagID")
             ->setParameter("orszagID", $orszagID);
         $query = $qb->getQuery();
@@ -34,16 +34,16 @@ class TelepulesService extends CrudService
     public function removeAllTelepulesByOrszag(int $orszagID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->delete()
-            ->from(Telepules::class, "telepules")
+            ->from(City::class, "telepules")
             ->where("telepules.orszag_ID =: orszagID")
             ->setParameter("orszagID", $orszagID);
         $query = $qb->getQuery();
         return $query->getResult();
     }
-    public function getOneTelepulesById(int $id): Telepules{
+    public function getOneTelepulesById(int $id): City{
         return $this->getRepo()->find($id);
     }
-    public function addTelepules(Telepules $telepules):void{
+    public function addTelepules(City $telepules):void{
         $this->em->persist($telepules);
         $this->em->flush();
     }

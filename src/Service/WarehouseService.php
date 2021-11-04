@@ -5,11 +5,11 @@ namespace App\Service;
 
 
 
-use App\Entity\Raktar;
+use App\Entity\Warehouse;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class RaktarService extends CrudService
+class WarehouseService extends CrudService
 {
     public function __construct(EntityManagerInterface $em)
     {
@@ -18,20 +18,20 @@ class RaktarService extends CrudService
 
     public function getRepo(): EntityRepository
     {
-        return $this->em->getRepository(Raktar::class);
+        return $this->em->getRepository(Warehouse::class);
     }
-    public function getAllRaktar():iterable{
+    public function getAllWarehouse():iterable{
         return $this->getRepo()->findAll();
     }
-    public function getOneRaktarById(int $id):Marka{
+    public function getOneWarehouseById(int $id):Warehouse{
         return $this->getRepo()->find($id);
     }
-    public function addRaktar(Raktar $raktar):void{
-        $this->em->persist($raktar);
+    public function addWarehouse(Warehouse $warehouse):void{
+        $this->em->persist($warehouse);
         $this->em->flush();
     }
-    public function removeRaktar(int $id):void{
-        $this->em->remove($this->getOneRaktarById($id));
+    public function removeWarehouse(int $id):void{
+        $this->em->remove($this->getOneWarehouseById($id));
         $this->em->flush();
     }
 

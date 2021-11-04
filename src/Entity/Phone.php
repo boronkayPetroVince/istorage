@@ -6,12 +6,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Telefon
+ * Class Phone
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="telefon")
+ * @ORM\Table(name="phone")
  */
-class Telefon
+class Phone
 {
     /**
      * @var int
@@ -29,17 +29,17 @@ class Telefon
     private $model_ID;
 
     /**
-     * @var Szin
-     * @ORM\JoinColumn(name="szin_ID", referencedColumnName="id")
-     * @ORM\ManyToOne(targetEntity="Szin")
+     * @var Color
+     * @ORM\JoinColumn(name="color_ID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Color")
      */
-    private $szin_ID;
+    private $color_ID;
 
     /**
      * @var int
      * @ORM\Column(type="integer", nullable=false)
      */
-    private $meretGB;
+    private $storageGB;
 
     /**
      * @return int
@@ -67,36 +67,37 @@ class Telefon
     }
 
     /**
-     * @return Szin
+     * @return Color
      */
-    public function getSzinID(): Szin
+    public function getColorID(): Color
     {
-        return $this->szin_ID;
+        return $this->color_ID;
     }
 
     /**
-     * @param Szin $szin_ID
+     * @param Color $color_ID
      */
-    public function setSzinID(Szin $szin_ID): void
+    public function setColorID(Color $color_ID): void
     {
-        $this->szin_ID = $szin_ID;
+        $this->color_ID = $color_ID;
     }
 
     /**
      * @return int
      */
-    public function getMeretGB(): int
+    public function getStorageGB(): int
     {
-        return $this->meretGB;
+        return $this->storageGB;
     }
 
     /**
-     * @param int $meretGB
+     * @param int $storageGB
      */
-    public function setMeretGB(int $meretGB): void
+    public function setStorageGB(int $storageGB): void
     {
-        $this->meretGB = $meretGB;
+        $this->storageGB = $storageGB;
     }
+
 
 
 

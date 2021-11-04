@@ -4,7 +4,7 @@
 namespace App\Service;
 
 
-use App\Entity\Felhasznalo;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,12 +62,12 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @inheritDoc
      */
     public function getCredentials(Request $request){
-        $felhNev = $request->request->get('username');
-        $request->getSession()->set(Security::LAST_USERNAME, $felhNev);
-        $jelszo = $request->request->get('password');
+        $username = $request->request->get('username');
+        $request->getSession()->set(Security::LAST_USERNAME, $username);
+        $password = $request->request->get('password');
         return [
-            'username' => $felhNev,
-            'password' => $jelszo,
+            'username' => $username,
+            'password' => $password,
         ];
     }
 
@@ -75,16 +75,16 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      * @inheritDoc
      */
     public function getUser($credentials, UserProviderInterface $userProvider){
-        $felhNev = $credentials['username'];
-        file_put_contents("debug.txt", "$felhNev", FILE_APPEND);
-        /** @var Felhasznalo $felhasznalo */
-        $felhasznalo = $userProvider->loadUserByIdentifier($felhNev);
-        file_put_contents("debug.txt", "\n".$felhasznalo->getPassword()."\n", FILE_APPEND);
-        if (!$felhasznalo){
+        $username = $credentials['username'];
+        file_put_contents("debug.txt", "$username", FILE_APPEND);
+        /** @var User $user */
+        $user = $userProvider->loadUserByIdentifier($username);
+        file_put_contents("debug.txt", "\n".$user->getPassword()."\n", FILE_APPEND);
+        if (!$user){
             file_put_contents("debug.txt", "\nRossz felhasználónév!\n", FILE_APPEND);
             throw new CustomUserMessageAuthenticationException("Rossz felhasználónév!");
         }
-        return $felhasznalo;
+        return $user;
     }
 
     /**

@@ -4,7 +4,7 @@
 namespace App\Service;
 
 
-use App\Entity\Felhasznalo;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -27,13 +27,13 @@ class SecurityService
         $this->encoder = $encoder;
     }
     public function getAllFelhasznalo():iterable{
-        return $this->em->getRepository(Felhasznalo::class)->findAll();
+        return $this->em->getRepository(User::class)->findAll();
     }
-    public function getOneFelhasznaloById(int $id):Felhasznalo{
-        return $this->em->getRepository(Felhasznalo::class)->find($id);
+    public function getOneFelhasznaloById(int $id):User{
+        return $this->em->getRepository(User::class)->find($id);
     }
     public function addFelhasznalo(string $username, string $password, string $telNev, string $email, int $telefonszam, string $role):void{
-        $felhasznalo = new Felhasznalo();
+        $felhasznalo = new User();
         $felhasznalo->setUsername($username);
         $felhasznalo->setPassword($this->encoder->encodePassword($felhasznalo, $password));
         $felhasznalo->setTelNev($telNev);
@@ -53,7 +53,7 @@ class SecurityService
         $this->em->flush();
     }
     public function checkPassword(string $username, string $password):bool{
-        $felhasznalo = $this->em->getRepository(Felhasznalo::class)->findOneBy(["username"=>$username]);
+        $felhasznalo = $this->em->getRepository(User::class)->findOneBy(["username"=>$username]);
         if (!$felhasznalo) return false;
         return $this->encoder->isPasswordValid($felhasznalo, $password);
     }

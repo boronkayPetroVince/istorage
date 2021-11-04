@@ -6,12 +6,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Elerhetoseg
+ * Class Contact
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="elerhetoseg")
+ * @ORM\Table(name="contact")
  */
-class Elerhetoseg
+class Contact
 {
     /**
      * @var int
@@ -22,23 +22,23 @@ class Elerhetoseg
     private $id;
 
     /**
-     * @var Ugyfel
-     * @ORM\JoinColumn(name="ugyfel_ID", referencedColumnName="id")
-     * @ORM\ManyToOne(targetEntity="Ugyfel")
+     * @var Client
+     * @ORM\JoinColumn(name="client_ID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Client")
      */
-    private $ugyfel_ID;
+    private $client_ID;
 
     /**
      * @var string|null
      * @ORM\Column(type="string", length=100, nullable=true)
      */
-    private $telNev;
+    private $fullName;
 
     /**
      * @var int
      * @ORM\Column(type="integer", nullable=false)
      */
-    private $telefonszam;
+    private $phoneNumber;
 
     /**
      * @var string
@@ -55,51 +55,51 @@ class Elerhetoseg
     }
 
     /**
-     * @return Ugyfel
+     * @return Client
      */
-    public function getUgyfelID(): Ugyfel
+    public function getClientID(): Client
     {
-        return $this->ugyfel_ID;
+        return $this->client_ID;
     }
 
     /**
-     * @param Ugyfel $ugyfel_ID
+     * @param Client $client_ID
      */
-    public function setUgyfelID(Ugyfel $ugyfel_ID): void
+    public function setClientID(Client $client_ID): void
     {
-        $this->ugyfel_ID = $ugyfel_ID;
+        $this->client_ID = $client_ID;
     }
 
     /**
      * @return string|null
      */
-    public function getTelNev(): ?string
+    public function getFullName(): ?string
     {
-        return $this->telNev;
+        return $this->fullName;
     }
 
     /**
-     * @param string|null $telNev
+     * @param string|null $fullName
      */
-    public function setTelNev(?string $telNev): void
+    public function setFullName(?string $fullName): void
     {
-        $this->telNev = $telNev;
+        $this->fullName = $fullName;
     }
 
     /**
      * @return int
      */
-    public function getTelefonszam(): int
+    public function getPhoneNumber(): int
     {
-        return $this->telefonszam;
+        return $this->phoneNumber;
     }
 
     /**
-     * @param int $telefonszam
+     * @param int $phoneNumber
      */
-    public function setTelefonszam(int $telefonszam): void
+    public function setPhoneNumber(int $phoneNumber): void
     {
-        $this->telefonszam = $telefonszam;
+        $this->phoneNumber = $phoneNumber;
     }
 
     /**
@@ -117,6 +117,7 @@ class Elerhetoseg
     {
         $this->email = $email;
     }
+
 
 
 }

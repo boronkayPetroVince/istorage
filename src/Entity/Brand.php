@@ -6,12 +6,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Orszag
+ * Class Brand
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="orszag")
+ * @ORM\Table(name="brand")
  */
-class Orszag
+class Brand
 {
     /**
      * @var int
@@ -23,9 +23,9 @@ class Orszag
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=30, nullable=false)
      */
-    private $orszag;
+    private $brand;
 
     /**
      * @return int
@@ -35,22 +35,23 @@ class Orszag
         return $this->id;
     }
 
-
     /**
      * @return string
      */
-    public function getOrszag(): string
+    public function getBrand(): string
     {
-        return $this->orszag;
+        return $this->brand;
     }
 
     /**
-     * @param string $orszag
+     * @param string $brand
      */
-    public function setOrszag(string $orszag): void
+    public function setBrand(string $brand): void
     {
-        $this->orszag = $orszag;
+        $this->brand = $brand;
     }
+
+
 
 
 }

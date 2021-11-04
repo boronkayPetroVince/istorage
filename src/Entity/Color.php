@@ -6,12 +6,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Marka
+ * Class Color
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="marka")
+ * @ORM\Table(name="color")
  */
-class Marka
+class Color
 {
     /**
      * @var int
@@ -21,11 +21,12 @@ class Marka
      */
     private $id;
 
+
     /**
      * @var string
-     * @ORM\Column(type="string", length=30, nullable=false)
+     * @ORM\Column(type="string", length=50, nullable=false)
      */
-    private $marka;
+    private $phoneColor;
 
     /**
      * @return int
@@ -35,22 +36,25 @@ class Marka
         return $this->id;
     }
 
-
     /**
      * @return string
      */
-    public function getMarka(): string
+    public function getPhoneColor(): string
     {
-        return $this->marka;
+        return $this->phoneColor;
     }
 
     /**
-     * @param string $marka
+     * @param string $phoneColor
      */
-    public function setMarka(string $marka): void
+    public function setPhoneColor(string $phoneColor): void
     {
-        $this->marka = $marka;
+        $this->phoneColor = $phoneColor;
     }
+
+
+
+
 
 
 }

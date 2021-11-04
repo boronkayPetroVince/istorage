@@ -4,7 +4,7 @@
 namespace App\Service;
 
 
-use App\Entity\Telefon;
+use App\Entity\Phone;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -17,7 +17,7 @@ class TelefonService extends CrudService
 
     public function getRepo(): EntityRepository
     {
-        return $this->em->getRepository(Telefon::class);
+        return $this->em->getRepository(Phone::class);
     }
 
     public function getAllTelefon():iterable{
@@ -27,7 +27,7 @@ class TelefonService extends CrudService
     public function getAllTelefonByModel(int $modelID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("telefon")
-            ->from(Telefon::class, "telefon")
+            ->from(Phone::class, "telefon")
             ->where("telefon.model_ID =:modelID")
             ->setParameter("modelID", $modelID);
         $query = $qb->getQuery();
@@ -37,7 +37,7 @@ class TelefonService extends CrudService
     public function getAllTelefonBySzin(int $szinID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("telefon")
-            ->from(Telefon::class, "telefon")
+            ->from(Phone::class, "telefon")
             ->where("telefon.szin_ID =:szinID")
             ->setParameter("szinID", $szinID);
         $query = $qb->getQuery();
@@ -46,7 +46,7 @@ class TelefonService extends CrudService
     public function getAllTelefonByMarka(int $markaID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("telefon")
-            ->from(Telefon::class, "telefon")
+            ->from(Phone::class, "telefon")
             ->innerJoin("telefon.model_ID", "model")
             ->where("model.marka_ID =: markaID")
             ->setParameter("markaID", $markaID);
@@ -56,7 +56,7 @@ class TelefonService extends CrudService
     public function removeAllTelefonByMarka(int $markaID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->delete()
-            ->from(Telefon::class, "telefon")
+            ->from(Phone::class, "telefon")
             ->innerJoin("telefon.model_ID", "model")
             ->where("model.marka_ID =: markaID")
             ->setParameter("markaID", $markaID);
@@ -66,7 +66,7 @@ class TelefonService extends CrudService
     public function removeAllTelefonByModel(int $modelID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->delete()
-            ->from(Telefon::class, "telefon")
+            ->from(Phone::class, "telefon")
             ->where("telefon.model_ID =:modelID")
             ->setParameter("modelID", $modelID);
         $query = $qb->getQuery();
@@ -76,16 +76,16 @@ class TelefonService extends CrudService
     public function removeAllTelefonBySzin(int $szinID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->delete()
-            ->from(Telefon::class, "telefon")
+            ->from(Phone::class, "telefon")
             ->where("telefon.szin_ID =:szinID")
             ->setParameter("szinID", $szinID);
         $query = $qb->getQuery();
         return $query->getResult();
     }
-    public function getOneTelefonById(int $id):Telefon{
+    public function getOneTelefonById(int $id):Phone{
         return $this->getRepo()->find($id);
     }
-    public function addTelefon(Telefon $telefon):void{
+    public function addTelefon(Phone $telefon):void{
         $this->em->persist($telefon);
         $this->em->flush();
     }

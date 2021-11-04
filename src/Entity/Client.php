@@ -6,12 +6,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Ugyfel
+ * Class Client
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="ugyfel")
+ * @ORM\Table(name="client")
  */
-class Ugyfel
+class Client
 {
     /**
      * @var int
@@ -25,19 +25,19 @@ class Ugyfel
      * @var string
      * @ORM\Column(type="string", length=100, nullable=false)
      */
-    private $cegnev;
+    private $clientName;
 
     /**
      * @var int
      * @ORM\Column(type="integer", nullable=false)
      */
-    private $adoszam;
+    private $vatNumber;
 
     /**
      * @var int|null
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $adoszam_EU;
+    private $vatNumberEU;
 
     /**
      * @return int
@@ -47,54 +47,56 @@ class Ugyfel
         return $this->id;
     }
 
-
     /**
      * @return string
      */
-    public function getCegnev(): string
+    public function getClientName(): string
     {
-        return $this->cegnev;
+        return $this->clientName;
     }
 
     /**
-     * @param string $cegnev
+     * @param string $clientName
      */
-    public function setCegnev(string $cegnev): void
+    public function setClientName(string $clientName): void
     {
-        $this->cegnev = $cegnev;
+        $this->clientName = $clientName;
     }
 
     /**
      * @return int
      */
-    public function getAdoszam(): int
+    public function getVatNumber(): int
     {
-        return $this->adoszam;
+        return $this->vatNumber;
     }
 
     /**
-     * @param int $adoszam
+     * @param int $vatNumber
      */
-    public function setAdoszam(int $adoszam): void
+    public function setVatNumber(int $vatNumber): void
     {
-        $this->adoszam = $adoszam;
+        $this->vatNumber = $vatNumber;
     }
 
     /**
      * @return int|null
      */
-    public function getAdoszamEU(): ?int
+    public function getVatNumberEU(): ?int
     {
-        return $this->adoszam_EU;
+        return $this->vatNumberEU;
     }
 
     /**
-     * @param int|null $adoszam_EU
+     * @param int|null $vatNumberEU
      */
-    public function setAdoszamEU(?int $adoszam_EU): void
+    public function setVatNumberEU(?int $vatNumberEU): void
     {
-        $this->adoszam_EU = $adoszam_EU;
+        $this->vatNumberEU = $vatNumberEU;
     }
+
+
+
 
 
 }

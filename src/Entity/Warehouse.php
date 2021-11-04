@@ -6,12 +6,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Raktar
+ * Class Warehouse
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="raktar")
+ * @ORM\Table(name="warehouse")
  */
-class Raktar
+class Warehouse
 {
     /**
      * @var int
@@ -25,13 +25,13 @@ class Raktar
      * @var string
      * @ORM\Column(type="string", length=50, nullable=false)
      */
-    private $helyszin;
+    private $location;
 
     /**
      * @var int
      * @ORM\Column(type="integer", nullable=false)
      */
-    private $kapacitas;
+    private $capacity;
 
     /**
      * @return int
@@ -41,38 +41,39 @@ class Raktar
         return $this->id;
     }
 
-
     /**
      * @return string
      */
-    public function getHelyszin(): string
+    public function getLocation(): string
     {
-        return $this->helyszin;
+        return $this->location;
     }
 
     /**
-     * @param string $helyszin
+     * @param string $location
      */
-    public function setHelyszin(string $helyszin): void
+    public function setLocation(string $location): void
     {
-        $this->helyszin = $helyszin;
+        $this->location = $location;
     }
 
     /**
      * @return int
      */
-    public function getKapacitas(): int
+    public function getCapacity(): int
     {
-        return $this->kapacitas;
+        return $this->capacity;
     }
 
     /**
-     * @param int $kapacitas
+     * @param int $capacity
      */
-    public function setKapacitas(int $kapacitas): void
+    public function setCapacity(int $capacity): void
     {
-        $this->kapacitas = $kapacitas;
+        $this->capacity = $capacity;
     }
+
+
 
 
 }

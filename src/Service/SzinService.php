@@ -4,7 +4,7 @@
 namespace App\Service;
 
 
-use App\Entity\Szin;
+use App\Entity\Color;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -17,16 +17,16 @@ class SzinService extends CrudService
 
     public function getRepo(): EntityRepository
     {
-        return $this->em->getRepository(Szin::class);
+        return $this->em->getRepository(Color::class);
     }
 
     public function getAllSzin():iterable{
         return $this->getRepo()->findAll();
     }
-    public function getOneSzinById(int $id):Szin{
+    public function getOneSzinById(int $id):Color{
         return $this->getRepo()->find($id);
     }
-    public function addSzin(Szin $szin):void{
+    public function addSzin(Color $szin):void{
         $this->em->persist($szin);
         $this->em->flush();
     }

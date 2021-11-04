@@ -6,12 +6,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Szin
+ * Class Country
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="szin")
+ * @ORM\Table(name="country")
  */
-class Szin
+class Country
 {
     /**
      * @var int
@@ -21,12 +21,11 @@ class Szin
      */
     private $id;
 
-
     /**
      * @var string
-     * @ORM\Column(type="string", length=50, nullable=false)
+     * @ORM\Column(type="string", length=100, nullable=false)
      */
-    private $szin;
+    private $countryName;
 
     /**
      * @return int
@@ -36,23 +35,24 @@ class Szin
         return $this->id;
     }
 
-
-
     /**
      * @return string
      */
-    public function getSzin(): string
+    public function getCountryName(): string
     {
-        return $this->szin;
+        return $this->countryName;
     }
 
     /**
-     * @param string $szin
+     * @param string $countryName
      */
-    public function setSzin(string $szin): void
+    public function setCountryName(string $countryName): void
     {
-        $this->szin = $szin;
+        $this->countryName = $countryName;
     }
+
+
+
 
 
 }

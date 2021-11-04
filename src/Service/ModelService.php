@@ -23,21 +23,21 @@ class ModelService extends CrudService
     public function getAllModel():iterable{
         return $this->getRepo()->findAll();
     }
-    public function getAllModelByMarka(int $markaID):iterable{
+    public function getAllModelByBrand(int $brand_ID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("model")
             ->from(Model::class, "model")
-            ->where("model.marka_ID =:markaID")
-            ->setParameter("markaID", $markaID);
+            ->where("model.brand_ID =:brand_ID")
+            ->setParameter("brand_ID", $brand_ID);
         $query = $qb->getQuery();
         return $query->getResult();
     }
-    public function removeAllModelByMarka(int $markaID):iterable{
+    public function removeAllModelByBrand(int $brand_ID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->delete()
             ->from(Model::class, "model")
-            ->where("model.marka_ID =:markaID")
-            ->setParameter("markaID", $markaID);
+            ->where("model.brand_ID =:brand_ID")
+            ->setParameter("brand_ID", $brand_ID);
         $query = $qb->getQuery();
         return $query->getResult();
     }

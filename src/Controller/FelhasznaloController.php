@@ -4,7 +4,7 @@
 namespace App\Controller;
 
 
-use App\Entity\Felhasznalo;
+use App\Entity\User;
 use App\Service\SecurityService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -54,7 +54,7 @@ class FelhasznaloController extends AbstractController
     }
 
     private function checkFelhasznalo(string $felhNev):bool{
-        /** @var Felhasznalo[] $arr */
+        /** @var User[] $arr */
          $arr = $this->security->getAllFelhasznalo();
          foreach($arr as $elem){
              if ($elem->getUsername() === $felhNev) return true;
@@ -69,7 +69,7 @@ class FelhasznaloController extends AbstractController
      */
     public function loginAction(Request $request): Response{
         /** Nem működik */
-        /** @var Felhasznalo $user */
+        /** @var User $user */
         $user = $this->getUser();
         if ($user){
             return new JsonResponse(["result"=>$user]);
@@ -94,7 +94,7 @@ class FelhasznaloController extends AbstractController
      */
     public function updateAction(Request $request): Response{
         $user = $this->security->getOneFelhasznaloById($request->request->get("felhNev"));
-        /** @var Felhasznalo $currUser */
+        /** @var User $currUser */
         $currUser = $this->getUser();
         //$users = $this->security->getAllFelhasznalo();
         if ($this->checkFelhasznalo($request->request->get("felhNev"))===false){
@@ -114,7 +114,7 @@ class FelhasznaloController extends AbstractController
      */
     public function getAllFelhasznalo():Response{
         $users = $this->security->getAllFelhasznalo();
-        return new JsonResponse($this->getUser());
+        return new JsonResponse($users);
     }
 
     /**

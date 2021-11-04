@@ -2,12 +2,12 @@ security:
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER
     encoders:
-        App\Entity\Felhasznalo: auto
+        App\Entity\User: auto
 
     providers:
         app_user_provider:
             entity:
-                class: App\Entity\Felhasznalo
+                class: App\Entity\User
                 property: username
     firewalls:
         main:

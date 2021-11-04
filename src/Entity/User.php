@@ -9,18 +9,19 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 
 /**
- * Class Felhasznalo
+ * Class User
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="felhasznalo")
+ * @ORM\Table(name="user")
  * @method string getUserIdentifier()
  */
-class Felhasznalo implements UserInterface, JsonSerializable
+class User implements UserInterface, JsonSerializable
 {
 
     public function jsonSerialize()
     {
-        return ["id" => $this->id,"username" => $this->username,"telNev" =>$this->telNev, "telSzam" => $this->telefonszam, "email" => $this->email , "role"=>$this->roles[0]];
+        return ["id" => $this->id,"username" => $this->username,"telNev" =>$this->fullName,
+            "telSzam" => $this->phoneNumber, "email" => $this->email , "role"=>$this->roles[0]];
     }
 
     /**
@@ -47,7 +48,7 @@ class Felhasznalo implements UserInterface, JsonSerializable
      * @var string
      * @ORM\Column(type="string", length=1000, nullable=false)
      */
-    private $telNev = "";
+    private $fullName = "";
 
     /**
      * @var string
@@ -59,7 +60,7 @@ class Felhasznalo implements UserInterface, JsonSerializable
      * @var int
      * @ORM\Column(type="integer", nullable=false)
      */
-    private $telefonszam = 0;
+    private $phoneNumber = 0;
 
     /**
      * @var string[]
@@ -110,17 +111,17 @@ class Felhasznalo implements UserInterface, JsonSerializable
     /**
      * @return string
      */
-    public function getTelNev(): string
+    public function getFullName(): string
     {
-        return $this->telNev;
+        return $this->fullName;
     }
 
     /**
-     * @param string $telNev
+     * @param string $fullName
      */
-    public function setTelNev(string $telNev): void
+    public function setFullName(string $fullName): void
     {
-        $this->telNev = $telNev;
+        $this->fullName = $fullName;
     }
 
     /**
@@ -142,17 +143,17 @@ class Felhasznalo implements UserInterface, JsonSerializable
     /**
      * @return int
      */
-    public function getTelefonszam(): int
+    public function getPhoneNumber(): int
     {
-        return $this->telefonszam;
+        return $this->phoneNumber;
     }
 
     /**
-     * @param int $telefonszam
+     * @param int $phoneNumber
      */
-    public function setTelefonszam(int $telefonszam): void
+    public function setPhoneNumber(int $phoneNumber): void
     {
-        $this->telefonszam = $telefonszam;
+        $this->phoneNumber = $phoneNumber;
     }
 
     /**

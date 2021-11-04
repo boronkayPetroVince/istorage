@@ -8,7 +8,7 @@ use App\Service\CrudService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class OrszagService extends CrudService
+class CountryService extends CrudService
 {
     public function __construct(EntityManagerInterface $em)
     {
@@ -17,20 +17,20 @@ class OrszagService extends CrudService
 
     public function getRepo(): EntityRepository
     {
-        return $this->em->getRepository(Orszag::class);
+        return $this->em->getRepository(Country::class);
     }
-    public function getAllOrszag():iterable{
+    public function getAllCountry():iterable{
         return $this->getRepo()->findAll();
     }
-    public function getOneOrszagById(int $id):Orszag{
+    public function getOneCountryById(int $id):Country{
         return $this->getRepo()->find($id);
     }
-    public function addOrszag(Orszag $orszag):void{
-        $this->em->persist($orszag);
+    public function addCountry(Country $country):void{
+        $this->em->persist($country);
         $this->em->flush();
     }
-    public function removeOrszag(int $id):void{
-        $this->em->remove($this->getOneOrszagById($id));
+    public function removeCountry(int $id):void{
+        $this->em->remove($this->getOneCountryById($id));
         $this->em->flush();
     }
 

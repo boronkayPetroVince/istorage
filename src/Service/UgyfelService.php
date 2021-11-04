@@ -4,7 +4,7 @@
 namespace App\Service;
 
 
-use App\Entity\Ugyfel;
+use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
@@ -17,16 +17,16 @@ class UgyfelService extends CrudService
 
     public function getRepo(): EntityRepository
     {
-        return $this->em->getRepository(Ugyfel::class);
+        return $this->em->getRepository(Client::class);
     }
 
     public function getAllUgyfel():iterable{
         return $this->getRepo()->findAll();
     }
-    public function getOneUgyfelById(int $id):Ugyfel{
+    public function getOneUgyfelById(int $id):Client{
         return $this->getRepo()->find($id);
     }
-    public function addUgyfel(Ugyfel $ugyfel):void{
+    public function addUgyfel(Client $ugyfel):void{
         $this->em->persist($ugyfel);
         $this->em->flush();
     }

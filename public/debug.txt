@@ -58,3 +58,7 @@ asder12
 $2y$13$0QG9slg4Sxy8V6KyYN7cJeOu8LKe6fIRfX9dxWOukw4tMf7KlZeyO
 123
 Jó jelszó!
+asder12
+$2y$13$0QG9slg4Sxy8V6KyYN7cJeOu8LKe6fIRfX9dxWOukw4tMf7KlZeyO
+123
+Jó jelszó!

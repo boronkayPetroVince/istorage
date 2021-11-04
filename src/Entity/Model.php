@@ -22,17 +22,17 @@ class Model
     private $id;
 
     /**
-     * @var Marka
-     * @ORM\JoinColumn(name="marka_ID", referencedColumnName="id")
-     * @ORM\ManyToOne(targetEntity="Marka")
+     * @var Brand
+     * @ORM\JoinColumn(name="brand_ID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Brand")
      */
-    private $marka_ID;
+    private $brand_ID;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=30, nullable=false)
      */
-    private $model;
+    private $modelName;
 
     /**
      * @return int
@@ -43,36 +43,38 @@ class Model
     }
 
     /**
-     * @return Marka
+     * @return Brand
      */
-    public function getMarkaID(): Marka
+    public function getBrandID(): Brand
     {
-        return $this->marka_ID;
+        return $this->brand_ID;
     }
 
     /**
-     * @param Marka $marka_ID
+     * @param Brand $brand_ID
      */
-    public function setMarkaID(Marka $marka_ID): void
+    public function setBrandID(Brand $brand_ID): void
     {
-        $this->marka_ID = $marka_ID;
+        $this->brand_ID = $brand_ID;
     }
 
     /**
      * @return string
      */
-    public function getModel(): string
+    public function getModelName(): string
     {
-        return $this->model;
+        return $this->modelName;
     }
 
     /**
-     * @param string $model
+     * @param string $modelName
      */
-    public function setModel(string $model): void
+    public function setModelName(string $modelName): void
     {
-        $this->model = $model;
+        $this->modelName = $modelName;
     }
+
+
 
 
 }

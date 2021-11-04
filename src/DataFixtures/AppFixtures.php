@@ -2,19 +2,19 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Elerhetoseg;
-use App\Entity\Felhasznalo;
-use App\Entity\Keszlet;
-use App\Entity\Marka;
+use App\Entity\Contact;
+use App\Entity\User;
+use App\Entity\Stock;
+use App\Entity\Brand;
 use App\Entity\Model;
-use App\Entity\Orszag;
-use App\Entity\Raktar;
-use App\Entity\Rendeles;
-use App\Entity\Szallitasi_cim;
-use App\Entity\Szin;
-use App\Entity\Telefon;
-use App\Entity\Telepules;
-use App\Entity\Ugyfel;
+use App\Entity\Country;
+use App\Entity\Warehouse;
+use App\Entity\Order;
+use App\Entity\Deliveryaddress;
+use App\Entity\Color;
+use App\Entity\Phone;
+use App\Entity\City;
+use App\Entity\Client;
 use App\Kernel;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManager;
@@ -52,7 +52,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         // $manager->persist($product);
 
         // TELEFON
-        $marka = new Marka();
+        $marka = new Brand();
         $marka->setMarka("IPhone");
         $this->em->persist($marka);
 
@@ -61,39 +61,39 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $model->setMarkaID($marka);
         $this->em->persist($model);
 
-        $szin = new Szin();
+        $szin = new Color();
         $szin->setSzin("Fehér");
         $this->em->persist($szin);
 
-        $telefon = new Telefon();
+        $telefon = new Phone();
         $telefon->setModelID($model);
         $telefon->setMeretGB(64);
         $telefon->setSzinID($szin);
         $this->em->persist($telefon);
 
         // ÜGYFÉL
-        $ugyfel = new Ugyfel();
+        $ugyfel = new Client();
         $ugyfel->setCegnev("PetroSoft");
         $ugyfel->setAdoszam(1234565-4-13);
         $this->em->persist($ugyfel);
 
-        $orszag = new Orszag();
+        $orszag = new Country();
         $orszag->setOrszag("Magyarország");
         $this->em->persist($orszag);
 
-        $telepules = new Telepules();
+        $telepules = new City();
         $telepules->setOrszagID($orszag);
         $telepules->setIranyitoszam(2600);
         $telepules->setTelepules("Vác");
         $this->em->persist($telepules);
 
-        $szallitasi_cim = new Szallitasi_cim();
+        $szallitasi_cim = new Deliveryaddress();
         $szallitasi_cim->setTelepulesID($telepules);
         $szallitasi_cim->setUtcaHazszam("Bottyán utca 17.");
         $szallitasi_cim->setUgyfelID($ugyfel);
         $this->em->persist($szallitasi_cim);
 
-        $elerhetoseg = new Elerhetoseg();
+        $elerhetoseg = new Contact();
         $elerhetoseg->setTelNev("Petróleum Vince");
         $elerhetoseg->setEmail("petroking@gmail.com");
         $elerhetoseg->setTelefonszam(06305506354);
@@ -101,7 +101,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $this->em->persist($elerhetoseg);
 
         //FELHASZNÁLÓ - RAKTÁROS
-        $felhasznalo = new Felhasznalo();
+        $felhasznalo = new User();
         $felhasznalo->setTelNev("Czobori Effi");
         $felhasznalo->setFelhNev("PetroTheGod");
         $felhasznalo->setJelszo("12345");
@@ -111,12 +111,12 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $this->em->persist($felhasznalo);
 
         // RAKTÁR - RENDELÉS
-        $raktar = new Raktar();
+        $raktar = new Warehouse();
         $raktar->setHelyszin("Budapest");
         $raktar->setKapacitas(1000);
         $this->em->persist($raktar);
 
-        $keszlet = new Keszlet();
+        $keszlet = new Stock();
         $keszlet->setTelefonID($telefon);
         $keszlet->setRaktarID($raktar);
         $keszlet->setBeszerszAr(5000);
@@ -124,7 +124,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $keszlet->setElerhetoE("Igen");
         $this->em->persist($keszlet);
 
-        $rendeles = new Rendeles();
+        $rendeles = new Order();
         $rendeles->setRaktarID($raktar);
         $rendeles->setFelhaszID($felhasznalo);
         $rendeles->setSzallitasID($szallitasi_cim);
