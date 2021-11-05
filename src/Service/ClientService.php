@@ -8,7 +8,7 @@ use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class UgyfelService extends CrudService
+class ClientService extends CrudService
 {
     public function __construct(EntityManagerInterface $em)
     {
@@ -20,18 +20,18 @@ class UgyfelService extends CrudService
         return $this->em->getRepository(Client::class);
     }
 
-    public function getAllUgyfel():iterable{
+    public function getAllClient():iterable{
         return $this->getRepo()->findAll();
     }
-    public function getOneUgyfelById(int $id):Client{
+    public function getOneClientById(int $id):Client{
         return $this->getRepo()->find($id);
     }
-    public function addUgyfel(Client $ugyfel):void{
-        $this->em->persist($ugyfel);
+    public function addClient(Client $client):void{
+        $this->em->persist($client);
         $this->em->flush();
     }
-    public function removeUgyfel(int $id):void{
-        $this->em->remove($this->getOneUgyfelById($id));
+    public function removeClient(int $id):void{
+        $this->em->remove($this->getOneClientById($id));
         $this->em->flush();
     }
 
