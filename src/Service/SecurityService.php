@@ -36,9 +36,9 @@ class SecurityService
         $user = new User();
         $user->setUsername($username);
         $user->setPassword($this->encoder->encodePassword($user, $password));
-        $user->setTelNev($fullName);
+        $user->setFullName($fullName);
         $user->setEmail($email);
-        $user->setTelefonszam($phoneNumber);
+        $user->setPhoneNumber($phoneNumber);
         $user->setRoles([$role]);
         $this->em->persist($user);
         $this->em->flush();

@@ -9,10 +9,11 @@
     <form action="{{ path('app_login') }}" method="post">
         <label for="inputUser">Felhasználó</label>
         <input type="text" name="username" id="inputUser">
-        <label for="jelszo">Jelszó</label>
-        <input type="password" name="password" id="jelszo">
+        <label for="password">Jelszó</label>
+        <input type="password" name="password" id="password">
         <button type="submit">Sign In</button>
     </form>
+    <h1>{{ username }}</h1>
 
 
 

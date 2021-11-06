@@ -1,11 +1,13 @@
 {% extends 'base.html.twig' %}
 
+
 {% block title %}
     Log in!
 {% endblock %}
 
 {% block body %}
     <p>LOGIN</p>
+    <p>{{ content }}</p>
     <form action="{{ path('register') }}" method="post">
         <label for="inputUser">Felhasználó</label>
         <input type="text" name="username" id="inputUser">
@@ -15,10 +17,10 @@
         <input type="password" name="password2" id="password">
         <br>
         <label for="telefon">Telefonszám</label>
-        <input type="number" name="telefonszam" id="telefon">
+        <input type="number" name="phoneNumber" id="telefon">
         <br>
         <label for="telNev">Teljes</label>
-        <input type="text" name="teljNev" id="telNev">
+        <input type="text" name="fullName" id="telNev">
         <label for="email">Email</label>
         <input type="text" name="emailad" id="email"> <!--nem email type teszt miatt -->
         <label for="role"></label>

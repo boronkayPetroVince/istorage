@@ -76,12 +76,8 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      */
     public function getUser($credentials, UserProviderInterface $userProvider){
         $username = $credentials['username'];
-        file_put_contents("debug.txt", "$username", FILE_APPEND);
-        /** @var User $user */
         $user = $userProvider->loadUserByIdentifier($username);
-        file_put_contents("debug.txt", "\n".$user->getPassword()."\n", FILE_APPEND);
         if (!$user){
-            file_put_contents("debug.txt", "\nRossz felhasználónév!\n", FILE_APPEND);
             throw new CustomUserMessageAuthenticationException("Rossz felhasználónév!");
         }
         return $user;
@@ -93,12 +89,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     public function checkCredentials($credentials, UserInterface $user)
     {
         $plainPassword = $credentials['password'];
-        file_put_contents("debug.txt", "$plainPassword", FILE_APPEND);
         if ($this->passwordEncoder->isPasswordValid($user,$plainPassword)){
-            file_put_contents("debug.txt", "\nJó jelszó!\n", FILE_APPEND);
             return true;
         }
-        file_put_contents("debug.txt", "\nRossz jelszó!\n", FILE_APPEND);
         throw new BadCredentialsException();
     }
 
@@ -108,6 +101,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+        return null;
     }
 
 
