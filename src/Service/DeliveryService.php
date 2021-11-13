@@ -22,21 +22,21 @@ class DeliveryService extends CrudService
     public function getAllDelivery():iterable{
         return $this->getRepo()->findAll();
     }
-    public function getAllAddressByCity(int $city_ID):iterable{
+    public function getAllAddressBySettlement(int $settlement_ID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("delivery")
             ->from(Delivery_address::class, "delivery")
-            ->where("delivery.city_ID =: city_ID")
-            ->setParameter("city_ID", $city_ID);
+            ->where("delivery.settlement_ID =: settlement_ID")
+            ->setParameter("settlement_ID", $settlement_ID);
         $query = $qb->getQuery();
         return $query->getResult();
     }
-    public function removeAllAddressByCity(int $city_ID):iterable{
+    public function removeAllAddressBySettlement(int $settlement_ID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->delete()
             ->from(Delivery_address::class, "delivery")
-            ->where("delivery.city_ID =: city_ID")
-            ->setParameter("city_ID", $city_ID);
+            ->where("delivery.settlement_ID =: settlement_ID")
+            ->setParameter("settlement_ID", $settlement_ID);
         $query = $qb->getQuery();
         return $query->getResult();
     }
@@ -69,6 +69,12 @@ class DeliveryService extends CrudService
         $this->em->remove($this->getOneAddressById($id));
         $this->em->flush();
     }
+    public function updateAddress(int $id):void{
+        $address = $this->getOneAddressById($id);
+        $this->em->persist($address);
+        $this->em->flush();
+    }
+
 
 
 }

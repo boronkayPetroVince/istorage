@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <form action="{{ path('addClient') }}" method="post">
+        <label for="client_name">client_name</label>
+        <input type="text" name="client_name" id="client_name"><br>
+        
+        <label for="vatNumber">vatNumber</label>
+        <input type="number" name="vatNumber" id="vatNumber"><br>
+
+        <label for="country">country</label>
+        <input type="text" name="country" id="country"><br>
+
+        <label for="postalCode">postalCode</label>
+        <input type="number" name="postalCode" id="postalCode" onchange="loadCity()"><br> <!-- Ha beírja az irányítót akkor betölti automatikusan a települes nevet -->
+
+        <label for="city">city</label>
+        <input type="text" name="city" id="city"><br>
+
+
+        <label for="address">address</label>
+        <input type="text" name="address" id="address"><br>
+
+        <input type="submit" value="Submit">
+
+        {{ result }}
+
+    </form>
+   
+
+{% endblock %}

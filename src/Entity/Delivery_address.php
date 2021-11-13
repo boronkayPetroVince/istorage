@@ -6,7 +6,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Deliveryaddress
+ * Class Delivery_address
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="delivery_address")
@@ -29,11 +29,11 @@ class Delivery_address
     private $client_ID;
 
     /**
-     * @var City
-     * @ORM\JoinColumn(name="city_ID", referencedColumnName="id")
-     * @ORM\ManyToOne(targetEntity="City")
+     * @var Settlement
+     * @ORM\JoinColumn(name="settlement_ID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Settlement")
      */
-    private $city_ID;
+    private $settlement_ID;
 
 
     /**
@@ -67,25 +67,25 @@ class Delivery_address
     }
 
     /**
-     * @return City
+     * @return Settlement
      */
-    public function getCityID(): City
+    public function getSettlementID(): Settlement
     {
-        return $this->city_ID;
+        return $this->settlement_ID;
     }
 
     /**
-     * @param City $city_ID
+     * @param Settlement $settlement_ID
      */
-    public function setCityID(City $city_ID): void
+    public function setSettlementID(Settlement $settlement_ID): void
     {
-        $this->city_ID = $city_ID;
+        $this->settlement_ID = $settlement_ID;
     }
 
     /**
      * @return string|null
      */
-    public function getaddress(): ?string
+    public function getAddress(): ?string
     {
         return $this->address;
     }
@@ -93,10 +93,12 @@ class Delivery_address
     /**
      * @param string|null $address
      */
-    public function setaddress(?string $address): void
+    public function setAddress(?string $address): void
     {
         $this->address = $address;
     }
+
+
 
 
 

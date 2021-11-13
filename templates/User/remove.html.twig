@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Felhasználó/raktáros törlése</h1>
+    <form action="{{ path('removeUser') }}" method="post">
+        <select name="users" id="users">
+            <option value="">Válassz</option>
+        </select>
+        <input type="submit" onclick="remove()" value="TÖRLÉS">
+    </form>
+
+
+    <script>
+        //Selectbe töltés
+        $(document).ready(function(){
+            $.ajax({
+                url: "{{ path('allUser') }}",
+                success: function (eredmeny){
+                    var select = document.getElementById("users");
+                    $.each(eredmeny, function (key,value){
+                        var option = document.createElement('option');
+                        option.value = value.id;
+                        option.innerHTML = value.username;
+                        select.appendChild(option);
+
+                    });
+                }
+            });
+        });
+
+
+
+    </script>
+
+{% endblock %}

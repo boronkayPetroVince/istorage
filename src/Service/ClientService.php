@@ -30,8 +30,13 @@ class ClientService extends CrudService
         $this->em->persist($client);
         $this->em->flush();
     }
-    public function removeClient(int $id):void{
+    public function removeClientById(int $id):void{
         $this->em->remove($this->getOneClientById($id));
+        $this->em->flush();
+    }
+    public function updateClient(int $id):void{
+        $client = $this->getOneClientById($id);
+        $this->em->persist($client);
         $this->em->flush();
     }
 

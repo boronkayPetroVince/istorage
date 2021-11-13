@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
+    <h1>Felhasználó/raktáros frissítése</h1>
     <form action="{{ path('update_action') }}" method="post" id="loginForm">
         <select name="users" id="users" onchange="loadUser()">
             <option value="">Válassz</option>
@@ -10,7 +10,9 @@
         <input type="text" name="username" id="username"><br>
         <label for="fullName">telnev</label>
         <input type="text" name="fullName" id="fullName"><br>
+        <label for="email">email</label>
         <input type="text" name="email" id="email"><br>
+        <label for="phoneNumber">phoneNumber</label>
         <input type="number" name="phoneNumber" id="phoneNumber"><br>
         <input type="submit" value="Frissítés">
     </form>
@@ -41,8 +43,8 @@
                 "username": document.getElementById("users").value
             },
             success: function(eredmeny){
-                $("#fullName").val(eredmeny.telNev);
-                //alert(eredmeny.username);
+                $("#fullName").val(eredmeny.fullName);
+                //alert(eredmeny.fullName);
             }
         });
     }

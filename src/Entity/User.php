@@ -20,8 +20,8 @@ class User implements UserInterface, JsonSerializable
 
     public function jsonSerialize()
     {
-        return ["id" => $this->id,"username" => $this->username,"telNev" =>$this->fullName,
-            "telSzam" => $this->phoneNumber, "email" => $this->email , "role"=>$this->roles[0]];
+        return ["id" => $this->id,"username" => $this->username,"fullName" =>$this->fullName,
+            "phoneNumber" => $this->phoneNumber, "email" => $this->email , "role"=>$this->roles[0]];
     }
 
     /**

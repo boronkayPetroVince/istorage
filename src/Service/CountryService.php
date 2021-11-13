@@ -1,9 +1,10 @@
 <?php
 
 
-namespace App\Entity;
+namespace App\Service;
 
 
+use App\Entity\Country;
 use App\Service\CrudService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;

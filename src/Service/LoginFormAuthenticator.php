@@ -44,6 +44,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $this->passwordEncoder = $passwordEncoder;
     }
 
+
     /**
      * @inheritDoc
      */

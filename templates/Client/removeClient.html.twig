@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <form action="{{ path('removeClient') }}" method="post">
+        <label for="clients">Ügyfelek</label>
+        <select name="clients" id="clients">
+            <option value="">Válassz</option>
+        </select><br>
+        <input type="submit"  value="TÖRLÉS">
+    </form>
+    {{ result }}
+
+    <script>
+        $(document).ready(function (){
+            $.ajax({
+                url: "{{ path('allClients') }}",
+                success: function (eredmeny){
+                    var select = document.getElementById("clients");
+                    $.each(eredmeny, function (key,value){
+                        var opt = document.createElement('option');
+                        opt.value = value.id;
+                        opt.innerHTML = value.clientName;
+                        select.appendChild(opt);
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
