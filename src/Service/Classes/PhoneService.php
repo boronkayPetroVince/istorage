@@ -5,10 +5,11 @@ namespace App\Service;
 
 
 use App\Entity\Phone;
+use App\Service\Interfaces\PhoneServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class PhoneService extends CrudService
+class PhoneService extends CrudService implements PhoneServiceInterface
 {
     public function __construct(EntityManagerInterface $em)
     {

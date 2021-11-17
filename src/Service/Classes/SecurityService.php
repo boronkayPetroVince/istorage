@@ -1,14 +1,15 @@
 <?php
 
 
-namespace App\Service;
+namespace App\Service\Classes;
 
 
 use App\Entity\User;
+use App\Service\Interfaces\SecurityServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class SecurityService
+class SecurityService implements SecurityServiceInterface
 {
     /** @var EntityManagerInterface */
     private $em;

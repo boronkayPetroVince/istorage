@@ -5,10 +5,11 @@ namespace App\Service;
 
 
 use App\Entity\Order;
+use App\Service\Interfaces\OrderServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class OrderService extends CrudService
+class OrderService extends CrudService implements OrderServiceInterface
 {
     public function __construct(EntityManagerInterface $em)
     {

@@ -5,10 +5,11 @@ namespace App\Service;
 
 
 use App\Entity\Client;
+use App\Service\Interfaces\ClientServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class ClientService extends CrudService
+class ClientService extends CrudService implements ClientServiceInterface
 {
     public function __construct(EntityManagerInterface $em)
     {

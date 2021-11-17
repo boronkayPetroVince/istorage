@@ -5,10 +5,11 @@ namespace App\Service;
 
 
 use App\Entity\Brand;
+use App\Service\Interfaces\BrandServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class BrandService extends CrudService
+class BrandService extends CrudService implements BrandServiceInterface
 {
     public function __construct(EntityManagerInterface $em)
     {

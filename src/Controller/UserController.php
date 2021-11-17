@@ -5,27 +5,32 @@ namespace App\Controller;
 
 
 use App\Entity\User;
-use App\Service\SecurityService;
+use App\Model\Interfaces\UserModelInterface;
+use App\Service\Interfaces\SecurityServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function Symfony\Component\String\b;
 
 
 class UserController extends AbstractController
 {
-    /** @var SecurityService */
+    /** @var UserModelInterface */
+    private $userModel;
+    /** @var SecurityServiceInterface */
     private $security;
 
     /**
      * UserController constructor.
-     * @param SecurityService $security
+     * @param SecurityServiceInterface $security
      */
-    public function __construct(SecurityService $security)
+    public function __construct(SecurityServiceInterface $security, UserModelInterface $userModel)
     {
         $this->security = $security;
+        $this->userModel = $userModel;
     }
 
     /**
@@ -35,34 +40,14 @@ class UserController extends AbstractController
      */
     public function registerAction(Request $request):Response{
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        if ($request->isMethod("POST")){
-            $user = $request->request->get("username");
-            $fullName = $request->request->get("fullName");
-            $phoneNumber = $request->request->get("phoneNumber");
-            $email = $request->request->get("emailad");
-            $role = $request->request->get("roles");
-            if ($request->request->get("password") === $request->request->get("password2")){
-                if ($this->checkUser($user) === false){
-                    $this->security->addUser($user,$request->request->get("password2"), $fullName, $email, $phoneNumber, $role);
-                    //return new JsonResponse(["result"=>true]);
-                    return $this->redirectToRoute("register", ["content"=>"Sikeres bejelentkezés"]);
-                }
-                else return $this->redirectToRoute("register", ["content"=>"HIBA"]);
-            }
-            //else return $this->render("security/register.html.twig");
-            else return $this->render("user/register.html.twig", ["content"=>""]);
-        }else{
-            return $this->render("user/register.html.twig", ["content"=>""]);
-        }
-    }
+        if($this->isGranted("ROLE_ADMIN")){
+            if ($request->isMethod("POST")){
+                if($this->userModel->addUser($request) == true){
+                    return $this->render("user/register.html.twig", ["content" => "Sikeres regisztráció"]);
+                }else return $this->render("user/register.html.twig", ["content"=>"Felhasználónév foglalt!"]);
+            }else return $this->render("user/register.html.twig", ["content"=>""]);
+        }else return new Response("Hozzáférés megtagadva!");
 
-    private function checkUser(string $username):bool{
-        /** @var User[] $arr */
-         $arr = $this->security->getAllUser();
-         foreach($arr as $user){
-             if ($user->getUsername() === $username) return true;
-         }
-         return false;
     }
 
     /**
@@ -73,10 +58,13 @@ class UserController extends AbstractController
     public function loginAction(Request $request): Response{
         /** @var User $user */
         $user = $this->getUser();
-        if ($user){
-            return $this->render("user/login.html.twig",["username"=>"Sikeresen bejelentkeztél: ".$user->getUsername()."!"]);
-            //return new JsonResponse(["result"=>$user]);
-        }else return $this->render("user/login.html.twig", ["username" => "Rossz felhasználónév, vagy jelszó!"]);
+        if ($request->isMethod("POST")){
+            if ($this->userModel->loginAction($request,$user) == true){
+                return $this->render("user/login.html.twig",["username"=>"Sikeresen bejelentkeztél: ".$user->getUsername()."!"]);
+                //return new JsonResponse(["result"=>$user]);
+            }else return $this->render("user/login.html.twig", ["username" => "Rossz felhasználónév, vagy jelszó!"]);
+        }else return $this->render("user/login.html.twig", ["username" => ""]);
+
         //return $this->render("user/login.html.twig", ["username"]);
         //else return new JsonResponse(["result"=>false]);
     }
@@ -92,25 +80,16 @@ class UserController extends AbstractController
 
     /**
      * @param Request $request
-     * @param int $id
      * @return Response
      * @Route(name="update_action", path="/update")
      */
     public function updateAction(Request $request): Response{
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        if ($request->isMethod("POST")){
-            if ($this->isGranted("ROLE_ADMIN")){
-                $user = $this->security->getOneUserById($request->request->get("users"));
-                if ($this->checkUser($request->request->get("username"))===false){
-                    $user->setFullName($request->request->get("fullName"));
-                    $user->setUsername($request->request->get("username"));
-                    $user->setEmail($request->request->get("email"));
-                    $user->setPhoneNumber((int)$request->request->get("phoneNumber"));
-                    $this->security->updateUser($user->getId());
-                    return new JsonResponse(["user" => $user]);
-                }
-                else return new JsonResponse(["user" => "Létezik a felhasználónév"]);
-            }else return new JsonResponse(["user" => "Hozzáférés megtagadva"]);
+        if ($request->isMethod("POST")) {
+            if ($this->isGranted("ROLE_ADMIN")) {
+                if($this->userModel->updateUser($request) === true){
+                    return new Response("Sikeres módosítás!");
+                }else return new Response("Sikertelen!");
+            }else return new Response("Hozzáférés megtagadva");
         }else return $this->render("user/update.html.twig");
 
     }
@@ -120,7 +99,7 @@ class UserController extends AbstractController
      * @return Response
      * @Route(name="allUsersDetails", path="/allUsersDetails")
      */
-    public function getAllUsersDetails(Request $request):Response{
+    public function getAllUsersDetails():Response{
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
         //if ($request->isMethod("POST")){
 
@@ -182,14 +161,6 @@ class UserController extends AbstractController
         return new JsonResponse($user);
     }
 
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="check", path="/check")
-     */
-    public function check(Request $request): Response{
-        if ($this->getUser()){
-            return new JsonResponse(["result"=>1]);
-        }else return new JsonResponse(["result" => 0]);
-    }
+
+
 }

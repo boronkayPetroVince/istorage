@@ -5,11 +5,12 @@ namespace App\Service;
 
 
 use App\Entity\Stock;
+use App\Service\Interfaces\StockServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use phpDocumentor\Reflection\Utils;
 
-class StockService extends CrudService
+class StockService extends CrudService implements StockServiceInterface
 {
     public function __construct(EntityManagerInterface $em)
     {

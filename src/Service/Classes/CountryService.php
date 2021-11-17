@@ -6,10 +6,11 @@ namespace App\Service;
 
 use App\Entity\Country;
 use App\Service\CrudService;
+use App\Service\Interfaces\CountryServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class CountryService extends CrudService
+class CountryService extends CrudService implements CountryServiceInterface
 {
     public function __construct(EntityManagerInterface $em)
     {

@@ -9,14 +9,18 @@
         <input type="number" name="vatNumber" id="vatNumber"><br>
 
         <label for="country">country</label>
-        <input type="text" name="country" id="country"><br>
+        <select name="country" id="country">
+            <option value="">Válassz</option>
+        </select><br>
 
         <label for="postalCode">postalCode</label>
-        <input type="number" name="postalCode" id="postalCode" onchange="loadCity()"><br> <!-- Ha beírja az irányítót akkor betölti automatikusan a települes nevet -->
+        <input type="number" name="postalCode" id="postalCode" onchange="loadData()"><br> <!-- Ha beírja az irányítót akkor betölti automatikusan a települes nevet -->
 
-        <label for="city">city</label>
-        <input type="text" name="city" id="city"><br>
+        <label for="region_name">region</label>
+        <input type="text" name="region_name" id="region_name"><br>
 
+        <label for="settlement">settlement</label>
+        <input type="text" name="settlement" id="settlement"><br>
 
         <label for="address">address</label>
         <input type="text" name="address" id="address"><br>
@@ -26,6 +30,7 @@
         {{ result }}
 
     </form>
-   
+    <script src="../"></script>
 
 {% endblock %}
+

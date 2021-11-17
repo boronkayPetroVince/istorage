@@ -5,10 +5,11 @@ namespace App\Service;
 
 
 use App\Entity\Color;
+use App\Service\Interfaces\ColorServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class ColorService extends CrudService
+class ColorService extends CrudService implements ColorServiceInterface
 {
     public function __construct(EntityManagerInterface $em)
     {

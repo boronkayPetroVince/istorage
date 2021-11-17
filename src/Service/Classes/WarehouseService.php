@@ -6,10 +6,11 @@ namespace App\Service;
 
 
 use App\Entity\Warehouse;
+use App\Service\Interfaces\WarehouseServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class WarehouseService extends CrudService
+class WarehouseService extends CrudService implements WarehouseServiceInterface
 {
     public function __construct(EntityManagerInterface $em)
     {

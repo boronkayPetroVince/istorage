@@ -5,10 +5,11 @@ namespace App\Service;
 
 
 use App\Entity\Delivery_address;
+use App\Service\Interfaces\DeliveryServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
-class DeliveryService extends CrudService
+class DeliveryService extends CrudService implements DeliveryServiceInterface
 {
     public function __construct(EntityManagerInterface $em)
     {

@@ -11,8 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="country")
  */
-class Country
+class Country implements \JsonSerializable
 {
+    public function jsonSerialize()
+    {
+        return ["id" => $this->id, "country_name" => $this->countryName];
+    }
+
     /**
      * @var int
      * @ORM\Column(type="integer")
