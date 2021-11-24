@@ -16,15 +16,13 @@ interface UserModelInterface
 
     public function updateUser(Request $request):bool;
 
-    public function getAllUserDetails():Response;
+    public function AllUserDetails():Response;
 
-    public function oneUserDetails(Request $request):Response;
+    public function oneUserDetails(Request $request, User $user):User;
 
-    public function removeUser(Request $request): Response;
+    public function removeUser(Request $request, User $user): bool;
 
     public function getAllUser():Response;
-
-    public function getOneUser(Request $request):Response;
 
     public function checkUser(string $username):bool;
 

@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+{% endblock %}
+
+{# @var user \App\Entity\User #}
+{% block title %}
+    Log in!
+{% endblock %}
+
+
+{% block body %}
+    <div class=" ">
+        <div class="row ">
+            <div class="col-xl-3   vw-25 py-3 bg-danger">
+                <h1 class="text-center mb-2">IStorage</h1>
+<!--d-flex align-items-center-->
+
+            </div>
+            <div class="col-xl-9 vh-10 bg-info">
+                <h1></h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-3 d-flex justify-contenct-center bg-white">
+                <div class="card bg-secondary">
+                    <div class="card-body">
+                        <nav class="navbar navbar-expand-lg" id="navbar">
+                            <a class="navbar-brand" href="#"></a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <ul class="navbar-nav flex-column mr-auto">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                                            Bejelentkezve: {{ user.username }}
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="#">Rólam</a>
+                                            <a class="dropdown-item" href="{{ path('app_logout') }}">Kijelentkezés</a>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Kezdőlap <span class="sr-only">(current)</span></a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                                            Raktárosok
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="{{ path('register') }}">Hozzáadás</a>
+                                            <a class="dropdown-item" href="{{ path('update_action') }}">Módosítás</a>
+                                            <a class="dropdown-item" href="{{ path('removeUser') }}">Törlés</a>
+                                            <a class="dropdown-item" href="{{ path('allUsersDetails') }}">Összes raktáros adatai</a>
+                                            <a class="dropdown-item" href="{{ path('oneUserDetails') }}">Egy raktáros adata</a>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                                            Ügyfél
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="{{ path('addClient') }}">Hozzáadás</a>
+                                            <a class="dropdown-item" href="{{ path('updateClient') }}">Adatmódosítás</a>
+                                            <a class="dropdown-item" href="{{ path('allClients') }}">Összes ügyfél adata</a>
+                                            <a class="dropdown-item" href="">Egy ügyfél adata</a>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                                            Raktár
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="#">Készlet</a>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                                            Rendelés
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="#">Beszerzés</a>
+                                            <a class="dropdown-item" href="#">Eladás</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9 bg-primary ">
+                <h1></h1>
+            </div>
+        </div>
+
+
+
+        <div class="bg-secondary">
+            <div class="row" >
+                <div id="footer" class="col-xl-3 bg-dark text-center py-5">
+                    <h1 class="btn btn-outline-warning ">Kijelentkezés</h1>
+                </div>
+                <div class="col-xl-9 bg-info ">
+                    <h1></h1>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+{% endblock %}

@@ -2,7 +2,7 @@
 
 {% block body %}
     <h1>Egy felhasználó/raktáros adatai</h1>
-    <form action="{{ path('removeUser') }}" method="post">
+    <form action="{{ path('oneUserDetails') }}" method="post">
         <select name="users" id="users" onchange="loadUser()">
             <option value="">Válassz</option>
         </select><br>
@@ -22,7 +22,7 @@
                 success: function (eredmeny){
                     console.log(eredmeny);
                     var select = document.getElementById("users");
-                    $.each(eredmeny, function (key, value){
+                    $.each(eredmeny, function (key,value){
                         var option = document.createElement('option');
                         option.value = value.id;
                         option.innerHTML = value.username;
@@ -34,7 +34,7 @@
         });
          function loadUser(){
              $.ajax({
-                 url: "{{ path('getOneUser') }}",
+                 url: "{{ path('oneUserDetails') }}",
                  method: "POST",
                  data:{
                      "username": document.getElementById("users").value

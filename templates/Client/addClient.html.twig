@@ -25,12 +25,53 @@
         <label for="address">address</label>
         <input type="text" name="address" id="address"><br>
 
+        <label for="contact_fullName">Kapcsolattartó teljes neve:</label>
+        <input type="text" name="contact_fullName" id="contact_fullName"><br>
+
+        <label for="contact_Email">Email</label>
+        <input type="email" name="contact_Email" id="contact_Email"><br>
+
+        <label for="contact_PhoneNumber">Telefonszáma</label>
+        <input type="number" name="contact_PhoneNumber" id="contact_PhoneNumber"><br>
+
         <input type="submit" value="Submit">
 
         {{ result }}
 
     </form>
-    <script src="../"></script>
+    <script>
+        function loadData(){
+            $.ajax({
+                url:"{{ path('getOneSettlement') }}",
+                method: "POST",
+                data:{
+                    "postalCode": document.getElementById("postalCode").value
+                },
+                success: function(eredmeny){
+                    $("#settlement").val(eredmeny.settlementName);
+                    $("#region_name").val(eredmeny.region_ID.region_name);
+                    //console.log(eredmeny);
+                }
+            });
+
+        }
+        $(document).ready(function (){
+            $.ajax({
+                url: "{{ path('getAllCountry') }}",
+                success:function (eredmeny){
+                    var select = document.getElementById("country");
+                    console.log(eredmeny);
+                    $.each(eredmeny, function (key,value){
+                        var opt = document.createElement('option');
+                        opt.value = value.id;
+                        opt.innerHTML = value.country_name;
+                        select.appendChild(opt);
+                    });
+                }
+            });
+
+        });
+    </script>
 
 {% endblock %}
 

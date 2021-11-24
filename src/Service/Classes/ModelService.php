@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Service;
+namespace App\Service\Classes;
 
 
 use App\Entity\Model;

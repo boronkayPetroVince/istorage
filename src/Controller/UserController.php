@@ -42,7 +42,7 @@ class UserController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
         if($this->isGranted("ROLE_ADMIN")){
             if ($request->isMethod("POST")){
-                if($this->userModel->addUser($request) == true){
+                if($this->userModel->addUser($request) === true){
                     return $this->render("user/register.html.twig", ["content" => "Sikeres regisztráció"]);
                 }else return $this->render("user/register.html.twig", ["content"=>"Felhasználónév foglalt!"]);
             }else return $this->render("user/register.html.twig", ["content"=>""]);
@@ -60,13 +60,10 @@ class UserController extends AbstractController
         $user = $this->getUser();
         if ($request->isMethod("POST")){
             if ($this->userModel->loginAction($request,$user) == true){
-                return $this->render("user/login.html.twig",["username"=>"Sikeresen bejelentkeztél: ".$user->getUsername()."!"]);
-                //return new JsonResponse(["result"=>$user]);
+                //return $this->render("user/login.html.twig",["username"=>"Sikeresen bejelentkeztél: ".$user->getUsername()."!"]);
+                return $this->render("main.html.twig", ["user" => $this->getUser()]);
             }else return $this->render("user/login.html.twig", ["username" => "Rossz felhasználónév, vagy jelszó!"]);
         }else return $this->render("user/login.html.twig", ["username" => ""]);
-
-        //return $this->render("user/login.html.twig", ["username"]);
-        //else return new JsonResponse(["result"=>false]);
     }
 
     /**
@@ -99,14 +96,9 @@ class UserController extends AbstractController
      * @return Response
      * @Route(name="allUsersDetails", path="/allUsersDetails")
      */
-    public function getAllUsersDetails():Response{
+    public function AllUsersDetails():Response{
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        //if ($request->isMethod("POST")){
-
-
-            return $this->render("User/allUserDetails.html.twig", ["users" => $this->security->getAllUser()]);
-        //}
-        //return $this->render("User/allUserDetails.html.twig", ["username" => "hiba"]);
+        return $this->render("User/allUserDetails.html.twig", ["users" => $this->security->getAllUser()]);
     }
 
     /**
@@ -117,11 +109,9 @@ class UserController extends AbstractController
     public function oneUserDetails(Request $request):Response{
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
         if ($request->isMethod("POST")){
-            $user = $this->security->getOneUserById($request->request->get("users"));
-            $user->getFullName($request->request->get("fullName"));
-            $user->getEmail($request->request->get("email"));
-            $user->getPhoneNumber($request->request->get("phoneNumber"));
-            return $this->render("user/oneUserDetails.html.twig");
+            $user = $this->security->getOneUserById($request->request->get("username"));
+            $this->userModel->oneUserDetails($request,$user);
+            return new JsonResponse($user);
         }else return $this->render("user/oneUserDetails.html.twig");
     }
 
@@ -132,35 +122,22 @@ class UserController extends AbstractController
      */
     public function removeUser(Request $request):Response{
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        if ($request->isMethod("POST")){
+        if ($request->isMethod("POST"))
+        {
             $user = $this->security->getOneUserById($request->request->get("users"));
-            $this->security->removeUser($user->getId());
-            return new Response("Sikeresen kitörölted a:".$user->getUsername()." felhasználót!");
-        }else return $this->render("user/remove.html.twig");
+            if ($this->userModel->removeUser($request, $user))
+            {
+                return $this->render("User/remove.html.twig",["result" => "Sikeresen kitörölted a:" . $user->getUsername() . " felhasználót!"]);
+            }else return new Response("Sikertelen törlés!");
+        }else return $this->render("user/remove.html.twig", ["result" => ""]);
     }
 
     /**
      * @return Response
-     * @Route(name="allUser", path="/allUser")
+     * @Route(name="allUser")
      */
     public function getAllUser():Response{
         $users = $this->security->getAllUser();
-//        foreach($users as $user){
-//            if($user === $this->getUser()->getUsername()) return
-//        }
         return new JsonResponse($users);
     }
-
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route (name="getOneUser", path="/oneUser")
-     */
-    public function getOneUser(Request $request):Response{
-        $user = $this->security->getOneUserById($request->request->get("username"));
-        return new JsonResponse($user);
-    }
-
-
-
 }

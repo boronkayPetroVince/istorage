@@ -61,29 +61,33 @@ class UserModel implements UserModelInterface
         }else return false;
     }
 
-    public function getAllUserDetails(): Response
+    public function AllUserDetails(): Response
     {
         // TODO: Implement getAllUserDetails() method.
     }
 
-    public function oneUserDetails(Request $request): Response
+    public function oneUserDetails(Request $request, User $user): User
     {
-        // TODO: Implement oneUserDetails() method.
+        //if($user){
+            $user->getFullName($request->request->get("fullName"));
+            $user->getEmail($request->request->get("email"));
+            $user->getPhoneNumber($request->request->get("phoneNumber"));
+            return $user;
+        //}else return $user=null;
+
     }
 
-    public function removeUser(Request $request): Response
+    public function removeUser(Request $request, User $user): bool
     {
-        // TODO: Implement removeUser() method.
+        if($user){
+            $this->securityService->removeUser($user->getId());
+            return true;
+        }else return false;
     }
 
     public function getAllUser(): Response
     {
         // TODO: Implement getAllUser() method.
-    }
-
-    public function getOneUser(Request $request): Response
-    {
-        // TODO: Implement getOneUser() method.
     }
 
     public function checkUser(string $username): bool

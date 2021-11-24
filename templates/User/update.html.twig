@@ -37,13 +37,17 @@
 
     function loadUser(){
         $.ajax({
-            url:"{{ path('getOneUser') }}",
+            url:"{{ path('oneUserDetails') }}",
             method: "POST",
             data: {
                 "username": document.getElementById("users").value
             },
             success: function(eredmeny){
+                $("#username").val(eredmeny.username);
                 $("#fullName").val(eredmeny.fullName);
+                $("#email").val(eredmeny.email);
+                $("#phoneNumber").val(eredmeny.phoneNumber);
+
                 //alert(eredmeny.fullName);
             }
         });

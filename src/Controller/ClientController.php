@@ -10,6 +10,12 @@ use App\Entity\Client;
 use App\Entity\Country;
 use App\Entity\Delivery_address;
 use App\Entity\Settlement;
+use App\Entity\User;
+use App\Model\Interfaces\ClientModelInterface;
+use App\Service\Interfaces\ClientServiceInterface;
+use App\Service\Interfaces\CountryServiceInterface;
+use App\Service\Interfaces\SecurityServiceInterface;
+use App\Service\Interfaces\SettlementServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,163 +29,108 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ClientController extends AbstractController
 {
-//    /** @var ContactService */
-//    private $contactService;
-//
-//    /** @var DeliveryService */
-//    private $deliveryService;
-//
-//    /** @var ClientService */
-//    private $clientService;
-//
-//    /** @var SecurityService */
-//    private $securityService;
-//
-//    /** @var CountryService */
-//    private $countryService;
-//
-//    /** @var RegionService */
-//    private $regionService;
-//
-//    /** @var SettlementService */
-//    private $settlementService;
-//
-//    /**
-//     * ClientController constructor.
-//     * @param ContactService $contactService
-//     * @param DeliveryService $deliveryService
-//     * @param ClientService $clientService
-//     * @param SecurityService $securityService
-//     * @param CountryService $countryService
-//     * @param SettlementService $settlementService
-//     */
-//    public function __construct(ContactService $contactService, DeliveryService $deliveryService, ClientService $clientService, SecurityService $securityService, CountryService $countryService,RegionService $regionService, SettlementService $settlementService)
-//    {
-//        $this->contactService = $contactService;
-//        $this->deliveryService = $deliveryService;
-//        $this->clientService = $clientService;
-//        $this->securityService = $securityService;
-//        $this->countryService = $countryService;
-//        $this->regionService = $regionService;
-//        $this->settlementService = $settlementService;
-//    }
-//
-//
-//    /**
-//     * @param Request $request
-//     * @return Response
-//     * @Route(name="addClient", path="/addClient")
-//     */
-//    public function addClient(Request $request): Response{
-//        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-//        if ($request->isMethod("POST")){
-//            $client = new Client();
-//            $client->setClientName($request->request->get("client_name"));
-//            $client->setVatNumber($request->request->get("vatNumber"));
-//            $this->clientService->addClient($client);
-//
-//            $country = $this->countryService->getOneCountryById($request->request->get("country"));
-//
-//            $region = $this->regionService->getOneRegionByName($request->request->get("region"));
-//            $region->setCountryID($country);
-//
-//            $postalCode = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postalCode"));
-//            /*$postalCode = $request->request->get("postalCode");
-//            $this->settlementService->getOneSettlementById($postalCode->getId());*/
-//            //$postalCode->getSettlementName($request->request->get("settlement"));
-//
-//            $delivery = new Delivery_address();
-//            $delivery->setClientID($this->clientService->getOneClientById($client->getId()));
-//            $delivery->setSettlementID($this->settlementService->getOneSettlementById($postalCode->getId()));
-//            $delivery->setaddress($request->request->get("address"));
-//            $this->deliveryService->addAddress($delivery);
-//            return $this->render("Client/addClient.html.twig", ["result" => "Sikeres hozzáadás!"]);
-//        }else{
-//            return $this->render("Client/addClient.html.twig", ["result" => "Sikertelen"]);
-//        }
-//    }
-//
-//    /**
-//     * @param Request $request
-//     * @return Response
-//     * @Route(name="getOneSettlement", path="/getOneSettlement")
-//     */
-//    public function getOneSettlement(Request $request):Response{
-//        $postalCode = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postalCode"));
-//        return new JsonResponse($postalCode);
-//    }
-//    /**
-//     * @param Request $request
-//     * @return Response
-//     * @Route(name="loadSettlementByPostalcode")
-//     */
-//    /*public function loadSettlementByPostalcode(int $postalCode): Response{
-//
-//        $arr = $this->settlementService->getAllSettlement();
-//        foreach($arr as $settle){
-//            if($settle->getPostalCode() === $postalCode) return new JsonResponse($postalCode);
-//        }
-//    }*/
-//
-//    /**
-//     * @return Response
-//     * @Route(name="getAllCountry", path="/getAllCountry")
-//     */
-//    public function getAllCountry():Response{
-//        $country = $this->countryService->getAllCountry();
-//        return new JsonResponse($country);
-//    }
-//
-//    /**
-//     * @return Response
-//     * @Route(name="getAllRegion", path="/getAllRegion")
-//     */
-//    public function getAllRegion():Response{
-//        $region = $this->regionService->getAllRegion();
-//        return new JsonResponse($region);
-//    }
-//
-//    /**
-//     * @param Request $request
-//     * @return Response
-//     * @Route(name="updateClient", path="/updateClient")
-//     */
-//    public function updateClient(Request $request): Response{
-//        /*$this->denyAccessUnlessGranted("ROLE_ADMIN");
-//        if ($request->isMethod("POST")){
-//            $client = $this->clientService->getOneClientById($request->request->get("clients"));
-//            $client->setClientName($request->request->get("client_name"));
-//            $client->setVatNumber($request->request->get("vatNumber"));
-//            $this->clientService->updateClient($client->getId());
-//
-//            $city = $this->cityService->getCityByClient($request->request->get($client->getId()));
-//            $city->setCityName($request->request->get("city"));
-//            $city->setPostalCode($request->request->get("postalCode"));
-//            $this->cityService->updateCity($city->getId());
-//
-//            $address = $this->deliveryService->getOneAddressById($request->request->get("address"));
-//            $address->setaddress($request->request->get("address"));
-//            $this->deliveryService->updateAddress($address->getId());
-//
-//        }else{
-//            return $this->render("Client/updateClient.html.twig", ["result" =>"Sikertelen"]);
-//        }*/
-//    }
-//
-//
-//
-//
-//
-//
-//    /**
-//     * @param Request $request
-//     * @return Response
-//     * @Route(name="allClients", path="/allClients")
-//     */
-//    public function allClients(Request $request): Response{
-//        $clients = $this->clientService->getAllClient();
-//        return new JsonResponse($clients);
-//    }
+    /** @var SecurityServiceInterface */
+    private $securityService;
+
+    /** @var ClientServiceInterface */
+    private $clientService;
+
+    /** @var ClientModelInterface */
+    private $clientModel;
+
+    /** @var SettlementServiceInterface */
+    private $settlementService;
+
+    /** @var CountryServiceInterface */
+    private $countryService;
+
+    /**
+     * ClientController constructor.
+     * @param SecurityServiceInterface $securityService
+     * @param ClientServiceInterface $clientService
+     * @param ClientModelInterface $clientModel
+     * @param SettlementServiceInterface $settlementService
+     * @param CountryServiceInterface $countryService
+     */
+    public function __construct(SecurityServiceInterface $securityService, ClientServiceInterface $clientService, ClientModelInterface $clientModel, SettlementServiceInterface $settlementService, CountryServiceInterface $countryService)
+    {
+        $this->securityService = $securityService;
+        $this->clientService = $clientService;
+        $this->clientModel = $clientModel;
+        $this->settlementService = $settlementService;
+        $this->countryService = $countryService;
+    }
+
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="addClient", path="/addClient")
+     */
+    public function addClient(Request $request): Response{
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+        /** @var User $user */
+        $user = $this->getUser();
+        if ($request->isMethod("POST")){
+            if($this->clientModel->addClient($request, $user)){
+                return $this->render("Client/addClient.html.twig", ["result" => "Sikeres hozzáadás!"]);
+            }
+            else{
+                return $this->render("Client/addClient.html.twig", ["result" => "Sikertelen!"]);
+            }
+        }else{
+            return $this->render("Client/addClient.html.twig", ["result" => ""]);
+        }
+    }
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="updateClient", path="/updateClient")
+     */
+    public function updateClient(Request $request): Response{
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+        if ($request->isMethod("POST")){
+            if($this->clientModel->updateClient($request) == true){
+                return $this->render("Client/updateClient.html.twig", ["result" =>"Sikeres frissítés"]);
+            }else{
+                return $this->render("Client/updateClient.html.twig", ["result" =>"Sikertelen"]);
+            }
+        }else{
+            return $this->render("Client/updateClient.html.twig", ["result" =>""]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="getOneSettlement")
+     */
+    public function getOneSettlement(Request $request):Response{
+        //$postalCode = $this->clientModel->getOneSettlement($request);
+        $postalCode = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postalCode"));
+        return new JsonResponse($postalCode);
+    }
+
+    /**
+     * @return Response
+     * @Route(name="getAllCountry", path="/getAllCountry")
+     */
+    public function getAllCountry():Response{
+        //$country = $this->clientModel->getAllCountry();
+        $country = $this->countryService->getAllCountry();
+        return new JsonResponse($country);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="allClients", path="/allClients")
+     */
+    public function allClients(Request $request): Response{
+        //$clients = $this->clientService->getAllClient();
+        $clients = $this->clientModel->allClients();
+        return new JsonResponse($clients);
+    }
 
 
 

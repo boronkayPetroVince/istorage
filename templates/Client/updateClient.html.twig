@@ -35,6 +35,7 @@
                 url: "{{ path('allClients') }}",
                 success: function (eredmeny){
                     var select = document.getElementById("clients");
+                    console.log(eredmeny);
                     $.each(eredmeny, function (key,value){
                         var option = document.createElement('option');
                         option.value = value.id;

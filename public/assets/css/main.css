@@ -1,0 +1,18 @@
+#navbar{
+    height: 500px;
+    width: 100%;
+
+
+
+}
+.card {
+    margin: 0 auto; /* Added */
+}
+body {
+    background-color: green;
+    height: 100%;
+}
+
+#footer{
+    display: block;
+}
