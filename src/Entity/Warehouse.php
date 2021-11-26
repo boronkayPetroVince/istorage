@@ -25,6 +25,12 @@ class Warehouse
      * @var string
      * @ORM\Column(type="string", length=50, nullable=false)
      */
+    private $wh_name;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=50, nullable=false)
+     */
     private $location;
 
     /**
@@ -39,6 +45,22 @@ class Warehouse
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWhName(): string
+    {
+        return $this->wh_name;
+    }
+
+    /**
+     * @param string $wh_name
+     */
+    public function setWhName(string $wh_name): void
+    {
+        $this->wh_name = $wh_name;
     }
 
     /**

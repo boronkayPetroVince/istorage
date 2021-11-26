@@ -12,6 +12,8 @@ interface StockServiceInterface
 
     public function getAllStockByWarehouse(int $warehouse_ID):iterable;
 
+    public function getAllStockByStatus(string $status):Stock;
+
     public function removeAllStockByWarehouse(int $warehouse_ID):iterable;
 
     public function getAllStockByPhone(int $phone_ID):iterable;

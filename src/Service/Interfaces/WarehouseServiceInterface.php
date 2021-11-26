@@ -12,6 +12,8 @@ interface WarehouseServiceInterface
 
     public function getOneWarehouseById(int $id):Warehouse;
 
+    public function getOneWarehouseByName(string $name):Warehouse;
+
     public function addWarehouse(Warehouse $warehouse):void;
 
     public function removeWarehouse(int $id):void;
