@@ -16,7 +16,11 @@ interface ModelServiceInterface
 
     public function getOneModelById(int $id):Model;
 
+    public function getOneModelByName(string $name):Model;
+
     public function addModel(Model $model):void;
+
+    public function updateModel(int $id):void;
 
     public function removeModel(int $id):void;
 }

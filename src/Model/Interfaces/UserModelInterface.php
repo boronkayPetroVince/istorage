@@ -16,11 +16,13 @@ interface UserModelInterface
 
     public function updateUser(Request $request):bool;
 
+    public function changePass(Request $request, User $user):bool;
+
     public function AllUserDetails():Response;
 
     public function oneUserDetails(Request $request, User $user):User;
 
-    public function removeUser(Request $request, User $user): bool;
+    public function removeUser(Request $request): bool;
 
     public function getAllUser():Response;
 

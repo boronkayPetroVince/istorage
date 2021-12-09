@@ -1,6 +1,6 @@
-{% extends 'base.html.twig' %}
+{% extends 'main.html.twig' %}
 
-{% block body %}
+{% block content %}
     <h1>Egy felhasználó/raktáros adatai</h1>
     <form action="{{ path('oneUserDetails') }}" method="post">
         <select name="users" id="users" onchange="loadUser()">

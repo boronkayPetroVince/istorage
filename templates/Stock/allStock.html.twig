@@ -1,0 +1,23 @@
+{% extends 'main.html.twig' %}
+
+{# @var user \App\Entity\User #}
+{# @var stocks App\Entity\Stock[] #}
+{% block content %}
+    <h1>Összes készlet megjelenítése</h1>
+    <table>
+        <th>Darab</th>
+        <th>Beszerzési ár</th>
+        <th>Státusz</th>
+        <th>Raktár</th>
+        <th>Brand</th>
+        {% for stock in stocks %}
+            <tr>
+                <td>{{ stock.amount }}</td>
+                <td>{{ stock.purchasePrice }}</td>
+                <td>{{ stock.status }}</td>
+                <td>{{ stock.warehouseID.whName }}</td>
+                <td>{{ stock.phoneID.brandID.brandName }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

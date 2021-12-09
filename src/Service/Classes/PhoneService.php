@@ -25,6 +25,16 @@ class PhoneService extends CrudService implements PhoneServiceInterface
         return $this->getRepo()->findAll();
     }
 
+    public function getAllPhoneByBrand(int $brand_ID):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->select("phone")
+            ->from(Phone::class, "phone")
+            ->where("phone.brand_ID =: brand_ID")
+            ->setParameter("brand_ID", $brand_ID);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
     public function getAllPhoneByModel(int $model_ID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("phone")
@@ -44,13 +54,14 @@ class PhoneService extends CrudService implements PhoneServiceInterface
         $query = $qb->getQuery();
         return $query->getResult();
     }
-    public function getAllPhoneByBrand(int $brand_ID):iterable{
+
+    public function getAllModelByBrand(int $brand_ID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("phone")
             ->from(Phone::class, "phone")
-            ->innerJoin("phone.model_ID", "model")
-            ->where("model.brand_ID =: brand_ID")
-            ->setParameter("brand_ID", $brand_ID);
+            ->where("phone.brand_ID =: brand_ID")
+            ->setParameter("brand_ID", $brand_ID)
+            ->andWhere("phone.model_ID =: model_ID");
         $query = $qb->getQuery();
         return $query->getResult();
     }
@@ -58,8 +69,7 @@ class PhoneService extends CrudService implements PhoneServiceInterface
         $qb = $this->em->createQueryBuilder();
         $qb->delete()
             ->from(Phone::class, "phone")
-            ->innerJoin("phone.model_ID", "model")
-            ->where("model.brand_ID =: brand_ID")
+            ->where("phone.brand_ID =: brand_ID")
             ->setParameter("brand_ID", $brand_ID);
         $query = $qb->getQuery();
         return $query->getResult();
@@ -90,6 +100,14 @@ class PhoneService extends CrudService implements PhoneServiceInterface
         $this->em->persist($phone);
         $this->em->flush();
     }
+
+    public function updatePhone(int $id): void
+    {
+        $phone = $this->getOnePhoneById($id);
+        $this->em->persist($phone);
+        $this->em->flush();
+    }
+
     public function removePhone(int $id):void{
         $this->em->persist($this->getOnePhoneById($id));
         $this->em->flush();

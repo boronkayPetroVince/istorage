@@ -16,6 +16,8 @@ interface PhoneServiceInterface
 
     public function getAllPhoneByBrand(int $brand_ID):iterable;
 
+    public function getAllModelByBrand(int $brand_ID):iterable;
+
     public function removeAllPhoneByBrand(int $brand_ID):iterable;
 
     public function removeAllPhoneByModel(int $model_ID):iterable;
@@ -23,6 +25,10 @@ interface PhoneServiceInterface
     public function removeAllPhoneByColor(int $color_ID):iterable;
 
     public function getOnePhoneById(int $id):Phone;
+
+    public function addPhone(Phone $phone):void;
+
+    public function updatePhone(int $id):void;
 
     public function removePhone(int $id):void;
 

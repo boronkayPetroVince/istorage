@@ -11,8 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="color")
  */
-class Color
+class Color implements \JsonSerializable
 {
+
     /**
      * @var int
      * @ORM\Column(type="integer")
@@ -36,6 +37,7 @@ class Color
         return $this->id;
     }
 
+
     /**
      * @return string
      */
@@ -52,6 +54,10 @@ class Color
         $this->phoneColor = $phoneColor;
     }
 
+    public function jsonSerialize()
+    {
+        return ["id" => $this->id, "colorName" => $this->phoneColor];
+    }
 
 
 

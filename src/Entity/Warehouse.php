@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="warehouse")
  */
-class Warehouse
+class Warehouse implements \JsonSerializable
 {
     /**
      * @var int
@@ -25,7 +25,7 @@ class Warehouse
      * @var string
      * @ORM\Column(type="string", length=50, nullable=false)
      */
-    private $wh_name;
+    private $whName;
 
     /**
      * @var string
@@ -52,15 +52,15 @@ class Warehouse
      */
     public function getWhName(): string
     {
-        return $this->wh_name;
+        return $this->whName;
     }
 
     /**
-     * @param string $wh_name
+     * @param string $whName
      */
-    public function setWhName(string $wh_name): void
+    public function setWhName(string $whName): void
     {
-        $this->wh_name = $wh_name;
+        $this->whName = $whName;
     }
 
     /**
@@ -96,6 +96,11 @@ class Warehouse
     }
 
 
+
+    public function jsonSerialize()
+    {
+        return ["id" => $this->id, "whName" => $this->whName, "location" => $this->location, "capacity" => $this->capacity];
+    }
 
 
 }

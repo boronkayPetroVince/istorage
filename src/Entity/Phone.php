@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="phone")
  */
-class Phone
+class Phone implements \JsonSerializable
 {
     /**
      * @var int
@@ -22,24 +22,32 @@ class Phone
     private $id;
 
     /**
+     * @var Brand
+     * @ORM\JoinColumn(name="brandID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Brand")
+     */
+    private $brandID;
+
+    /**
      * @var Model
-     * @ORM\JoinColumn(name="model_ID", referencedColumnName="id")
+     * @ORM\JoinColumn(name="modelID", referencedColumnName="id")
      * @ORM\ManyToOne(targetEntity="Model")
      */
-    private $model_ID;
+    private $modelID;
 
     /**
      * @var Color
-     * @ORM\JoinColumn(name="color_ID", referencedColumnName="id")
+     * @ORM\JoinColumn(name="colorID", referencedColumnName="id")
      * @ORM\ManyToOne(targetEntity="Color")
      */
-    private $color_ID;
+    private $colorID;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer", nullable=false)
+     * @var Capacity
+     * @ORM\JoinColumn(name="capacityID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Capacity")
      */
-    private $storageGB;
+    private $capacityID;
 
     /**
      * @return int
@@ -49,21 +57,36 @@ class Phone
         return $this->id;
     }
 
+    /**
+     * @return Brand
+     */
+    public function getBrandID(): Brand
+    {
+        return $this->brandID;
+    }
+
+    /**
+     * @param Brand $brandID
+     */
+    public function setBrandID(Brand $brandID): void
+    {
+        $this->brandID = $brandID;
+    }
 
     /**
      * @return Model
      */
     public function getModelID(): Model
     {
-        return $this->model_ID;
+        return $this->modelID;
     }
 
     /**
-     * @param Model $model_ID
+     * @param Model $modelID
      */
-    public function setModelID(Model $model_ID): void
+    public function setModelID(Model $modelID): void
     {
-        $this->model_ID = $model_ID;
+        $this->modelID = $modelID;
     }
 
     /**
@@ -71,32 +94,45 @@ class Phone
      */
     public function getColorID(): Color
     {
-        return $this->color_ID;
+        return $this->colorID;
     }
 
     /**
-     * @param Color $color_ID
+     * @param Color $colorID
      */
-    public function setColorID(Color $color_ID): void
+    public function setColorID(Color $colorID): void
     {
-        $this->color_ID = $color_ID;
+        $this->colorID = $colorID;
     }
 
     /**
-     * @return int
+     * @return Capacity
      */
-    public function getStorageGB(): int
+    public function getCapacityID(): Capacity
     {
-        return $this->storageGB;
+        return $this->capacityID;
     }
 
     /**
-     * @param int $storageGB
+     * @param Capacity $capacityID
      */
-    public function setStorageGB(int $storageGB): void
+    public function setCapacityID(Capacity $capacityID): void
     {
-        $this->storageGB = $storageGB;
+        $this->capacityID = $capacityID;
     }
+
+
+    public function jsonSerialize()
+    {
+        return ["id" => $this->id,"brandID" => $this->brandID, "modelID" =>$this->modelID,
+            "colorID"=>$this->colorID ,"capacityID" => $this->capacityID];
+    }
+
+
+
+
+
+
 
 
 

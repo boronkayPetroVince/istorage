@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="model")
  */
-class Model
+class Model implements \JsonSerializable
 {
     /**
      * @var int
@@ -20,13 +20,6 @@ class Model
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var Brand
-     * @ORM\JoinColumn(name="brand_ID", referencedColumnName="id")
-     * @ORM\ManyToOne(targetEntity="Brand")
-     */
-    private $brand_ID;
 
     /**
      * @var string
@@ -43,22 +36,6 @@ class Model
     }
 
     /**
-     * @return Brand
-     */
-    public function getBrandID(): Brand
-    {
-        return $this->brand_ID;
-    }
-
-    /**
-     * @param Brand $brand_ID
-     */
-    public function setBrandID(Brand $brand_ID): void
-    {
-        $this->brand_ID = $brand_ID;
-    }
-
-    /**
      * @return string
      */
     public function getModelName(): string
@@ -72,6 +49,11 @@ class Model
     public function setModelName(string $modelName): void
     {
         $this->modelName = $modelName;
+    }
+
+    public function jsonSerialize()
+    {
+        return ["id" => $this->id, "modelName" => $this->modelName];
     }
 
 

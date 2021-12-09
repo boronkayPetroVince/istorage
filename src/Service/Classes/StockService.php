@@ -72,5 +72,10 @@ class StockService extends CrudService implements StockServiceInterface
         $this->em->flush();
     }
 
+    public function getAllStockByStatus(string $status): Stock
+    {
+        // TODO: Implement getAllStockByStatus() method.
+    }
+
 
 }

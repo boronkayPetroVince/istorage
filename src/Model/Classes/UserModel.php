@@ -10,20 +10,27 @@ use App\Service\Interfaces\SecurityServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserModel implements UserModelInterface
 {
     /** @var SecurityServiceInterface */
     private $securityService;
 
+    /** @var UserPasswordEncoderInterface */
+    private $encoder;
+
     /**
      * UserModel constructor.
      * @param SecurityServiceInterface $securityService
+     * @param UserPasswordEncoderInterface $encoder
      */
-    public function __construct(SecurityServiceInterface $securityService)
+    public function __construct(SecurityServiceInterface $securityService, UserPasswordEncoderInterface $encoder)
     {
         $this->securityService = $securityService;
+        $this->encoder = $encoder;
     }
+
 
     public function addUser(Request $request): bool
     {
@@ -61,6 +68,21 @@ class UserModel implements UserModelInterface
         }else return false;
     }
 
+    public function changePass(Request $request, User $user): bool
+    {
+        if($request){
+            $password = $request->request->get("old");
+            if($this->securityService->checkPassword($user->getUsername(),$password) === true){
+                $user->setPassword($this->encoder->encodePassword($user,$request->request->get("new")));
+                $this->securityService->updateUser($user->getId());
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+
     public function AllUserDetails(): Response
     {
         // TODO: Implement getAllUserDetails() method.
@@ -77,9 +99,10 @@ class UserModel implements UserModelInterface
 
     }
 
-    public function removeUser(Request $request, User $user): bool
+    public function removeUser(Request $request): bool
     {
-        if($user){
+        if($request){
+            $user = $this->securityService->getOneUserById($request->request->get("users"));
             $this->securityService->removeUser($user->getId());
             return true;
         }else return false;

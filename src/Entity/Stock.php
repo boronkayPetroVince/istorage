@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="stock")
  */
-class Stock
+class Stock implements \JsonSerializable
 {
     /**
      * @var int
@@ -23,17 +23,17 @@ class Stock
 
     /**
      * @var Warehouse
-     * @ORM\JoinColumn(name="warehouse_ID", referencedColumnName="id")
+     * @ORM\JoinColumn(name="warehouseID", referencedColumnName="id")
      * @ORM\ManyToOne(targetEntity="Warehouse")
      */
-    private $warehouse_ID;
+    private $warehouseID;
 
     /**
      * @var Phone
-     * @ORM\JoinColumn(name="phone_ID", referencedColumnName="id")
+     * @ORM\JoinColumn(name="phoneID", referencedColumnName="id")
      * @ORM\ManyToOne(targetEntity="Phone")
      */
-    private $phone_ID;
+    private $phoneID;
 
     /**
      * @var int
@@ -45,7 +45,7 @@ class Stock
      * @var int
      * @ORM\Column(type="integer", nullable=false)
      */
-    private $purchase_price;
+    private $purchasePrice;
 
     /**
      * @var string
@@ -66,15 +66,15 @@ class Stock
      */
     public function getWarehouseID(): Warehouse
     {
-        return $this->warehouse_ID;
+        return $this->warehouseID;
     }
 
     /**
-     * @param Warehouse $warehouse_ID
+     * @param Warehouse $warehouseID
      */
-    public function setWarehouseID(Warehouse $warehouse_ID): void
+    public function setWarehouseID(Warehouse $warehouseID): void
     {
-        $this->warehouse_ID = $warehouse_ID;
+        $this->warehouseID = $warehouseID;
     }
 
     /**
@@ -82,15 +82,15 @@ class Stock
      */
     public function getPhoneID(): Phone
     {
-        return $this->phone_ID;
+        return $this->phoneID;
     }
 
     /**
-     * @param Phone $phone_ID
+     * @param Phone $phoneID
      */
-    public function setPhoneID(Phone $phone_ID): void
+    public function setPhoneID(Phone $phoneID): void
     {
-        $this->phone_ID = $phone_ID;
+        $this->phoneID = $phoneID;
     }
 
     /**
@@ -114,15 +114,15 @@ class Stock
      */
     public function getPurchasePrice(): int
     {
-        return $this->purchase_price;
+        return $this->purchasePrice;
     }
 
     /**
-     * @param int $purchase_price
+     * @param int $purchasePrice
      */
-    public function setPurchasePrice(int $purchase_price): void
+    public function setPurchasePrice(int $purchasePrice): void
     {
-        $this->purchase_price = $purchase_price;
+        $this->purchasePrice = $purchasePrice;
     }
 
     /**
@@ -145,6 +145,14 @@ class Stock
 
 
 
+
+
+
+    public function jsonSerialize()
+    {
+        return ["id" => $this->id, "amount" => $this->amount, "purchasePrice" => $this->purchasePrice,"status" => $this->status,
+            "warehouseID" => $this->warehouseID, "phoneID" => $this->phoneID];
+    }
 
 
 }

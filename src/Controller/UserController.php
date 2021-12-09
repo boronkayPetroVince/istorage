@@ -10,10 +10,8 @@ use App\Service\Interfaces\SecurityServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function Symfony\Component\String\b;
 
 
 class UserController extends AbstractController
@@ -43,9 +41,9 @@ class UserController extends AbstractController
         if($this->isGranted("ROLE_ADMIN")){
             if ($request->isMethod("POST")){
                 if($this->userModel->addUser($request) === true){
-                    return $this->render("user/register.html.twig", ["content" => "Sikeres regisztráció"]);
-                }else return $this->render("user/register.html.twig", ["content"=>"Felhasználónév foglalt!"]);
-            }else return $this->render("user/register.html.twig", ["content"=>""]);
+                    return $this->render("user/register.html.twig", ["content" => "Sikeres regisztráció", "user" => $this->getUser()]);
+                }else return $this->render("user/register.html.twig", ["content"=>"Felhasználónév foglalt!", "user" => $this->getUser()]);
+            }else return $this->render("user/register.html.twig", ["content"=>"", "user" => $this->getUser()]);
         }else return new Response("Hozzáférés megtagadva!");
 
     }
@@ -62,8 +60,8 @@ class UserController extends AbstractController
             if ($this->userModel->loginAction($request,$user) == true){
                 //return $this->render("user/login.html.twig",["username"=>"Sikeresen bejelentkeztél: ".$user->getUsername()."!"]);
                 return $this->render("main.html.twig", ["user" => $this->getUser()]);
-            }else return $this->render("user/login.html.twig", ["username" => "Rossz felhasználónév, vagy jelszó!"]);
-        }else return $this->render("user/login.html.twig", ["username" => ""]);
+            }else return $this->render("user/login.html.twig", ["username" => "Rossz felhasználónév, vagy jelszó!", "user" => $this->getUser()]);
+        }else return $this->render("user/login.html.twig", ["username" => "", "user" => $this->getUser()]);
     }
 
     /**
@@ -87,8 +85,25 @@ class UserController extends AbstractController
                     return new Response("Sikeres módosítás!");
                 }else return new Response("Sikertelen!");
             }else return new Response("Hozzáférés megtagadva");
-        }else return $this->render("user/update.html.twig");
+        }else return $this->render("user/update.html.twig", ["user" => $this->getUser()]);
 
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="passChange", path="/passChange")
+     */
+    public function changePass(Request $request): Response{
+        if($request->isMethod("POST")){
+            if($this->isGranted("ROLE_ADMIN")){
+                $user = $this->getUser();
+                if($this->userModel->changePass($request, $user) === true){
+                    return new Response("SIKERES modosítás");
+                }else return new Response("sikertelen modosítás");
+            }else return new Response("HOZZÁFÉRÉS MEGTAGADVA");
+        }
+        return $this->render("User/UserPassChange.html.twig", ["user" => $this->getUser()]);
     }
 
     /**
@@ -98,7 +113,7 @@ class UserController extends AbstractController
      */
     public function AllUsersDetails():Response{
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        return $this->render("User/allUserDetails.html.twig", ["users" => $this->security->getAllUser()]);
+        return $this->render("User/allUserDetails.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser()]);
     }
 
     /**
@@ -112,7 +127,7 @@ class UserController extends AbstractController
             $user = $this->security->getOneUserById($request->request->get("username"));
             $this->userModel->oneUserDetails($request,$user);
             return new JsonResponse($user);
-        }else return $this->render("user/oneUserDetails.html.twig");
+        }else return $this->render("user/oneUserDetails.html.twig",["user" => $this->getUser()]);
     }
 
     /**
@@ -124,17 +139,16 @@ class UserController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
         if ($request->isMethod("POST"))
         {
-            $user = $this->security->getOneUserById($request->request->get("users"));
-            if ($this->userModel->removeUser($request, $user))
+            if ($this->userModel->removeUser($request))
             {
-                return $this->render("User/remove.html.twig",["result" => "Sikeresen kitörölted a:" . $user->getUsername() . " felhasználót!"]);
+                return $this->render("User/remove.html.twig",["result" => "Sikeresen kitörölted a:" . $request->getUser() . " felhasználót!"]);
             }else return new Response("Sikertelen törlés!");
-        }else return $this->render("user/remove.html.twig", ["result" => ""]);
+        }else return $this->render("user/remove.html.twig", ["result" => "", "user" => $this->getUser()]);
     }
 
     /**
      * @return Response
-     * @Route(name="allUser")
+     * @Route(name="allUser", path="/allUser")
      */
     public function getAllUser():Response{
         $users = $this->security->getAllUser();

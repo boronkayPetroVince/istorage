@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <form action="{{ path('addPhone') }}" method="post">
+        <label for="brandName">Kérem adja meg a telefon márkáját!</label>
+        <input type="text" name="brandName" id="brandName"><br>
+
+        <label for="modelName">Kérem adja meg a telefon modeljét!</label>
+        <input type="text" name="modelName" id="modelName"><br>
+
+        <label for="colorName">Kérem adja meg a telefon színét!</label>
+        <input type="text" name="colorName" id="colorName"><br>
+
+        <label for="capacity">Kérem adja meg a telefon tárhely kapacitását!</label>
+        <input type="number" name="capacity" id="capacity"><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+{% endblock %}

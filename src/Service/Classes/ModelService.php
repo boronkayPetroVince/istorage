@@ -45,10 +45,24 @@ class ModelService extends CrudService implements ModelServiceInterface
     public function getOneModelById(int $id):Model{
         return $this->getRepo()->find($id);
     }
+
+    public function getOneModelByName(string $name): Model
+    {
+        return $this->getRepo()->findOneBy(["modelName" =>$name]);
+    }
+
     public function addModel(Model $model):void{
         $this->em->persist($model);
         $this->em->flush();
     }
+
+    public function updateModel(int $id): void
+    {
+        $model = $this->getOneModelById($id);
+        $this->em->persist($model);
+        $this->em->flush();
+    }
+
     public function removeModel(int $id):void{
         $this->em->remove($this->getOneModelById($id));
         $this->em->flush();

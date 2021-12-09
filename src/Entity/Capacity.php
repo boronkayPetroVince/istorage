@@ -6,12 +6,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class Brand
+ * Class Capacity
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="brand")
+ * @ORM\Table(name="capacity")
  */
-class Brand implements \JsonSerializable
+class Capacity implements \JsonSerializable
 {
     /**
      * @var int
@@ -22,10 +22,10 @@ class Brand implements \JsonSerializable
     private $id;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=30, nullable=false)
+     * @var int
+     * @ORM\Column(type="integer", nullable=false)
      */
-    private $brandName;
+    private $capacity;
 
     /**
      * @return int
@@ -36,29 +36,25 @@ class Brand implements \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getBrandName(): string
+    public function getCapacity(): int
     {
-        return $this->brandName;
+        return $this->capacity;
     }
 
     /**
-     * @param string $brandName
+     * @param int $capacity
      */
-    public function setBrandName(string $brandName): void
+    public function setCapacity(int $capacity): void
     {
-        $this->brandName = $brandName;
+        $this->capacity = $capacity;
     }
 
     public function jsonSerialize()
     {
-        return ["id" => $this->id, "brandName" => $this->brandName];
+        return ["id"=>$this->id, "capacity"=>$this->capacity];
     }
-
-
-
-
 
 
 }

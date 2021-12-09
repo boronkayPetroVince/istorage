@@ -91,7 +91,7 @@ class OrderService extends CrudService implements OrderServiceInterface
         $qb = $this->em->createQueryBuilder();
         $qb->delete()
             ->from(Order::class, "rendeles")
-            ->where("rendeles.raktar_ID =: raktarIDID")
+            ->where("rendeles.raktar_ID =: raktarID")
             ->setParameter("raktarID", $raktarID);
         $query = $qb->getQuery();
         return $query->getResult();

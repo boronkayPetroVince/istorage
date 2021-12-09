@@ -18,5 +18,9 @@ interface StockModelInterface
 
     public function changeStatus(Request $request): bool;
 
+    public function allWarehouse():iterable;
+
+    public function allStock():iterable;
+
 
 }

@@ -12,7 +12,11 @@ interface ColorServiceInterface
 
     public function getOneColorById(int $id):Color;
 
+    public function getOneColorByName(string $name):Color;
+
     public function addColor(Color $color):void;
+
+    public function updateColor(int $id):void;
 
     public function removeColor(int $id):void;
 
