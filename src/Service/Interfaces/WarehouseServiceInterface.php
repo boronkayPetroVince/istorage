@@ -16,5 +16,7 @@ interface WarehouseServiceInterface
 
     public function addWarehouse(Warehouse $warehouse):void;
 
+    public function updateWarehouse(int $id):void;
+
     public function removeWarehouse(int $id):void;
 }

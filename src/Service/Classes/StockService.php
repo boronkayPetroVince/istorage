@@ -67,6 +67,11 @@ class StockService extends CrudService implements StockServiceInterface
         $this->em->persist($stock);
         $this->em->flush();
     }
+    public function updateStock(int $id):void{
+        $stock = $this->getOneStockById($id);
+        $this->em->persist($stock);
+        $this->em->flush();
+    }
     public function removeStock(int $id):void{
         $this->em->remove($this->getOneStockById($id));
         $this->em->flush();

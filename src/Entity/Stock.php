@@ -36,6 +36,13 @@ class Stock implements \JsonSerializable
     private $phoneID;
 
     /**
+     * @var Status
+     * @ORM\JoinColumn(name="statusID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Status")
+     */
+    private $statusID;
+
+    /**
      * @var int
      * @ORM\Column(type="integer", nullable=false)
      */
@@ -47,11 +54,7 @@ class Stock implements \JsonSerializable
      */
     private $purchasePrice;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=30, nullable=false)
-     */
-    private $status;
+
 
     /**
      * @return int
@@ -94,6 +97,22 @@ class Stock implements \JsonSerializable
     }
 
     /**
+     * @return Status
+     */
+    public function getStatusID(): Status
+    {
+        return $this->statusID;
+    }
+
+    /**
+     * @param Status $statusID
+     */
+    public function setStatusID(Status $statusID): void
+    {
+        $this->statusID = $statusID;
+    }
+
+    /**
      * @return int
      */
     public function getAmount(): int
@@ -125,32 +144,9 @@ class Stock implements \JsonSerializable
         $this->purchasePrice = $purchasePrice;
     }
 
-    /**
-     * @return string
-     */
-    public function getStatus(): string
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param string $status
-     */
-    public function setStatus(string $status): void
-    {
-        $this->status = $status;
-    }
-
-
-
-
-
-
-
-
     public function jsonSerialize()
     {
-        return ["id" => $this->id, "amount" => $this->amount, "purchasePrice" => $this->purchasePrice,"status" => $this->status,
+        return ["id" => $this->id, "amount" => $this->amount, "purchasePrice" => $this->purchasePrice,"statusID" => $this->statusID,
             "warehouseID" => $this->warehouseID, "phoneID" => $this->phoneID];
     }
 

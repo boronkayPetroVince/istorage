@@ -47,6 +47,21 @@ class StockController extends AbstractController
     }
 
     /**
+     * @param Request $request
+     * @param int $stockId
+     * @return Response
+     * @Route(name="updateOrderedStock", path="/updateOrdered/{stockId}")
+     */
+    public function updateOrdered(Request $request, int $stockId): Response{
+        if($request->isMethod("POST")){
+            if($this->stockModel->changeStatusBystockID($request, $stockId) === true){
+                return new Response("Sikeres módosítás");
+            }
+        }
+        return $this->render("Stock/edit.html.twig", ["user" => $this->getUser(), "stock" => $this->stockModel->oneStockById($stockId)]);
+    }
+
+    /**
      * @return Response
      * @Route(name="allWarehouse", path="/allWarehouse")
      */
@@ -60,6 +75,22 @@ class StockController extends AbstractController
      */
     public function allStock():Response{
         return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser()]);
+    }
+    /**
+     * @return Response
+     * @Route(name="orderedStock", path="/orderedStock")
+     */
+    public function orderedStock():Response{
+        return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser()]);
+    }
+
+    /**
+     * @return Response
+     * @Route(name="allStatus", path="/allStatus")
+     */
+    public function allStatus():Response{
+        $status = $this->stockModel->allStatus();
+        return new JsonResponse($status);
     }
 
 

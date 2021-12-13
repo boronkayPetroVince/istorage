@@ -24,5 +24,7 @@ interface StockServiceInterface
 
     public function addStock(Stock $stock):void;
 
+    public function updateStock(int $id):void;
+
     public function removeStock(int $id):void;
 }

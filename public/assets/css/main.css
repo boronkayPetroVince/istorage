@@ -1,5 +1,5 @@
 body {
-    background: orange;
+    background: red;
     height: 100%;
 }
 
@@ -18,4 +18,11 @@ body {
 
 #footer{
     display: block;
+}
+.loading {
+    height: 200px;
+    width: 200px;
+    background-color: red;
+    display: none;
+    position: absolute;
 }

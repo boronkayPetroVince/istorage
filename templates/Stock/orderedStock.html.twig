@@ -13,8 +13,9 @@
         <th>Szín</th>
         <th>Kapacitás</th>
         <th>Státusz</th>
+        <th>Műveletek</th>
         {% for stock in stocks %}
-            {% if stock.statusID.status != "Megrendelve" %}
+            {% if stock.statusID.status == "Megrendelve" %}
                 <tr>
                     <td>{{ stock.amount }}</td>
                     <td>{{ stock.purchasePrice }}</td>
@@ -24,10 +25,31 @@
                     <td>{{ stock.phoneID.colorID.phoneColor }}</td>
                     <td>{{ stock.phoneID.capacityId.capacity }}</td>
                     <td>{{ stock.statusID.status }}</td>
+                    <td>
+                        <a href="{{ path('updateOrderedStock', {"stockId":stock.ID}) }}" class="btn btn-danger">Módosítás</a>
+                    </td>
                 </tr>
+
             {% endif %}
+
+
 
         {% endfor %}
     </table>
+
+    <script>
+        $(document).ready(function (){
+            $.ajax({
+                url: "{{ path('allStatus') }}",
+                success: function (eredmeny){
+                    console.log(eredmeny);
+                    $.each(eredmeny, function (key,value){
+                        var statusOption = $('<option>',{ value: value.id, text: value.status});
+                        $("#status").append(statusOption);
+                    });
+                }
+            });
+        });
+    </script>
 
 {% endblock %}

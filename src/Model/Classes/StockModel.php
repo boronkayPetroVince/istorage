@@ -4,9 +4,12 @@
 namespace App\Model\Classes;
 
 
+use App\Entity\Status;
 use App\Entity\Stock;
+use App\Entity\Warehouse;
 use App\Model\Interfaces\PhoneModelInterface;
 use App\Model\Interfaces\StockModelInterface;
+use App\Service\Interfaces\StatusServiceInterface;
 use App\Service\Interfaces\StockServiceInterface;
 use App\Service\Interfaces\WarehouseServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,17 +25,22 @@ class StockModel implements StockModelInterface
     /** @var StockServiceInterface */
     private $stockService;
 
+    /** @var StatusServiceInterface */
+    private $statusService;
+
     /**
      * StockModel constructor.
      * @param PhoneModelInterface $phoneModel
      * @param WarehouseServiceInterface $warehouseService
      * @param StockServiceInterface $stockService
+     * @param StatusServiceInterface $statusService
      */
-    public function __construct(PhoneModelInterface $phoneModel, WarehouseServiceInterface $warehouseService, StockServiceInterface $stockService)
+    public function __construct(PhoneModelInterface $phoneModel, WarehouseServiceInterface $warehouseService, StockServiceInterface $stockService, StatusServiceInterface $statusService)
     {
         $this->phoneModel = $phoneModel;
         $this->warehouseService = $warehouseService;
         $this->stockService = $stockService;
+        $this->statusService = $statusService;
     }
 
 
@@ -46,16 +54,18 @@ class StockModel implements StockModelInterface
     public function addStock(Request $request): bool
     {
         if($request){
-            $stock = new Stock();
             $warehouse = $this->warehouseService->getOneWarehouseById($request->request->get("warehouse"));
             $phone = $this->phoneModel->addPhone($request); //phone id_val kell visszatérnie
-            $stock->setWarehouseID($warehouse);
-            $stock->setPhoneID($phone);
-            $stock->setAmount($request->request->get("amount"));
-            $stock->setPurchasePrice($request->request->get("purchase"));
-            $stock->setStatus("Megrendelve");
-            $this->stockService->addStock($stock);
-            return true;
+            if ($this->checkCapacity($warehouse, $request->request->get("amount")) === true){
+                $stock = new Stock();
+                $stock->setAmount($request->request->get("amount"));
+                $stock->setWarehouseID($warehouse);
+                $stock->setPhoneID($phone);
+                $stock->setPurchasePrice($request->request->get("purchase"));
+                $stock->setStatusID($this->statusService->getOneStatusById(1));
+                $this->stockService->addStock($stock);
+                return true;
+            }
         }
         return false;
     }
@@ -70,9 +80,16 @@ class StockModel implements StockModelInterface
         // TODO: Implement removeStock() method.
     }
 
-    public function changeStatus(Request $request): bool
+    public function changeStatusBystockID(Request $request, int $stockId): bool
     {
-        // TODO: Implement changeStatus() method.
+        if($request){
+            $status = $this->statusService->getOneStatusById($request->request->get("status"));
+            $stock = $this->stockService->getOneStockById($stockId);
+            $stock->setStatusID($status);
+            $this->stockService->updateStock($stockId);
+            return true;
+        }
+        return false;
     }
 
     public function allWarehouse():iterable{
@@ -81,5 +98,28 @@ class StockModel implements StockModelInterface
     public function allStock():iterable{
         return $this->stockService->getAllStock();
     }
+
+    public function allStatus(): iterable
+    {
+        return $this->statusService->getAllStatus();
+    }
+
+    public function oneStockById(int $id):Stock{
+        return $this->stockService->getOneStockById($id);
+    }
+    public function checkCapacity(Warehouse $warehouse, int $amount):bool{
+        $capacity = $warehouse->getCapacity();
+        if($capacity > 0){
+            if($capacity > $amount){
+                $diff = $capacity - $amount;
+                $warehouse->setCapacity($diff);
+                $this->warehouseService->updateWarehouse($warehouse->getId());
+                return true;
+            }
+        }
+        return false;
+
+    }
+
 
 }

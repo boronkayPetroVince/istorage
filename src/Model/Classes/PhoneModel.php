@@ -54,7 +54,6 @@ class PhoneModel implements PhoneModelInterface
 
     public function addPhone(Request $request): Phone
     {
-
             if($this->checkBrand(strtolower($request->request->get("brandName"))) === false){
                 $brand = new Brand();
                 $brand->setBrandName(strtolower($request->request->get("brandName")));
