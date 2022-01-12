@@ -8,7 +8,6 @@ use App\Entity\Stock;
 use App\Service\Interfaces\StockServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use phpDocumentor\Reflection\Utils;
 
 class StockService extends CrudService implements StockServiceInterface
 {
@@ -46,7 +45,7 @@ class StockService extends CrudService implements StockServiceInterface
         $qb = $this->em->createQueryBuilder();
         $qb->select("stock")
             ->from(Stock::class, "stock")
-            ->where("stock.phone_ID =: phone_ID")
+            ->where("stock.phoneID = :phone_ID")
             ->setParameter("phone_ID", $phone_ID);
         $query = $qb->getQuery();
         return $query->getResult();
@@ -57,6 +56,15 @@ class StockService extends CrudService implements StockServiceInterface
             ->from(Stock::class, "stock")
             ->where("stock.phone_ID =: phone_ID")
             ->setParameter("phone_ID", $phone_ID);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+    public function getAllPhoneByStatus(int $status_ID):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->select("stock")
+            ->from(Stock::class, "stock")
+            ->where("stock.statusID = :statusID")
+            ->setParameter("statusID", $status_ID);
         $query = $qb->getQuery();
         return $query->getResult();
     }

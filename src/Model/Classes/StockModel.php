@@ -4,6 +4,7 @@
 namespace App\Model\Classes;
 
 
+use App\Entity\Phone;
 use App\Entity\Status;
 use App\Entity\Stock;
 use App\Entity\Warehouse;
@@ -12,6 +13,7 @@ use App\Model\Interfaces\StockModelInterface;
 use App\Service\Interfaces\StatusServiceInterface;
 use App\Service\Interfaces\StockServiceInterface;
 use App\Service\Interfaces\WarehouseServiceInterface;
+use phpDocumentor\Reflection\Types\Array_;
 use Symfony\Component\HttpFoundation\Request;
 
 class StockModel implements StockModelInterface
@@ -28,6 +30,7 @@ class StockModel implements StockModelInterface
     /** @var StatusServiceInterface */
     private $statusService;
 
+
     /**
      * StockModel constructor.
      * @param PhoneModelInterface $phoneModel
@@ -43,24 +46,23 @@ class StockModel implements StockModelInterface
         $this->statusService = $statusService;
     }
 
-
     public function listAllStock(Request $request): bool
     {
-        if($request){
-
-        }
+        // TODO: Implement listAllStock() method.
     }
+
 
     public function addStock(Request $request): bool
     {
         if($request){
             $warehouse = $this->warehouseService->getOneWarehouseById($request->request->get("warehouse"));
-            $phone = $this->phoneModel->addPhone($request); //phone id_val kell visszatérnie
+            $phone = $this->phoneModel->addPhone($request);
             if ($this->checkCapacity($warehouse, $request->request->get("amount")) === true){
                 $stock = new Stock();
                 $stock->setAmount($request->request->get("amount"));
                 $stock->setWarehouseID($warehouse);
                 $stock->setPhoneID($phone);
+                $stock->setDate(new \DateTime());
                 $stock->setPurchasePrice($request->request->get("purchase"));
                 $stock->setStatusID($this->statusService->getOneStatusById(1));
                 $this->stockService->addStock($stock);
@@ -75,6 +77,26 @@ class StockModel implements StockModelInterface
         // TODO: Implement editStock() method.
     }
 
+    public function filteredStock(Request $request):iterable{
+        /** @var Stock[] $stocks */
+        $stocks = $this->stockService->getAllStock();
+
+        /** @var Phone[] $phones */
+        $phones = $this->phoneModel->filteredPhones($request);
+
+        /** @var Stock[] $array */
+        $array = array();
+        foreach($stocks as $stock){
+            foreach($phones as $phone){
+                if($stock->getPhoneID()->getId() === $phone->getId()){
+                    array_push($array, $stock);
+                }
+            }
+        }
+        return $array;
+    }
+
+
     public function removeStock(Request $request): bool
     {
         // TODO: Implement removeStock() method.
@@ -86,6 +108,8 @@ class StockModel implements StockModelInterface
             $status = $this->statusService->getOneStatusById($request->request->get("status"));
             $stock = $this->stockService->getOneStockById($stockId);
             $stock->setStatusID($status);
+            $stock->setDate(new \DateTime());
+            //Ha módosítja a behozott darabszámot, akkor diff számolás és újból levonás/hozzáadás a tárhelybe
             $this->stockService->updateStock($stockId);
             return true;
         }

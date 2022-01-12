@@ -9,12 +9,14 @@ use App\Entity\Capacity;
 use App\Entity\Color;
 use App\Entity\Model;
 use App\Entity\Phone;
+use App\Entity\Stock;
 use App\Model\Interfaces\PhoneModelInterface;
 use App\Service\Interfaces\BrandServiceInterface;
 use App\Service\Interfaces\CapacityServiceInterface;
 use App\Service\Interfaces\ColorServiceInterface;
 use App\Service\Interfaces\ModelServiceInterface;
 use App\Service\Interfaces\PhoneServiceInterface;
+use App\Service\Interfaces\StockServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class PhoneModel implements PhoneModelInterface
@@ -34,6 +36,9 @@ class PhoneModel implements PhoneModelInterface
     /** @var CapacityServiceInterface */
     private $capacityService;
 
+    /** @var StockServiceInterface */
+    private $stockService;
+
     /**
      * PhoneModel constructor.
      * @param ColorServiceInterface $colorService
@@ -41,14 +46,16 @@ class PhoneModel implements PhoneModelInterface
      * @param BrandServiceInterface $brandService
      * @param PhoneServiceInterface $phoneService
      * @param CapacityServiceInterface $capacityService
+     * @param StockServiceInterface $stockService
      */
-    public function __construct(ColorServiceInterface $colorService, ModelServiceInterface $modelService, BrandServiceInterface $brandService, PhoneServiceInterface $phoneService, CapacityServiceInterface $capacityService)
+    public function __construct(ColorServiceInterface $colorService, ModelServiceInterface $modelService, BrandServiceInterface $brandService, PhoneServiceInterface $phoneService, CapacityServiceInterface $capacityService, StockServiceInterface $stockService)
     {
         $this->colorService = $colorService;
         $this->modelService = $modelService;
         $this->brandService = $brandService;
         $this->phoneService = $phoneService;
         $this->capacityService = $capacityService;
+        $this->stockService = $stockService;
     }
 
 
@@ -92,7 +99,24 @@ class PhoneModel implements PhoneModelInterface
             $phone->setColorID($this->colorService->getOneColorById($color->getId()));
             $phone->setCapacityID($this->capacityService->getOneCapacityById($capacity->getId()));
             $this->phoneService->addPhone($phone);
-            return $this->phoneService->getOnePhoneById($phone->getId());
+            if ($this->checkPhone($phone) === true){
+                return $this->phoneService->removePhone($phone->getId());
+            }
+            return $phone;
+
+    }
+
+    public function checkPhone(Phone $phone):bool{
+        /** @var Phone[] $existingPhones */
+        $existingPhones = $this->phoneService->getAllPhone();
+        foreach($existingPhones as $exphone){
+            if($exphone->getBrandID()->getId() === $phone->getBrandID()->getId() && $exphone->getModelID()->getId() === $phone->getModelID()->getId()
+            && $exphone->getColorID()->getId() === $phone->getColorID()->getId() && $exphone->getCapacityID()->getId() === $phone->getCapacityID()->getId()){
+                $this->phoneService->removePhone($phone->getId());
+                return true;
+            }
+        }
+        return false;
 
     }
 
@@ -103,27 +127,40 @@ class PhoneModel implements PhoneModelInterface
 
     public function allPhones(): iterable
     {
-        return $this->phoneService->getAllPhone();
+        // TODO: Implement allPhones() method.
     }
+
 
     public function allBrands(): iterable
     {
-        $brands = $this->brandService->getAllBrand();
-        return $brands;
+        return $this->stockService->getAllPhoneByStatus(1); // dinamikussá tevés
     }
 
-    public function allModelByBrand(int $brand_ID): iterable
+    public function allModelByBrand(Request $request): iterable
     {
-        return $this->phoneService->getAllModelByBrand($brand_ID);
+        return $this->phoneService->getAllPhoneByBrand($request->request->get("brandID"));
     }
 
-    public function allColorByModel(Request $request, int $model_ID): iterable
+    public function allColorByModel(Request $request): iterable
     {
-
+        return $this->phoneService->getAllPhoneByModel($request->request->get("modelID"));
     }
-    public function allCapacityByColor(Request $request, int $color_ID): iterable{
 
+    public function allCapacityByColor(Request $request): iterable{
+        return $this->phoneService->getAllPhoneByColor($request->request->get("colorID"));
     }
+
+    public function filteredPhones(Request $request): iterable
+    {
+        if($request){
+            $brand = $this->brandService->getOneBrandById($request->request->get("brands"));
+            $model = $this->modelService->getOneModelById($request->request->get("models"));
+            $color = $this->colorService->getOneColorById($request->request->get("colors"));
+            $capacity = $this->capacityService->getOneCapacityById($request->request->get("capacities"));
+            return $this->phoneService->getAllFilteredPhone($brand->getId(),$model->getId(),$color->getId(),$capacity->getId());
+        }
+    }
+
     public function checkBrand(string $brandName):bool{
         /** @var Brand[] $brands */
         $brands = $this->brandService->getAllBrand();

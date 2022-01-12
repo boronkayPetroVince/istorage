@@ -4,7 +4,10 @@
 namespace App\Controller;
 
 
+
+use App\Model\Interfaces\PhoneModelInterface;
 use App\Model\Interfaces\StockModelInterface;
+use App\Service\Classes\StatusService;
 use App\Service\Interfaces\SecurityServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,16 +23,27 @@ class StockController extends AbstractController
     /** @var SecurityServiceInterface */
     private $securityService;
 
+    /** @var PhoneModelInterface */
+    private $phoneModel;
+
+    /** @var StatusService */
+    private $statusService;
+
     /**
      * StockController constructor.
      * @param StockModelInterface $stockModel
      * @param SecurityServiceInterface $securityService
+     * @param PhoneModelInterface $phoneModel
+     * @param StatusService $statusService
      */
-    public function __construct(StockModelInterface $stockModel, SecurityServiceInterface $securityService)
+    public function __construct(StockModelInterface $stockModel, SecurityServiceInterface $securityService, PhoneModelInterface $phoneModel, StatusService $statusService)
     {
         $this->stockModel = $stockModel;
         $this->securityService = $securityService;
+        $this->phoneModel = $phoneModel;
+        $this->statusService = $statusService;
     }
+
 
     /**
      * @param Request $request
@@ -62,6 +76,19 @@ class StockController extends AbstractController
     }
 
     /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="orderedStock", path="/orderedStock")
+     */
+    public function orderedStock(Request $request):Response{
+        if ($request->isMethod("POST")){
+            return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->filteredStock($request), "user" => $this->getUser()]);
+        }else{
+            return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser()]);
+        }
+    }
+
+    /**
      * @return Response
      * @Route(name="allWarehouse", path="/allWarehouse")
      */
@@ -70,18 +97,17 @@ class StockController extends AbstractController
     }
 
     /**
+     * @param Request $request
      * @return Response
      * @Route(name="allStock", path="/allStock")
      */
-    public function allStock():Response{
-        return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser()]);
-    }
-    /**
-     * @return Response
-     * @Route(name="orderedStock", path="/orderedStock")
-     */
-    public function orderedStock():Response{
-        return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser()]);
+    public function allStock(Request $request):Response{
+        if ($request->isMethod("POST")){
+            return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->filteredStock($request), "user" => $this->getUser()]);
+        }else{
+            return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser()]);
+        }
+
     }
 
     /**

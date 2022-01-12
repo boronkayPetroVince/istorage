@@ -61,23 +61,6 @@ class PhoneController extends AbstractController
         $this->capacityService = $capacityService;
     }
 
-
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="addPhone", path="/addPhone")
-     */
-    public function addPhone(Request $request): Response{
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        if($request->isMethod("POST")){
-            if($this->phoneModel->addPhone($request) === true){
-                return new Response("SIKERES HOZZÁADÁS!!!!!");
-            }else return new Response("VALAMI KAKI VAN A LEVESBEN!!!!");
-        }else{
-            return $this->render("phone/addPhone.html.twig");
-        }
-    }
-
     /**
      * @param Request $request
      * @return Response
@@ -96,20 +79,10 @@ class PhoneController extends AbstractController
 
     /**
      * @return Response
-     * @Route(name="allPhone")
-     */
-    public function allPhone(): Response{
-        $phone = $this->phoneModel->allPhones();
-        return new JsonResponse($phone);
-    }
-
-    /**
-     * @return Response
      * @Route(name="allBrand", path="/allBrand")
      */
     public function allBrand(): Response{
-        $brand = $this->phoneModel->allBrands();
-        return new JsonResponse($brand);
+        return new JsonResponse($this->phoneModel->allBrands());
     }
     /**
      * @param Request $request
@@ -117,19 +90,27 @@ class PhoneController extends AbstractController
      * @Route(name="allModelByBrand", path="/allModelByBrand")
      */
     public function allModelByBrand(Request $request): Response{
-        $brand_ID = $this->brandService->getOneBrandById($request->request->get("brand_ID"));
-        $model = $this->phoneModel->allModelByBrand($brand_ID->getId());
-        return new JsonResponse($model);
+        return new JsonResponse($this->phoneModel->allModelByBrand($request));
     }
 
     /**
+     * @param Request $request
      * @return Response
      * @Route(name="allColorByModel", path="/allColorByModel")
      */
     public function allColorByModel(Request $request): Response{
-        $model_ID = $this->modelService->getOneModelById($request->request->get("modelID"));
-        $color = $this->phoneModel->allColorByModel($request,$model_ID->getId());
-        return new JsonResponse($color);
+        return new JsonResponse($this->phoneModel->allColorByModel($request));
     }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="allCapacityByColor", path="/allCapacityByColor")
+     */
+    public function allCapacityByColor(Request $request): Response{
+        return new JsonResponse($this->phoneModel->allCapacityByColor($request));
+    }
+
+
 
 }

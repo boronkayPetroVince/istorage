@@ -5,6 +5,7 @@ namespace App\Model\Interfaces;
 
 
 use App\Entity\Phone;
+use App\Entity\Stock;
 use Symfony\Component\HttpFoundation\Request;
 
 interface PhoneModelInterface
@@ -17,11 +18,13 @@ interface PhoneModelInterface
 
     public function allBrands(): iterable;
 
-    public function allModelByBrand(int $brand_ID): iterable;
+    public function allModelByBrand(Request $request): iterable;
 
-    public function allColorByModel(Request $request, int $model_ID): iterable;
+    public function allColorByModel(Request $request): iterable;
 
-    public function allCapacityByColor(Request $request, int $color_ID): iterable;
+    public function allCapacityByColor(Request $request): iterable;
+
+    public function filteredPhones(Request $request): iterable;
 
     public function checkBrand(string $brandName):bool;
 

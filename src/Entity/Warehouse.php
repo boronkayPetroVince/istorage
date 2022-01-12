@@ -50,7 +50,7 @@ class Warehouse implements \JsonSerializable
     /**
      * @return Warehouse
      */
-    public function getWhName(): Warehouse
+    public function getWhName(): string
     {
         return $this->whName;
     }

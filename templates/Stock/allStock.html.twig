@@ -3,6 +3,15 @@
 {# @var user \App\Entity\User #}
 {# @var stocks App\Entity\Stock[] #}
 {% block content %}
+    <form action="{{ path('allStock') }}" method="post">
+        <select name="brands" id="brands" onchange="brandChanged()">
+            <option value="">Válassz márkát!</option>
+        </select>
+        <select name="models" id="models" onchange="modelChanged()"></select>
+        <select name="colors" id="colors" onchange="colorChanged()"></select>
+        <select name="capacities" id="capacities" onchange="capacityChanged()"></select>
+        <button id="szures">Szűrés</button>
+    </form>
     <h1>Összes készlet megjelenítése</h1>
     <table border="1">
         <th>Darab</th>
@@ -13,6 +22,8 @@
         <th>Szín</th>
         <th>Kapacitás</th>
         <th>Státusz</th>
+        <th>Dátum</th>
+        <th>Felhasználó</th>
         {% for stock in stocks %}
             {% if stock.statusID.status != "Megrendelve" %}
                 <tr>
@@ -24,10 +35,97 @@
                     <td>{{ stock.phoneID.colorID.phoneColor }}</td>
                     <td>{{ stock.phoneID.capacityId.capacity }}</td>
                     <td>{{ stock.statusID.status }}</td>
+                    <td>{{ stock.date|date('Y-m-d H:i:s') }}</td>
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <td>{{ user.username }} (admin) </td>
+                    {% endif %}
+
                 </tr>
             {% endif %}
 
         {% endfor %}
     </table>
+
+    <script>
+        $(document).ready(function (){
+            $("#models").hide();
+            $("#colors").hide();
+            $("#capacities").hide();
+            $("#szures").hide();
+            $.ajax({
+                url: "{{ path('allBrand') }}",
+                success: function (result){
+                    $.each(result, function (key,value){
+                        var brandOption = $('<option>', {value:value.phoneID.brandID.id, text:value.phoneID.brandID.brandName});
+                        $("#brands").append(brandOption);
+                    });
+                }
+            });
+        });
+        function brandChanged(){
+            console.log(document.getElementById("brands"));
+            $("#models").show();
+            $.ajax({
+                url: "{{ path('allBrand') }}",
+                method: "post",
+                data:{
+                    "brandID":document.getElementById("brands").value
+                },
+                success: function (result){
+                    $("#models").find("option").remove();
+                    var defaultVal = $('<option>', {value:"", text:"Válassz modelt"});
+                    $("#models").append(defaultVal);
+                    $.each(result, function (key,value){
+                        var modelOption = $('<option>', {value:value.phoneID.modelID.id, text:value.phoneID.modelID.modelName});
+                        $("#models").append(modelOption);
+                    });
+                }
+
+            });
+        }
+        function modelChanged(){
+            $("#colors").show();
+            $.ajax({
+                url: "{{ path('allBrand') }}",
+                method: "post",
+                data:{
+                    "modelID":document.getElementById("models").value
+                },
+                success: function (result){
+                    $("#colors").find("option").remove();
+                    var defaultVal = $('<option>', {value:"", text:"Válassz színt"});
+                    $("#colors").append(defaultVal);
+                    $.each(result, function (key,value){
+                        var colorOption = $('<option>', {value:value.phoneID.colorID.id, text:value.phoneID.colorID.phoneColor});
+                        $("#colors").append(colorOption);
+                    });
+                }
+
+            });
+        }
+        function colorChanged(){
+            $("#capacities").show();
+            $.ajax({
+                url: "{{ path('allBrand') }}",
+                method: "post",
+                data:{
+                    "colorID":document.getElementById("colors").value
+                },
+                success: function (result){
+                    $("#capacities").find("option").remove();
+                    var defaultVal = $('<option>', {value:"", text:"Válassz méretet!"});
+                    $("#capacities").append(defaultVal);
+                    $.each(result, function (key,value){
+                        var capacityOption = $('<option>', {value:value.phoneID.capacityID.id, text:value.phoneID.capacityID.capacity});
+                        $("#capacities").append(capacityOption);
+                    });
+                }
+
+            });
+        }
+        function capacityChanged(){
+            $("#szures").show();
+        }
+    </script>
 
 {% endblock %}

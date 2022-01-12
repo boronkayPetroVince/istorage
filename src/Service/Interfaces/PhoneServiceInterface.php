@@ -10,6 +10,8 @@ interface PhoneServiceInterface
 {
     public function getAllPhone():iterable;
 
+    public function getAllFilteredPhone(int $brand_ID,int $model_ID, int $color_ID, int $capacity_ID): iterable;
+
     public function getAllPhoneByModel(int $model_ID):iterable;
 
     public function getAllPhoneByColor(int $color_ID):iterable;

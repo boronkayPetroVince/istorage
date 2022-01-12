@@ -54,6 +54,12 @@ class Stock implements \JsonSerializable
      */
     private $purchasePrice;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    private $date;
+
 
 
     /**
@@ -144,10 +150,27 @@ class Stock implements \JsonSerializable
         $this->purchasePrice = $purchasePrice;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getDate(): \DateTime
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param \DateTime $date
+     */
+    public function setDate(\DateTime $date): void
+    {
+        $this->date = $date;
+    }
+
+
     public function jsonSerialize()
     {
         return ["id" => $this->id, "amount" => $this->amount, "purchasePrice" => $this->purchasePrice,"statusID" => $this->statusID,
-            "warehouseID" => $this->warehouseID, "phoneID" => $this->phoneID];
+            "warehouseID" => $this->warehouseID, "phoneID" => $this->phoneID, "date" => $this->date];
     }
 
 
