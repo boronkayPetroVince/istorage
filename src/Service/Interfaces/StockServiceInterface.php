@@ -18,7 +18,13 @@ interface StockServiceInterface
 
     public function getAllStockByPhone(int $phone_ID):iterable;
 
-    public function removeAllStockByPhone(int $phone_ID):iterable;
+    public function getAllBrandByStatus(int $status_ID):iterable;
+
+    public function getAllModelByStatusAndBrand(int $status_ID, int $brand_ID):iterable;
+
+    public function getAllColorByStatusAndModel(int $status_ID, int $model_ID):iterable;
+
+
 
     public function getOneStockById(int $id):Stock;
 

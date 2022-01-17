@@ -53,7 +53,7 @@
             $("#szures").hide();
 
             $.ajax({
-               url: "{{ path('allBrand') }}",
+               url: "{{ path('allOrderedBrand') }}",
                success: function (result){
                    // var teszt = document.getElementById("brand");
                    // var unique = teszt.filter(function(itm, i, a) {
@@ -68,13 +68,12 @@
             });
         });
         function brandChanged(){
-            console.log(document.getElementById("brands"));
             $("#models").show();
             $("#colors").hide();
             $("#capacities").hide();
             $("#szures").hide();
             $.ajax({
-                url: "{{ path('allBrand') }}",
+                url: "{{ path('allOrderedModel') }}",
                 method: "post",
                 data:{
                     "brandID":document.getElementById("brands").value
@@ -96,12 +95,13 @@
             $("#capacities").hide();
             $("#szures").hide();
             $.ajax({
-                url: "{{ path('allBrand') }}",
+                url: "{{ path('allOrderedColor') }}",
                 method: "post",
                 data:{
                     "modelID":document.getElementById("models").value
                 },
                 success: function (result){
+                    console.log(result);
                     $("#colors").find("option").remove();
                     var defaultVal = $('<option>', {value:"", text:"Válassz színt"});
                     $("#colors").append(defaultVal);
@@ -117,7 +117,7 @@
             $("#capacities").show();
             $("#szures").hide();
             $.ajax({
-                url: "{{ path('allBrand') }}",
+                url: "{{ path('allOrderedCapacity') }}",
                 method: "post",
                 data:{
                     "colorID":document.getElementById("colors").value

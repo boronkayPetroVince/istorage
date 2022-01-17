@@ -79,36 +79,70 @@ class PhoneController extends AbstractController
 
     /**
      * @return Response
-     * @Route(name="allBrand", path="/allBrand")
+     * @Route(name="allArrivedBrand", path="/allArrivedBrand")
      */
-    public function allBrand(): Response{
-        return new JsonResponse($this->phoneModel->allBrands());
+    public function ArrivedBrands(): Response{
+        return new JsonResponse($this->phoneModel->allArrivedBrand());
     }
     /**
      * @param Request $request
      * @return Response
-     * @Route(name="allModelByBrand", path="/allModelByBrand")
+     * @Route(name="allArrivedModel", path="/allArrivedModel")
      */
-    public function allModelByBrand(Request $request): Response{
-        return new JsonResponse($this->phoneModel->allModelByBrand($request));
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="allColorByModel", path="/allColorByModel")
-     */
-    public function allColorByModel(Request $request): Response{
-        return new JsonResponse($this->phoneModel->allColorByModel($request));
+    public function allArrivedPhoneModelByBrand(Request $request): Response{
+        return new JsonResponse($this->phoneModel->allArrivedModel($request));
     }
 
     /**
      * @param Request $request
      * @return Response
-     * @Route(name="allCapacityByColor", path="/allCapacityByColor")
+     * @Route(name="allArrivedColor", path="/allColorByModel")
      */
-    public function allCapacityByColor(Request $request): Response{
-        return new JsonResponse($this->phoneModel->allCapacityByColor($request));
+    public function allArrivedPhoneColorByModel(Request $request): Response{
+        return new JsonResponse($this->phoneModel->allArrivedColor($request));
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="allArrivedCapacityByColor", path="/allArrivedCapacity")
+     */
+    public function allArrivedPhoneCapacityByColor(Request $request): Response{
+        return new JsonResponse($this->phoneModel->allArrivedCapacity($request));
+    }
+
+    /**
+     * @return Response
+     * @Route(name="allOrderedBrand", path="/allOrderedBrand")
+     */
+    public function OrderedBrands(): Response{
+        return new JsonResponse($this->phoneModel->allOrderedBrand());
+    }
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="allOrderedModel", path="/allOrderedModel")
+     */
+    public function allOrderedPhoneModelByBrand(Request $request): Response{
+        return new JsonResponse($this->phoneModel->allOrderedModel($request));
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="allOrderedColor", path="/allOrderedColor")
+     */
+    public function allOrderedPhoneColorByModel(Request $request): Response{
+        return new JsonResponse($this->phoneModel->allOrderedColor($request));
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="allOrderedCapacity", path="/allOrderedCapacity")
+     */
+    public function allAOrderedPhoneCapacityByColor(Request $request): Response{
+        return new JsonResponse($this->phoneModel->allOrderedCapacity($request));
     }
 
 

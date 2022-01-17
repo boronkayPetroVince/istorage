@@ -48,12 +48,14 @@
 
     <script>
         $(document).ready(function (){
+
             $("#models").hide();
             $("#colors").hide();
             $("#capacities").hide();
             $("#szures").hide();
             $.ajax({
-                url: "{{ path('allBrand') }}",
+                url: "{{ path('allArrivedBrand') }}",
+                method: "post",
                 success: function (result){
                     $.each(result, function (key,value){
                         var brandOption = $('<option>', {value:value.phoneID.brandID.id, text:value.phoneID.brandID.brandName});
@@ -63,15 +65,15 @@
             });
         });
         function brandChanged(){
-            console.log(document.getElementById("brands"));
             $("#models").show();
             $.ajax({
-                url: "{{ path('allBrand') }}",
+                url: "{{ path('allArrivedModel') }}",
                 method: "post",
                 data:{
                     "brandID":document.getElementById("brands").value
                 },
                 success: function (result){
+                    console.log(result);
                     $("#models").find("option").remove();
                     var defaultVal = $('<option>', {value:"", text:"Válassz modelt"});
                     $("#models").append(defaultVal);
@@ -86,7 +88,7 @@
         function modelChanged(){
             $("#colors").show();
             $.ajax({
-                url: "{{ path('allBrand') }}",
+                url: "{{ path('allArrivedColor') }}",
                 method: "post",
                 data:{
                     "modelID":document.getElementById("models").value
@@ -106,7 +108,7 @@
         function colorChanged(){
             $("#capacities").show();
             $.ajax({
-                url: "{{ path('allBrand') }}",
+                url: "{{ path('allArrivedCapacity') }}",
                 method: "post",
                 data:{
                     "colorID":document.getElementById("colors").value

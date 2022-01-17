@@ -16,7 +16,9 @@ interface PhoneModelInterface
 
     public function allPhones(): iterable;
 
-    public function allBrands(): iterable;
+    //public function allOrderedPhone(): iterable;
+
+    //public function allArrivedPhone(): iterable;
 
     public function allModelByBrand(Request $request): iterable;
 

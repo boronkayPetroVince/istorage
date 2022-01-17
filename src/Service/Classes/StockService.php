@@ -4,10 +4,12 @@
 namespace App\Service\Classes;
 
 
+use App\Entity\Phone;
 use App\Entity\Stock;
 use App\Service\Interfaces\StockServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 
 class StockService extends CrudService implements StockServiceInterface
 {
@@ -50,24 +52,60 @@ class StockService extends CrudService implements StockServiceInterface
         $query = $qb->getQuery();
         return $query->getResult();
     }
-    public function removeAllStockByPhone(int $phone_ID):iterable{
-        $qb = $this->em->createQueryBuilder();
-        $qb->delete()
-            ->from(Stock::class, "stock")
-            ->where("stock.phone_ID =: phone_ID")
-            ->setParameter("phone_ID", $phone_ID);
-        $query = $qb->getQuery();
-        return $query->getResult();
-    }
-    public function getAllPhoneByStatus(int $status_ID):iterable{
+
+    public function getAllBrandByStatus(int $status_ID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("stock")
             ->from(Stock::class, "stock")
             ->where("stock.statusID = :statusID")
-            ->setParameter("statusID", $status_ID);
+            ->setParameter("statusID", $status_ID)
+            ->innerJoin("stock.phoneID", "phone", Join::WITH, $qb->expr()->eq('phone.id', 'stock.phoneID'))
+            ->groupBy("phone.brandID");
         $query = $qb->getQuery();
         return $query->getResult();
     }
+    public function getAllModelByStatusAndBrand(int $status_ID, int $brand_ID):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->select("stock")
+            ->from(Stock::class, "stock")
+            ->where("stock.statusID = :statusID")
+            ->setParameter("statusID", $status_ID)
+            ->innerJoin("stock.phoneID", "phone", Join::WITH, $qb->expr()->eq('phone.id', 'stock.phoneID'))
+            ->andWhere("phone.brandID = :brand_ID")
+            ->setParameter("brand_ID", $brand_ID)
+            ->groupBy("phone.modelID");
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
+    public function getAllColorByStatusAndModel(int $status_ID, int $model_ID):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->select("stock")
+            ->from(Stock::class, "stock")
+            ->where("stock.statusID = :statusID")
+            ->setParameter("statusID", $status_ID)
+            ->innerJoin("stock.phoneID", "phone", Join::WITH, $qb->expr()->eq('phone.id', 'stock.phoneID'))
+            ->andWhere("phone.modelID = :modelID")
+            ->setParameter("modelID", $model_ID)
+            ->groupBy("phone.colorID");
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
+    public function getAllCapacityByStatusAndColor(int $status_ID, int $color_ID):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->select("stock")
+            ->from(Stock::class, "stock")
+            ->where("stock.statusID = :statusID")
+            ->setParameter("statusID", $status_ID)
+            ->innerJoin("stock.phoneID", "phone", Join::WITH, $qb->expr()->eq('phone.id', 'stock.phoneID'))
+            ->andWhere("phone.colorID = :colorID")
+            ->setParameter("colorID", $color_ID)
+            ->groupBy("phone.capacityID");
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
     public function getOneStockById(int $id):Stock{
         return $this->getRepo()->find($id);
     }
