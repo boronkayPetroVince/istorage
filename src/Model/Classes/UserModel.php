@@ -37,7 +37,7 @@ class UserModel implements UserModelInterface
         $user = $request->request->get("username");
         $fullName = $request->request->get("fullName");
         $phoneNumber = $request->request->get("phoneNumber");
-        $email = $request->request->get("emailad");
+        $email = $request->request->get("email");
         $role = $request->request->get("roles");
         if ($request->request->get("password") === $request->request->get("password2")){
            if ($this->checkUser($user) === false){

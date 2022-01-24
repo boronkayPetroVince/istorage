@@ -1,0 +1,32 @@
+.register form {
+  max-width: 450px;
+  width: 80%;
+  background-color: #1e2833 !important;
+  padding: 40px;
+  border-radius: 4px;
+  color: #fff;
+  display:block;
+  border: 1px solid #214a80;
+  box-shadow: 6px 6px 14px rgba(0,0,0,0.4);
+}
+
+.register {
+  height: 100vh;
+  background: #003247 !important;
+}
+
+.gomb {
+  background: #003247 !important;
+  border: none;
+  border-radius: 4px;
+  padding: 11px;
+  box-shadow: none;
+  margin-top: 26px;
+  text-shadow: none;
+  outline: none;
+}
+
+.gomb:hover {
+  background: #214a80!important;
+}
+

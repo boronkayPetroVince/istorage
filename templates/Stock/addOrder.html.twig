@@ -1,0 +1,166 @@
+{% extends 'main.html.twig' %}
+
+{# @var stocks App\Entity\Stock[] #}
+{% block content %}
+    <form action="">
+        <select name="clients" id="clients" onchange="clientsChanged()">
+            <option value="">Válassz ügyfelet!</option>
+        </select>
+        <select name="contacts" id="contacts">
+            <option value="">Válassz kontaktot</option>
+        </select>
+        <button id="eladas">Feladás</button>
+    </form>
+    <div id="ordering">
+        <div id="clientInformations">
+            <p>Itt megjelenik az ügyfélnek minden adata! + a kontakté</p>
+        </div>
+        <div id=tempTable">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Darab</th>
+                        <th>Beszerzési ár</th>
+                        <th>Raktár</th>
+                        <th>Márka</th>
+                        <th>Model</th>
+                        <th>Szín</th>
+                        <th>Kapacitás</th>
+                        <th>Státusz</th>
+                        <th>Dátum</th>
+                        <th>Hozzáadás</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% set counter = 0 %}
+                    {% for stock in stocks %}
+                        {% if stock.statusID.status == "Beérkezett" %}
+                            <tr id="{{ counter }}">
+                                <td id="id{{ counter }}">{{ stock.id }}</td>
+                                <td id="amount{{ counter }}">{{ stock.amount }}</td>
+                                <td id="purchasePrice{{ counter }}">{{ stock.purchasePrice }}</td>
+                                <td id="whName{{ counter }}">{{ stock.warehouseID.whName }}</td>
+                                <td id="brandName{{ counter }}">{{ stock.phoneID.brandID.brandName }}</td>
+                                <td id="modelName{{ counter }}">{{ stock.phoneID.modelID.modelName }}</td>
+                                <td id="phoneColor{{ counter }}">{{ stock.phoneID.colorID.phoneColor }}</td>
+                                <td id="capacity{{ counter }}">{{ stock.phoneID.capacityId.capacity }}</td>
+                                <td id="status{{ counter }}">{{ stock.statusID.status }}</td>
+                                <td id="date{{ counter }}">{{ stock.date|date('Y-m-d H:i:s') }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-light" id="btn{{ counter }}" onclick="makeOrder(this.id)">+</button>
+                                </td>
+                            </tr>
+                            {% set counter = counter + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+            <div id="sellingTable">
+                <table border="1">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Darab</th>
+                        <th>Beszerzési ár</th>
+                        <th>Raktár</th>
+                        <th>Márka</th>
+                        <th>Model</th>
+                        <th>Szín</th>
+                        <th>Kapacitás</th>
+                        <th>Státusz</th>
+                        <th>Dátum</th>
+                        <th>Törlés</th>
+                    </tr>
+                    </thead>
+                    <tbody id="sellingTableBody">
+
+                    </tbody>
+                </table>
+            </div>
+    </div>
+    <div class="modal"  tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="modal" id="orderingModal" role="dialog" >
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-secondary">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Select quantity and selling price!</h5>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="row g-3">
+                            <div class="col-12">
+                                <label for="numberofdevice" class="form-label">Quantity (max: <span id="maxAmount"></span>)</label>
+                                <input type="number" class="form-control" id="numberofdevice">
+                            </div>
+                            <div class="col-12">
+                                <label for="price" class="form-label">Price</label>
+                                <input type="number" class="form-control" id="price">
+                            </div>
+                            <div class="col-12">
+                                <label for="pendingComment" class="form-label">Comment</label>
+                                <textarea class="form-control" id="pendingComment" name="pendingComment" placeholder="Comment" rows="3" ></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary close" data-dismiss="modal">Close</button>
+                        <button type="button" onclick="addToList()" class="btn btn-primary">Add Device</button>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+
+    <script>
+        var id= "";
+        var maxAmount = 0;
+        var purchasePrice = 0;
+        function getTdById(id, type){
+            return document.getElementById(type+id).innerHTML;
+        }
+        function setTdById(id, type, value){
+            return document.getElementById(type+id).innerHTML = value;
+        }
+
+        function makeOrder(rowId){
+            rowId = rowId.replace("btn", "");
+            id = rowId;
+            maxAmount = document.getElementById("amount"+rowId).innerHTML;
+            purchasePrice = document.getElementById("purchasePrice"+rowId).innerHTML;
+            document.getElementById("maxAmount").innerHTML = maxAmount;
+            document.getElementById("price").value = purchasePrice;
+            $("#orderingModal").show();
+        }
+        function addToList(){
+            var amount = document.getElementById("numberofdevice").value;
+            var salePrice = document.getElementById("price").value;
+            var comment = document.getElementById("pendingComment").value;
+
+            if (parseFloat(maxAmount) < parseFloat(amount)){
+                alert("Not enough amount in the stock")
+            }
+            $("#orderingModal").hide();
+        }
+    </script>
+
+
+{% endblock %}

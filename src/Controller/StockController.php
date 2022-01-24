@@ -89,6 +89,15 @@ class StockController extends AbstractController
     }
 
     /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="sellingStock", path="/sellingStock")
+     */
+    public function sellingStock(Request $request):Response{
+        return $this->render("Stock/addOrder.html.twig", ["stocks" => $this->stockModel->allStock(), "user" => $this->getUser()]);
+    }
+
+    /**
      * @return Response
      * @Route(name="allWarehouse", path="/allWarehouse")
      */
