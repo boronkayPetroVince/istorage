@@ -59,7 +59,7 @@ class UserController extends AbstractController
         if ($request->isMethod("POST")){
             if ($this->userModel->loginAction($request,$user) == true){
                 //return $this->render("user/login.html.twig",["username"=>"Sikeresen bejelentkeztél: ".$user->getUsername()."!"]);
-                return $this->render("main.html.twig", ["user" => $this->getUser()]);
+                return $this->render("index.html.twig", ["user" => $this->getUser()]);
             }else return $this->render("user/login.html.twig", ["username" => "Rossz felhasználónév, vagy jelszó!", "user" => $this->getUser()]);
         }else return $this->render("user/login.html.twig", ["username" => "", "user" => $this->getUser()]);
     }

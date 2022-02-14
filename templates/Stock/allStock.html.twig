@@ -108,7 +108,7 @@
         function colorChanged(){
             $("#capacities").show();
             $.ajax({
-                url: "{{ path('allArrivedCapacity') }}",
+                url: "{{ path('allArrivedCapacityByColor') }}",
                 method: "post",
                 data:{
                     "colorID":document.getElementById("colors").value
