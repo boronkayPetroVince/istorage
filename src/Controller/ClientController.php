@@ -129,7 +129,7 @@ class ClientController extends AbstractController
     public function allClients(Request $request): Response{
         //$clients = $this->clientService->getAllClient();
         $clients = $this->clientModel->allClients();
-        return new JsonResponse($clients);
+        return $this->render("Client/clients.html.twig");
     }
 
 

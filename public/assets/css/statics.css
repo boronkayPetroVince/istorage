@@ -1,0 +1,57 @@
+#wrapper #content-wrapper {
+  background-color: rgba(177,233,254,0.6);
+  width: 100%;
+  overflow-x: hidden;
+}
+
+h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
+  margin-top: 0;
+  margin-bottom: .5rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.staticsFont {
+  font-size: .7rem !important;
+  font-weight: 700 !important;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background: rgba(255,255,255,0.2) !important;
+  background-clip: border-box;
+  border: 1px solid #e3e6f0;
+  border-radius: .35rem;
+}
+
+.card-header {
+  padding: .5rem 1rem;
+  margin-bottom: 0;
+  background-color: #f8f9fc;
+  border-bottom: 1px solid #e3e6f0;
+}
+
+.fw-bold {
+  font-weight: 700 !important;
+}
+
+.chart-area {
+  position: relative;
+  height: 10rem;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .chart-area {
+    height: 20rem;
+  }
+}
+
+small, .small {
+  font-size: 0.875em;
+}
+

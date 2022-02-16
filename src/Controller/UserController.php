@@ -113,7 +113,7 @@ class UserController extends AbstractController
      */
     public function AllUsersDetails():Response{
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        return $this->render("User/allUserDetails.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser()]);
+        return $this->render("User/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser()]);
     }
 
     /**

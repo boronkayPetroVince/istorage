@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
-    <link rel="stylesheet" href="assets/css/untitled.css">
+    <link rel="stylesheet" href="assets/css/navbar.css">
+    <link rel="stylesheet" href="assets/css/statics.css">
+    <link rel="stylesheet" href="assets/css/users.css">
 </head>
 
 <body id="page-top">
@@ -62,15 +64,14 @@
                 <div class="container-fluid">
                     <h3 class="text-dark mb-4">Ügyfelek<br></h3>
                     <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
-                        <div class="card-body">
+                        <div class="card-body" style="background: rgba(255,255,255,0.5);">
                             <div class="row">
                                 <div class="col-md-6 text-nowrap">
-                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm showSelect">
-                                                <option value="5" selected="">5</option>
+                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block showSelect">
+                                                <option value="10" selected="">10</option>
                                                 <option value="25">25</option>
                                                 <option value="50">50</option>
                                                 <option value="100">100</option>
-                                                <option value=""></option>
                                             </select>&nbsp;</label></div>
                                 </div>
                                 <div class="col-md-6">
@@ -83,10 +84,10 @@
                                         <tr>
                                             <th>Ügyfél neve</th>
                                             <th>Adószám</th>
-                                            <th>Szállítási cím</th>
-                                            <th>Kontakt neve</th>
-                                            <th>Kontakt telefon</th>
-                                            <th>Kontakt Email címe</th>
+                                            <th>Cím</th>
+                                            <th>Kapcsolattartó név</th>
+                                            <th>Kapcsolattartó telefon<br></th>
+                                            <th>Kapcsolattartó email<br></th>
                                             <th>Módosítás</th>
                                         </tr>
                                     </thead>
@@ -98,12 +99,12 @@
                                             <td>33</td>
                                             <td>2008/11/28</td>
                                             <td>Cell 6</td>
-                                            <td><button class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateClient" data-bs-toggle="modal"><i class="fas fa-edit operationIcon m-auto p-auto"></i></button></td>
+                                            <td><button class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateClient" data-bs-toggle="modal"><i class="fas fa-edit operationIcon"></i></button></td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar2.jpeg">Angelica Ramos</td>
-                                            <td>Chief&nbsp;</td>
+                                            <td>Chief Executive Officer(CEO)</td>
                                             <td>London</td>
                                             <td>47</td>
                                             <td>2009/10/09<br></td>
@@ -112,7 +113,7 @@
                                         </tr>
                                         <tr>
                                             <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar3.jpeg">Ashton Cox</td>
-                                            <td>Junior</td>
+                                            <td>Junior Technical Author</td>
                                             <td>San Francisco</td>
                                             <td>66</td>
                                             <td>2009/01/12<br></td>
@@ -120,17 +121,17 @@
                                             <td>$86,000</td>
                                         </tr>
                                         <tr>
-                                            <td>41</td>
                                             <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar4.jpeg">Bradley Greer</td>
-                                            <td>Software&nbsp;</td>
+                                            <td>Software Engineer</td>
                                             <td>London</td>
+                                            <td>41</td>
                                             <td>2012/10/13<br></td>
                                             <td>Cell 6</td>
                                             <td>$132,000</td>
                                         </tr>
                                         <tr>
                                             <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar5.jpeg">Brenden Wagner</td>
-                                            <td>Software&nbsp;</td>
+                                            <td>Software Engineer</td>
                                             <td>San Francisco</td>
                                             <td>28</td>
                                             <td>2011/06/07<br></td>
@@ -139,7 +140,7 @@
                                         </tr>
                                         <tr>
                                             <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar1.jpeg">Brielle Williamson</td>
-                                            <td>Integration&nbsp;</td>
+                                            <td>Integration Specialist</td>
                                             <td>New York</td>
                                             <td>61</td>
                                             <td>2012/12/02<br></td>
@@ -148,7 +149,7 @@
                                         </tr>
                                         <tr>
                                             <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar2.jpeg">Bruno Nash<br></td>
-                                            <td>Software&nbsp;</td>
+                                            <td>Software Engineer</td>
                                             <td>London</td>
                                             <td>38</td>
                                             <td>2011/05/03<br></td>
@@ -157,7 +158,7 @@
                                         </tr>
                                         <tr>
                                             <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar3.jpeg">Caesar Vance</td>
-                                            <td>Pre-Sales&nbsp;</td>
+                                            <td>Pre-Sales Support</td>
                                             <td>New York</td>
                                             <td>21</td>
                                             <td>2011/12/12<br></td>
@@ -175,7 +176,7 @@
                                         </tr>
                                         <tr>
                                             <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar5.jpeg">Cedric Kelly</td>
-                                            <td>Senior&nbsp;</td>
+                                            <td>Senior JavaScript Developer</td>
                                             <td>Edinburgh</td>
                                             <td>22</td>
                                             <td>2012/03/29<br></td>
@@ -237,10 +238,10 @@
                                         <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt neve</strong><br></label><input class="form-control" type="text" id="last_name" placeholder="Doe" name="last_name"></div>
                                     </div>
                                     <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt telefonszáma</strong><br></label><input class="form-control" type="text" id="last_name-3" placeholder="Doe" name="last_name"></div>
+                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt telefonszáma</strong><br></label><input class="form-control" type="text" id="last_name-1" placeholder="Doe" name="last_name"></div>
                                     </div>
                                     <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt email</strong><br></label><input class="form-control" type="text" id="last_name-2" placeholder="Doe" name="last_name"></div>
+                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt email</strong><br></label><input class="form-control" type="text" id="last_name-4" placeholder="Doe" name="last_name"></div>
                                     </div>
                                 </div>
                             </form>
@@ -272,10 +273,10 @@
                                         <div class="mb-3"><label class="form-label" for="first_name"><strong>Szállítási cím</strong><br></label><input class="form-control" type="text" id="first_name-1" placeholder="John" name="first_name"></div>
                                     </div>
                                     <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt neve</strong><br></label><input class="form-control" type="text" id="last_name-1" placeholder="Doe" name="last_name"></div>
+                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt neve</strong><br></label><input class="form-control" type="text" id="last_name-2" placeholder="Doe" name="last_name"></div>
                                     </div>
                                     <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt telefonszáma</strong><br></label><input class="form-control" type="text" id="last_name-4" placeholder="Doe" name="last_name"></div>
+                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt telefonszáma</strong><br></label><input class="form-control" type="text" id="last_name-3" placeholder="Doe" name="last_name"></div>
                                     </div>
                                     <div class="col col-12">
                                         <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt email</strong><br></label><input class="form-control" type="text" id="last_name-5" placeholder="Doe" name="last_name"></div>
@@ -291,7 +292,6 @@
     </div>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-init.js"></script>
-    <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/theme.js"></script>
 </body>
 
