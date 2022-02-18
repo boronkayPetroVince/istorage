@@ -1,6 +1,7 @@
 body {
   margin: 0;
   font-family: Nunito, sans-serif !important;
+  background: #cdf0fd !important;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -19,7 +20,7 @@ body {
 }
 
 .dropdownProfileSet {
-  background: rgb(0,50,71,0.95) !important;
+  background: rgba(0,50,71,0.95) !important;
 }
 
 #profileItem:active, #profileItem:hover, #profileItem:focus {
@@ -188,7 +189,7 @@ ol, ul {
   background-color: rgba(255,255,255,0.8);
 }
 
-.dropdown-item:hover, {
+.dropdown-item:hover {
   color: #1e2833;
   background-color: rgba(255,255,255,0.4);
 }
@@ -212,12 +213,12 @@ ol, ul {
 }
 
 a:hover {
-  background-color: rgb(255,255,255,0.2) !important;
+  background-color: rgba(255,255,255,0.2) !important;
   color: #cdf0fd !important;
 }
 
 a:active, a:focus {
-  background-color: rgb(255,255,255,0.4) !important;
+  background-color: rgba(255,255,255,0.4) !important;
 }
 
 .sidebar-dark #sidebarToggle:hover {
@@ -372,8 +373,6 @@ button:not(:disabled), [type=button]:not(:disabled), [type=reset]:not(:disabled)
   animation-name: growIn;
   -webkit-animation-duration: 200ms;
   animation-duration: 200ms;
-  -webkit-animation-timing-function: transform cubic-bezier(0.18, 1.25, 0.4, 1),opacity cubic-bezier(0, 1, 0.4, 1);
-  animation-timing-function: transform cubic-bezier(0.18, 1.25, 0.4, 1),opacity cubic-bezier(0, 1, 0.4, 1);
 }
 
 .dropdown-menu.show {
@@ -424,4 +423,10 @@ button:not(:disabled), [type=button]:not(:disabled), [type=reset]:not(:disabled)
 .d-inline {
   display: inline !important;
 }
+footer.sticky-footer {
+  padding: 2rem 0;
+  flex-shrink: 0;
+}
+
+
 

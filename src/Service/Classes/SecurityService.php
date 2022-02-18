@@ -7,6 +7,7 @@ namespace App\Service\Classes;
 use App\Entity\User;
 use App\Service\Interfaces\SecurityServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityService implements SecurityServiceInterface
@@ -27,11 +28,16 @@ class SecurityService implements SecurityServiceInterface
         $this->em = $em;
         $this->encoder = $encoder;
     }
+    public function getRepo(): EntityRepository
+    {
+        return $this->em->getRepository(User::class);
+    }
+
     public function getAllUser():iterable{
-        return $this->em->getRepository(User::class)->findAll();
+        return $this->getRepo()->findAll();;
     }
     public function getOneUserById(int $id):User{
-        return $this->em->getRepository(User::class)->find($id);
+        return $this->getRepo()->find($id);
     }
     public function addUser(string $username, string $password, string $fullName, string $email, int $phoneNumber, string $role):void{
         $user = new User();
@@ -48,6 +54,10 @@ class SecurityService implements SecurityServiceInterface
         $user = $this->getOneUserById($id);
         $this->em->persist($user);
         $this->em->flush();
+    }
+    public function getOneUserByName(string $name): User //iittttt ezt kell a frissitéshez
+    {
+        return $this->getRepo()->findOneBy(["username" => $name]);
     }
     public function removeUser(int $id):void{
         $this->em->remove($this->getOneUserById($id));

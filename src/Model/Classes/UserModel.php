@@ -34,15 +34,14 @@ class UserModel implements UserModelInterface
 
     public function addUser(Request $request): bool
     {
-        $user = $request->request->get("username");
-        $fullName = $request->request->get("fullName");
-        $phoneNumber = $request->request->get("phoneNumber");
-        $email = $request->request->get("email");
-        $role = $request->request->get("roles");
-        if ($request->request->get("password") === $request->request->get("password2")){
+        $user = $request->request->get("newUsername");
+        $fullName = $request->request->get("newFullname");
+        $email = $request->request->get("newEmail");
+        $phoneNumber = $request->request->get("newPhoneNumber");
+        $role = $request->request->get("newRole");
+        if ($request->request->get("newPassword") === $request->request->get("newPasswordAgain")){
            if ($this->checkUser($user) === false){
-                $this->securityService->addUser($user,$request->request->get("password2"), $fullName, $email, $phoneNumber, $role);
-                //return new JsonResponse(["result"=>true]);
+                $this->securityService->addUser($user,$request->request->get("newPasswordAgain"), $fullName, $email, $phoneNumber, $role);
                 return true;
            }else return false;
         }else return false;
@@ -55,14 +54,15 @@ class UserModel implements UserModelInterface
         }else return false;
     }
 
-    public function updateUser(Request $request): bool
+    public function updateUser(Request $request, int $userId): bool
     {
-        $user = $this->securityService->getOneUserById($request->request->get("users"));
+        $user = $this->securityService->getOneUserById($userId);
         if ($this->checkUser($request->request->get("username")) === false){
             $user->setFullName($request->request->get("fullName"));
             $user->setUsername($request->request->get("username"));
             $user->setEmail($request->request->get("email"));
             $user->setPhoneNumber((int)$request->request->get("phoneNumber"));
+            $user->setRoles([$request->request->get("role")]);
             $this->securityService->updateUser($user->getId());
             return true;
         }else return false;

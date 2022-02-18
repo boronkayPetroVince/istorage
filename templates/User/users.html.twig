@@ -1,169 +1,88 @@
 {% extends 'index.html.twig' %}
 
+{# @var users \App\Entity\User[] #}
+{% set updateUserId = 0 %}
 {% block content %}
-    <div class="d-flex flex-column" id="content-wrapper">
-        <div id="content" style="background: rgba(177,233,254,0.6);">
-            <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top" style="background: #1e2833 !important;">
-                <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
-                    <ul class="navbar-nav flex-nowrap ms-auto flex-wrap" id="profile">
-                        <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"></a>
-                            <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
-                                <form class="me-auto navbar-search w-100">
-                                    <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
-                                        <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-                        <div class="d-none d-sm-block topbar-divider"></div>
-                        <li class="nav-item dropdown" id="dropdownProfile">
-                            <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" id="dropdownProfile" href="#"><span class="d-none d-lg-inline d-sm-inline me-2 text-gray-600" id="profileItem"><img class="border rounded-circle img-profile border-0" src="assets/img/unknow.jpg">&nbsp;Username</span></a>
-                                <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in dropdownProfileSet"><a class="dropdown-item profileDropItemSet" href="profile.html"><i class="fas fa-user fa-sm fa-fw me-2"></i>&nbsp;Profile</a>
-                                    <div class="dropdown-divider"></div><a class="dropdown-item profileDropItemSet" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+    <div class="container-fluid">
+        <h3 class="text-dark mb-4">Raktárosok<br></h3>
+        <div id="resultAlert" class="alert {{ resultColor }} hide" role="alert">
+            {{ resultMessage }}
+        </div>
+        <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
+            <div class="card-body" style="background: rgba(255,255,255,0.5);">
+                <div class="row">
+                    <div class="col-md-6 text-nowrap">
+                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block showSelect">
+                                    <option value="10" selected="">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>&nbsp;</label></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><button class="btn btn-primary buttonDesign" type="button">Excel</button><button class="btn btn-primary buttonDesign" type="button">PDF</button><button class="btn btn-primary buttonDesign" type="button" data-bs-target="#addUser" data-bs-toggle="modal">Hozzáadás</button></div>
+                    </div>
                 </div>
-            </nav>
-            <div class="container-fluid">
-                <h3 class="text-dark mb-4">Raktárosok<br></h3>
-                <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
-                    <div class="card-body" style="background: rgba(255,255,255,0.5);">
-                        <div class="row">
-                            <div class="col-md-6 text-nowrap">
-                                <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block showSelect">
-                                            <option value="10" selected="">10</option>
-                                            <option value="25">25</option>
-                                            <option value="50">50</option>
-                                            <option value="100">100</option>
-                                        </select>&nbsp;</label></div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="text-md-end dataTables_filter" id="dataTable_filter"><button class="btn btn-primary buttonDesign" type="button">Excel</button><button class="btn btn-primary buttonDesign" type="button">PDF</button><button class="btn btn-primary buttonDesign" type="button" data-bs-target="#addUser" data-bs-toggle="modal">Hozzáadás</button></div>
-                            </div>
-                        </div>
-                        <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                            <table class="table my-0" id="dataTable">
-                                <thead>
-                                <tr>
-                                    <th>Felhasználónév</th>
-                                    <th>Teljes név</th>
-                                    <th>Email</th>
-                                    <th>Telefonszám</th>
-                                    <th>Jogosultság</th>
-                                    <th>Módosítás</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar1.jpeg">Airi Satou</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>33</td>
-                                    <td>2008/11/28</td>
-                                    <td><button class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateUser" data-bs-toggle="modal"><i class="fas fa-edit operationIcon"></i></button></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar2.jpeg">Angelica Ramos</td>
-                                    <td>Chief Executive Officer(CEO)</td>
-                                    <td>London</td>
-                                    <td>47</td>
-                                    <td>2009/10/09<br></td>
-                                    <td>$1,200,000</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar3.jpeg">Ashton Cox</td>
-                                    <td>Junior Technical Author</td>
-                                    <td>San Francisco</td>
-                                    <td>66</td>
-                                    <td>2009/01/12<br></td>
-                                    <td>$86,000</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar4.jpeg">Bradley Greer</td>
-                                    <td>Software Engineer</td>
-                                    <td>London</td>
-                                    <td>41</td>
-                                    <td>2012/10/13<br></td>
-                                    <td>$132,000</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar5.jpeg">Brenden Wagner</td>
-                                    <td>Software Engineer</td>
-                                    <td>San Francisco</td>
-                                    <td>28</td>
-                                    <td>2011/06/07<br></td>
-                                    <td>$206,850</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar1.jpeg">Brielle Williamson</td>
-                                    <td>Integration Specialist</td>
-                                    <td>New York</td>
-                                    <td>61</td>
-                                    <td>2012/12/02<br></td>
-                                    <td>$372,000</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar2.jpeg">Bruno Nash<br></td>
-                                    <td>Software Engineer</td>
-                                    <td>London</td>
-                                    <td>38</td>
-                                    <td>2011/05/03<br></td>
-                                    <td>$163,500</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar3.jpeg">Caesar Vance</td>
-                                    <td>Pre-Sales Support</td>
-                                    <td>New York</td>
-                                    <td>21</td>
-                                    <td>2011/12/12<br></td>
-                                    <td>$106,450</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar4.jpeg">Cara Stevens</td>
-                                    <td>Sales Assistant</td>
-                                    <td>New York</td>
-                                    <td>46</td>
-                                    <td>2011/12/06<br></td>
-                                    <td>$145,600</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar5.jpeg">Cedric Kelly</td>
-                                    <td>Senior JavaScript Developer</td>
-                                    <td>Edinburgh</td>
-                                    <td>22</td>
-                                    <td>2012/03/29<br></td>
-                                    <td>$433,060</td>
-                                </tr>
-                                </tbody>
-                                <tfoot>
-                                <tr></tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 align-self-center">
-                                <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
-                            </div>
-                            <div class="col-md-6">
-                                <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                                    <ul class="pagination">
-                                        <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
+                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                    <table class="table my-0" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Felhasználónév</th>
+                            <th>Teljes név</th>
+                            <th>Email</th>
+                            <th>Telefonszám</th>
+                            <th>Jogosultság</th>
+                            <th>Módosítás</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% set counter = 0 %}
+                        {% for user in users %}
+                            <tr id="{{ counter }}">
+                                <td id="id{{ counter }}">{{ user.id }}</td>
+                                <td id="username{{ counter }}">{{ user.username }}</td>
+                                <td id="fullName{{ counter }}">{{ user.fullName }}</td>
+                                <td id="email{{ counter }}">{{ user.email }}</td>
+                                <td id="phoneNumber{{ counter }}">{{ user.phoneNumber }}</td>
+                                {% if user.roles[0] == "ROLE_ADMIN" %}
+                                    <td id="role{{ counter }}">{{ user.roles[0] }}</td>
+                                {% elseif user.roles[0] == "ROLE_USER" %}
+                                    <td id="role{{ counter }}">{{ user.roles[0] }}</td>
+                                {% endif %}
+                                <td>
+                                    <button id="btn{{ counter }}" class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateUser" data-bs-toggle="modal" onclick="updateUser(this.id)"><i class="fas fa-edit operationIcon"></i></button>
+                                </td>
+                            </tr>
+                            {% set updateUserId = user.id %}
+                            {% set counter = counter + 1 %}
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr></tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 align-self-center">
+                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
+                    </div>
+                    <div class="col-md-6">
+                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                            <ul class="pagination">
+                                <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
         </div>
-        <footer class="bg-white sticky-footer" style="background: #1e2833 !important;"></footer>
+    </div>
+    <footer class="bg-white sticky-footer" style="background: #1e2833 !important;"></footer>
     </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="updateUser">
@@ -172,32 +91,53 @@
                 <div class="modal-header modalHeaderFooter">
                     <h5 class="w-100 text-center"><strong>Raktáros adat módosítás</strong><br></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body modalBody">
-                    <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);color: #1e2833;">
-                        <div class="card-body">
-                            <form>
-                                <div class="row">
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="username"><strong>Felhasználónév</strong></label><input class="form-control" type="text" id="username" placeholder="user.name" name="username"></div>
+
+                <form id="updateForm" action="{{ path('updateUser', {"userId" : "id"}) }}" method="post">
+                    <div class="modal-body modalBody">
+                        <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);color: #1e2833;">
+                            <div class="card-body">
+                                    <div class="row">
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="username"><strong>Felhasználónév</strong></label>
+                                                <input class="form-control" type="text" id="username"  name="username">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="fullName"><strong>Teljes név</strong><br></label>
+                                                <input class="form-control" type="text" id="fullName" name="fullName">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="email"><strong>Email cím&nbsp;</strong></label>
+                                                <input class="form-control" type="email" id="email" name="email">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="phoneNumber"><strong>Telefonszám</strong><br></label>
+                                                <input class="form-control" type="text" id="phoneNumber" name="phoneNumber">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="role"><strong>Jogosultság</strong><br></label>
+                                                <input class="form-control" type="text" id="role" name="role">
+                                            </div>
+                                        </div>
+                                        <h1 id="idSzoveg"></h1>
                                     </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="email"><strong>Email cím&nbsp;</strong></label><input class="form-control" type="email" id="email" placeholder="user@example.com" name="email"></div>
-                                    </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="first_name"><strong>Teljes név</strong><br></label><input class="form-control" type="text" id="first_name" placeholder="John" name="first_name"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Telefonszám</strong><br></label><input class="form-control" type="text" id="last_name" placeholder="Doe" name="last_name"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Jogosultság</strong><br></label><input class="form-control" type="text" id="last_name-1" placeholder="Doe" name="last_name"></div>
-                                    </div>
-                                </div>
-                            </form>
+
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer modalHeaderFooter"><button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button><button class="btn btn-primary modalSaveButton" type="button">Mentés</button></div>
+                    <div class="modal-footer modalHeaderFooter">
+                        <button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button>
+                        <button class="btn btn-primary modalSaveButton" type="submit" onclick="update()">Mentés</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -207,35 +147,90 @@
                 <div class="modal-header modalHeaderFooter">
                     <h5 class="w-100 text-center"><strong>Új raktáros hozzáadása</strong></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body modalBody">
-                    <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
-                        <div class="card-body">
-                            <form>
-                                <div class="row">
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="username"><strong>Felhasználónév</strong></label><input class="form-control" type="text" id="username-1" placeholder="user.name" name="username"></div>
+                <form action="{{ path('addUser') }}" method="post">
+                    <div class="modal-body modalBody">
+                        <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
+                            <div class="card-body">
+                                    <div class="row">
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newUsername"><strong>Felhasználónév</strong></label>
+                                                <input class="form-control" type="text" id="newUsername"  name="newUsername">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newPassword"><strong>Jelszó</strong><br></label>
+                                                <input class="form-control" type="password" id="newPassword"  name="newPassword">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newPasswordAgain"><strong>Jelszó megerősítése</strong><br></label>
+                                                <input class="form-control" type="password" id="newPasswordAgain"  name="newPasswordAgain">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newFullname"><strong>Teljes név</strong><br></label>
+                                                <input class="form-control" type="text" id="newFullname"  name="newFullname">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newEmail"><strong>Email cím&nbsp;</strong></label>
+                                                <input class="form-control" type="email" id="newEmail" name="newEmail">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newPhoneNumber"><strong>Telefonszám</strong><br></label>
+                                                <input class="form-control" type="number" id="newPhoneNumber" name="newPhoneNumber">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newRole"><strong>Jogosultság</strong><br></label>
+                                                <input class="form-control" type="text" id="newRole" name="newRole">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="email"><strong>Email cím&nbsp;</strong></label><input class="form-control" type="email" id="email-1" placeholder="user@example.com" name="email"></div>
-                                    </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="first_name"><strong>Teljes név</strong><br></label><input class="form-control" type="text" id="first_name-1" placeholder="John" name="first_name"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Telefonszám</strong><br></label><input class="form-control" type="text" id="last_name-2" placeholder="Doe" name="last_name"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Jogosultság</strong><br></label><input class="form-control" type="text" id="last_name-3" placeholder="Doe" name="last_name"></div>
-                                    </div>
-                                </div>
-                            </form>
+
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer modalHeaderFooter"><button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button><button class="btn btn-primary modalSaveButton" type="button">Hozzáadás</button></div>
+                    <div class="modal-footer modalHeaderFooter">
+                        <button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button>
+                        <button class="btn btn-primary modalSaveButton" type="submit">Hozzáadás</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
+    <script>
+        //MÓDOSÍTÁS működik, csak rossz ID-----------------------------------------------------------------------------------
+        var id = 0;
+        var rowId = 0;
+        function updateUser(rowId){
+            rowId = rowId.replace("btn","");
+            id = document.getElementById("id"+rowId).innerHTML;
+            document.getElementById("username").value = document.getElementById("username"+rowId).innerHTML;
+            document.getElementById("fullName").value = document.getElementById("fullName"+rowId).innerHTML;
+            document.getElementById("email").value = document.getElementById("email"+rowId).innerHTML;
+            document.getElementById("phoneNumber").value = document.getElementById("phoneNumber"+rowId).innerHTML;
+            document.getElementById("role").value = document.getElementById("role"+rowId).innerHTML;
+
+            let url = document.getElementById("updateForm").action;
+            var newUrl = url.replace("id", parseInt(id));
+            document.getElementById("updateForm").action = newUrl;
+            $("#updateUser").show();
+        }
+        function update(){
+
+        }
+
+    </script>
 {% endblock %}
 
 

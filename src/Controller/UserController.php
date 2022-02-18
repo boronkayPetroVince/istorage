@@ -34,16 +34,18 @@ class UserController extends AbstractController
     /**
      * @param Request $request
      * @return Response
-     * @Route(name="register", path="/register")
+     * @Route(name="addUser", path="/addUser")
      */
-    public function registerAction(Request $request):Response{
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+    public function addUser(Request $request):Response{
         if($this->isGranted("ROLE_ADMIN")){
             if ($request->isMethod("POST")){
                 if($this->userModel->addUser($request) === true){
-                    return $this->render("user/register.html.twig", ["content" => "Sikeres regisztráció", "user" => $this->getUser()]);
-                }else return $this->render("user/register.html.twig", ["content"=>"Felhasználónév foglalt!", "user" => $this->getUser()]);
-            }else return $this->render("user/register.html.twig", ["content"=>"", "user" => $this->getUser()]);
+                    return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser(),
+                        "result.message"=> "Sikeres módosítás!", "color" => "alert-success"]);
+                }else return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(), "user" => $this->getUser(),
+                    "resultMessage"=> "Sikertelen módosítás!", "resultColor" => "alert-warning"]);
+            }else return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(), "user" => $this->getUser(),
+                "resultMessage"=> "Rosszul érkeztek be az adatok!", "resultColor" => "alert-danger"]);
         }else return new Response("Hozzáférés megtagadva!");
 
     }
@@ -75,18 +77,30 @@ class UserController extends AbstractController
 
     /**
      * @param Request $request
+     * @param int $userId
      * @return Response
-     * @Route(name="update_action", path="/update")
+     * @Route(name="updateUser", path="/updateUser/{userId}")
      */
-    public function updateAction(Request $request): Response{
+    public function updateUser(Request $request, int $userId): Response{
         if ($request->isMethod("POST")) {
             if ($this->isGranted("ROLE_ADMIN")) {
-                if($this->userModel->updateUser($request) === true){
-                    return new Response("Sikeres módosítás!");
-                }else return new Response("Sikertelen!");
+                if($this->userModel->updateUser($request, $userId) === true){
+                    //Egy másik oldallal tér vissza, HA sikertelen! Amin csak egy alert szerepel!
+                    return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser(),
+                        "resultMessage"=> "Sikeres módosítás!", "resultColor" => "alert-success"]);
+                }else return $this->render("user/updateFailed.html.twig", ["user" => $this->security->getOneUserById($userId),
+                    "resultMessage"=> "Sikertelen adatmódosítás!", "resultColor" => "alert-danger"]);
             }else return new Response("Hozzáférés megtagadva");
-        }else return $this->render("user/update.html.twig", ["user" => $this->getUser()]);
+        }else return $this->redirect($this->allUsers());
+    }
 
+    /**
+     * @return Response
+     * @Route(name="users", path="/users")
+     */
+    public function allUsers():Response{
+        return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser(),
+            "resultMessage"=> "kurvinyóóó", "resultColor" => "alert-success"]);
     }
 
     /**
@@ -106,52 +120,6 @@ class UserController extends AbstractController
         return $this->render("User/UserPassChange.html.twig", ["user" => $this->getUser()]);
     }
 
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="allUsersDetails", path="/allUsersDetails")
-     */
-    public function AllUsersDetails():Response{
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        return $this->render("User/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser()]);
-    }
 
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="oneUserDetails", path="/oneUserDetails")
-     */
-    public function oneUserDetails(Request $request):Response{
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        if ($request->isMethod("POST")){
-            $user = $this->security->getOneUserById($request->request->get("username"));
-            $this->userModel->oneUserDetails($request,$user);
-            return new JsonResponse($user);
-        }else return $this->render("user/oneUserDetails.html.twig",["user" => $this->getUser()]);
-    }
 
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="removeUser", path="/removeUser")
-     */
-    public function removeUser(Request $request):Response{
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        if ($request->isMethod("POST"))
-        {
-            if ($this->userModel->removeUser($request))
-            {
-                return $this->render("User/remove.html.twig",["result" => "Sikeresen kitörölted a:" . $request->getUser() . " felhasználót!"]);
-            }else return new Response("Sikertelen törlés!");
-        }else return $this->render("user/remove.html.twig", ["result" => "", "user" => $this->getUser()]);
-    }
-
-    /**
-     * @return Response
-     * @Route(name="allUser", path="/allUser")
-     */
-    public function getAllUser():Response{
-        $users = $this->security->getAllUser();
-        return new JsonResponse($users);
-    }
 }

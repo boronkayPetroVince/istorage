@@ -38,7 +38,7 @@
                     <td>{{ stock.statusID.status }}</td>
                     <td>{{ stock.date|date('Y-m-d H:i:s') }}</td>
                     <td>
-                        <a href="{{ path('updateOrderedStock', {"stockId":stock.ID}) }}" class="btn btn-danger">Módosítás</a>
+                        <a href="{{ path('updateOrderedStock', {"stockId":stock.id}) }}" class="btn btn-danger">Módosítás</a>
                     </td>
                 </tr>
             {% endif %}

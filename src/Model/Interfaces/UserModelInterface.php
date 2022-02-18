@@ -14,7 +14,7 @@ interface UserModelInterface
 
     public function loginAction(Request $request, User $user):bool;
 
-    public function updateUser(Request $request):bool;
+    public function updateUser(Request $request,int $userId):bool;
 
     public function changePass(Request $request, User $user):bool;
 

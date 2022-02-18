@@ -1,31 +1,9 @@
 {% extends 'index.html.twig' %}
 
+{# @var clients \App\Entity\Client[] #}
 {% block content %}
     <div class="d-flex flex-column" id="content-wrapper">
-        <div id="content" style="background: rgb(177,233,254,0.6);">
-            <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top" style="background: #1e2833 !important;">
-                <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
-                    <ul class="navbar-nav flex-nowrap ms-auto flex-wrap" id="profile">
-                        <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"></a>
-                            <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
-                                <form class="me-auto navbar-search w-100">
-                                    <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
-                                        <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-                        <div class="d-none d-sm-block topbar-divider"></div>
-                        <li class="nav-item dropdown" id="dropdownProfile">
-                            <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" id="dropdownProfile" href="#"><span class="d-none d-lg-inline d-sm-inline me-2 text-gray-600" id="profileItem"><img class="border rounded-circle img-profile border-0" src="assets/img/unknow.jpg">&nbsp;Username</span></a>
-                                <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in dropdownProfileSet"><a class="dropdown-item profileDropItemSet" href="profile.html"><i class="fas fa-user fa-sm fa-fw me-2"></i>&nbsp;Profile</a>
-                                    <div class="dropdown-divider"></div><a class="dropdown-item profileDropItemSet" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+        <div id="content" style="background: rgba(177,233,254,0.6);">
             <div class="container-fluid">
                 <h3 class="text-dark mb-4">Ügyfelek<br></h3>
                 <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
@@ -56,104 +34,26 @@
                                     <th>Módosítás</th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar1.jpeg">Airi Satou</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>33</td>
-                                    <td>2008/11/28</td>
-                                    <td>Cell 6</td>
-                                    <td><button class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateClient" data-bs-toggle="modal"><i class="fas fa-edit operationIcon"></i></button></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar2.jpeg">Angelica Ramos</td>
-                                    <td>Chief Executive Officer(CEO)</td>
-                                    <td>London</td>
-                                    <td>47</td>
-                                    <td>2009/10/09<br></td>
-                                    <td>Cell 6</td>
-                                    <td>$1,200,000</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar3.jpeg">Ashton Cox</td>
-                                    <td>Junior Technical Author</td>
-                                    <td>San Francisco</td>
-                                    <td>66</td>
-                                    <td>2009/01/12<br></td>
-                                    <td>Cell 6</td>
-                                    <td>$86,000</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar4.jpeg">Bradley Greer</td>
-                                    <td>Software Engineer</td>
-                                    <td>London</td>
-                                    <td>41</td>
-                                    <td>2012/10/13<br></td>
-                                    <td>Cell 6</td>
-                                    <td>$132,000</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar5.jpeg">Brenden Wagner</td>
-                                    <td>Software Engineer</td>
-                                    <td>San Francisco</td>
-                                    <td>28</td>
-                                    <td>2011/06/07<br></td>
-                                    <td>Cell 6</td>
-                                    <td>$206,850</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar1.jpeg">Brielle Williamson</td>
-                                    <td>Integration Specialist</td>
-                                    <td>New York</td>
-                                    <td>61</td>
-                                    <td>2012/12/02<br></td>
-                                    <td>Cell 6</td>
-                                    <td>$372,000</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar2.jpeg">Bruno Nash<br></td>
-                                    <td>Software Engineer</td>
-                                    <td>London</td>
-                                    <td>38</td>
-                                    <td>2011/05/03<br></td>
-                                    <td>Cell 6</td>
-                                    <td>$163,500</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar3.jpeg">Caesar Vance</td>
-                                    <td>Pre-Sales Support</td>
-                                    <td>New York</td>
-                                    <td>21</td>
-                                    <td>2011/12/12<br></td>
-                                    <td>Cell 6</td>
-                                    <td>$106,450</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar4.jpeg">Cara Stevens</td>
-                                    <td>Sales Assistant</td>
-                                    <td>New York</td>
-                                    <td>46</td>
-                                    <td>2011/12/06<br></td>
-                                    <td>Cell 6</td>
-                                    <td>$145,600</td>
-                                </tr>
-                                <tr>
-                                    <td><img class="rounded-circle me-2" width="30" height="30" src="avatars/avatar5.jpeg">Cedric Kelly</td>
-                                    <td>Senior JavaScript Developer</td>
-                                    <td>Edinburgh</td>
-                                    <td>22</td>
-                                    <td>2012/03/29<br></td>
-                                    <td>Cell 6</td>
-                                    <td>$433,060</td>
-                                </tr>
+                                {% set counter = 0 %}
+                                {% for client in clients %}
+                                    <tr id="{{ counter }}">
+                                        <td id="id{{ counter }}">{{ client.id }}</td>
+                                        <td id="clientName{{ counter }}">{{ client.clientName }}</td>
+                                        <td id="fullName{{ counter }}">{{ user.fullName }}</td>
+                                        <td id="email{{ counter }}">{{ user.email }}</td>
+                                        <td id="phoneNumber{{ counter }}">{{ user.phoneNumber }}</td>
+                                        {% if user.roles[0] == "ROLE_ADMIN" %}
+                                            <td id="role{{ counter }}">{{ user.roles[0] }}</td>
+                                        {% elseif user.roles[0] == "ROLE_USER" %}
+                                            <td id="role{{ counter }}">{{ user.roles[0] }}</td>
+                                        {% endif %}
+                                        <td>
+                                            <button id="btn{{ counter }}" class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateUser" data-bs-toggle="modal" onclick="updateUser(this.id)"><i class="fas fa-edit operationIcon"></i></button>
+                                        </td>
+                                    </tr>
+                                    {% set counter = counter + 1 %}
+                                {% endfor %}
                                 </tbody>
-                                <tfoot>
-                                <tr>
-                                    <td>Summary 1</td>
-                                </tr>
-                                </tfoot>
                             </table>
                         </div>
                         <div class="row">
