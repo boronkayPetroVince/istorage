@@ -1,11 +1,11 @@
 {% extends 'index.html.twig' %}
 
 {# @var users \App\Entity\User[] #}
-{% set updateUserId = 0 %}
+
 {% block content %}
     <div class="container-fluid">
-        <h3 class="text-dark mb-4">Raktárosok<br></h3>
-        <div id="resultAlert" class="alert {{ resultColor }} hide" role="alert">
+        <h3 class="text-dark mb-1">Raktárosok</h3>
+        <div class="alert alert-{{ resultColor }} hide" role="alert">
             {{ resultMessage }}
         </div>
         <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
@@ -20,7 +20,11 @@
                                 </select>&nbsp;</label></div>
                     </div>
                     <div class="col-md-6">
-                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><button class="btn btn-primary buttonDesign" type="button">Excel</button><button class="btn btn-primary buttonDesign" type="button">PDF</button><button class="btn btn-primary buttonDesign" type="button" data-bs-target="#addUser" data-bs-toggle="modal">Hozzáadás</button></div>
+                        <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                            <a href="{{ path('generateUserExcel') }}" class="btn btn-primary buttonDesign" type="button">Excel</a>
+                            <a href="{{ path('generateUserPDF') }}" class="btn btn-primary buttonDesign">PDF</a>
+                            <button class="btn btn-primary buttonDesign" type="button" data-bs-target="#addUser" data-bs-toggle="modal">Hozzáadás</button>
+                        </div>
                     </div>
                 </div>
                 <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
@@ -54,7 +58,6 @@
                                     <button id="btn{{ counter }}" class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateUser" data-bs-toggle="modal" onclick="updateUser(this.id)"><i class="fas fa-edit operationIcon"></i></button>
                                 </td>
                             </tr>
-                            {% set updateUserId = user.id %}
                             {% set counter = counter + 1 %}
                         {% endfor %}
                         </tbody>
@@ -82,7 +85,6 @@
             </div>
         </div>
     </div>
-    <footer class="bg-white sticky-footer" style="background: #1e2833 !important;"></footer>
     </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="updateUser">
@@ -127,9 +129,7 @@
                                                 <input class="form-control" type="text" id="role" name="role">
                                             </div>
                                         </div>
-                                        <h1 id="idSzoveg"></h1>
                                     </div>
-
                             </div>
                         </div>
                     </div>
@@ -195,7 +195,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                             </div>
                         </div>
                     </div>
@@ -207,9 +206,7 @@
             </div>
         </div>
     </div>
-
     <script>
-        //MÓDOSÍTÁS működik, csak rossz ID-----------------------------------------------------------------------------------
         var id = 0;
         var rowId = 0;
         function updateUser(rowId){
@@ -226,10 +223,6 @@
             document.getElementById("updateForm").action = newUrl;
             $("#updateUser").show();
         }
-        function update(){
-
-        }
-
     </script>
 {% endblock %}
 

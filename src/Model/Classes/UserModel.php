@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+
 class UserModel implements UserModelInterface
 {
     /** @var SecurityServiceInterface */
@@ -30,6 +31,8 @@ class UserModel implements UserModelInterface
         $this->securityService = $securityService;
         $this->encoder = $encoder;
     }
+
+
 
 
     public function addUser(Request $request): bool

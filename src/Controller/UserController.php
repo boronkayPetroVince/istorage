@@ -12,6 +12,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 
 class UserController extends AbstractController
@@ -24,11 +29,61 @@ class UserController extends AbstractController
     /**
      * UserController constructor.
      * @param SecurityServiceInterface $security
+     * @param UserModelInterface $userModel
      */
     public function __construct(SecurityServiceInterface $security, UserModelInterface $userModel)
     {
         $this->security = $security;
         $this->userModel = $userModel;
+    }
+
+    /**
+     * @Route(name="generateUserPDF", path="/generateUserPDF")
+     */
+    public function generatePDF(){
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+        $html = $this->renderView('user/usersPDF.html.twig', ["users" => $this->security->getAllUser()]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        ob_get_clean();
+        $dompdf->stream("raktarosok.pdf", [
+            "Attachment" => true
+        ]);
+    }
+
+    /**
+     * @Route(name="generateUserExcel", path="/generateUserExcel")
+     */
+    public function generateExcel(){
+        /** @var User[] $users */
+        $users = $this->security->getAllUser();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'ID');
+        $sheet->setCellValue('B1', 'Felhasználónév');
+        $sheet->setCellValue('C1', 'Teljes név');
+        $sheet->setCellValue('D1', 'Email');
+        $sheet->setCellValue('E1', 'Telefonszám');
+        $sheet->setCellValue('F1', 'Jogosultság');
+        $counter = 2;
+        foreach ($users as $user){
+            $sheet->setCellValue('A'.$counter, $user->getId());
+            $sheet->setCellValue('B'.$counter, $user->getUsername());
+            $sheet->setCellValue('C'.$counter, $user->getFullName());
+            $sheet->setCellValue('D'.$counter, $user->getEmail());
+            $sheet->setCellValue('E'.$counter, $user->getPhoneNumber());
+            $sheet->setCellValue('F'.$counter, $user->getRoles()[0]);
+            $counter++;
+        }
+        $writer = new Xlsx($spreadsheet);
+        $filename = "raktarosok";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        $writer->save('php://output');
+        die();
     }
 
     /**
@@ -41,11 +96,11 @@ class UserController extends AbstractController
             if ($request->isMethod("POST")){
                 if($this->userModel->addUser($request) === true){
                     return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser(),
-                        "result.message"=> "Sikeres módosítás!", "color" => "alert-success"]);
+                        "resultMessage"=> "Sikeres hozzáadás!", "resultColor" => "success"]);
                 }else return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(), "user" => $this->getUser(),
-                    "resultMessage"=> "Sikertelen módosítás!", "resultColor" => "alert-warning"]);
+                    "resultMessage"=> "Sikertelen hozzáadás! A jelszók nem egyeznek!", "resultColor" => "danger"]);
             }else return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(), "user" => $this->getUser(),
-                "resultMessage"=> "Rosszul érkeztek be az adatok!", "resultColor" => "alert-danger"]);
+                "resultMessage"=> "Rosszul érkeztek be az adatok!", "resultColor" => "warning"]);
         }else return new Response("Hozzáférés megtagadva!");
 
     }
@@ -87,9 +142,9 @@ class UserController extends AbstractController
                 if($this->userModel->updateUser($request, $userId) === true){
                     //Egy másik oldallal tér vissza, HA sikertelen! Amin csak egy alert szerepel!
                     return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser(),
-                        "resultMessage"=> "Sikeres módosítás!", "resultColor" => "alert-success"]);
+                        "resultMessage"=> "Sikeres módosítás!", "resultColor" => "success"]);
                 }else return $this->render("user/updateFailed.html.twig", ["user" => $this->security->getOneUserById($userId),
-                    "resultMessage"=> "Sikertelen adatmódosítás!", "resultColor" => "alert-danger"]);
+                    "resultMessage"=> "Sikertelen adatmódosítás!", "resultColor" => "red"]);
             }else return new Response("Hozzáférés megtagadva");
         }else return $this->redirect($this->allUsers());
     }
@@ -100,7 +155,7 @@ class UserController extends AbstractController
      */
     public function allUsers():Response{
         return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser(),
-            "resultMessage"=> "kurvinyóóó", "resultColor" => "alert-success"]);
+            "resultMessage"=> "", "resultColor" => "", "show" => 'hide']);
     }
 
     /**

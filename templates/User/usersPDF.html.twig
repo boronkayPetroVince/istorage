@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{# @var users \App\Entity\User[] #}
+
+{% block title %}
+    Raktárosok - PDF
+{% endblock %}
+
+{% block body %}
+    <h1 style="margin-bottom: 5px; text-align: center;">Összes raktáros adata</h1><br>
+    <div>
+        <table border="1" style="margin: auto;">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Felhasználónév</th>
+                <th>Teljes név</th>
+                <th>Email</th>
+                <th>Telefonszám</th>
+                <th>Jogosultság</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set counter = 0 %}
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.fullName }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phoneNumber }}</td>
+                    {% if user.roles[0] == "ROLE_ADMIN" %}
+                        <td>{{ user.roles[0] }}</td>
+                    {% elseif user.roles[0] == "ROLE_USER" %}
+                        <td>{{ user.roles[0] }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr></tr>
+            </tfoot>
+        </table>
+    </div>
+{% endblock %}

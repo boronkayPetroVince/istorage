@@ -1,0 +1,96 @@
+{% extends 'index.html.twig' %}
+{# @var #user \App\Entity\User #}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-lg-12">
+                <div class="card mb-3" style="background: rgba(255,255,255,0.5);">
+                    <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4 profileImgSet" src="assets/img/unknow.jpg" width="160" height="160">
+                        <div class="mb-3">
+                            <p>Név + rang</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg-8 col-lg-12">
+                <div class="row mb-3 d-none">
+                    <div class="col">
+                        <div class="card textwhite bg-primary text-white shadow">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <p class="m-0">Peformance</p>
+                                        <p class="m-0"><strong>65.2%</strong></p>
+                                    </div>
+                                    <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
+                                </div>
+                                <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card textwhite bg-success text-white shadow">
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col">
+                                        <p class="m-0">Peformance</p>
+                                        <p class="m-0"><strong>65.2%</strong></p>
+                                    </div>
+                                    <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
+                                </div>
+                                <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-lg-6 col-sm-12">
+                        <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
+                            <div class="card-header py-3">
+                                <p class="text-primary m-0 fw-bold">Felhasználói adat módosítás</p>
+                            </div>
+                            <div class="card-body" style="color: #1e2833;">
+                                <form>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label" for="username"><strong>Felhasználónév</strong></label><input class="form-control" type="text" id="username" placeholder="user.name" name="username"></div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label" for="email"><strong>Email cím</strong></label><input class="form-control" type="email" id="email" placeholder="user@example.com" name="email"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label" for="first_name"><strong>Teljes név</strong><br></label><input class="form-control" type="text" id="first_name" placeholder="John" name="first_name"></div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label" for="last_name"><strong>Telefonszám</strong><br></label><input class="form-control" type="text" id="last_name" placeholder="Doe" name="last_name"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3"><button class="btn btn-primary btn-sm buttonDesign" type="submit">Módosít</button></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-lg-6 col-sm-12">
+                        <div class="card shadow" style="background: rgba(255,255,255,0.5);">
+                            <div class="card-header py-3">
+                                <p class="text-primary m-0 fw-bold">Jelszómódosítás</p>
+                            </div>
+                            <div class="card-body" style="color: #1e2833;">
+                                <form>
+                                    <div class="mb-3"><label class="form-label" for="address"><strong>&nbsp;Új jelszó</strong></label><input class="form-control" type="text" id="address" placeholder="Sunset Blvd, 38" name="address"></div>
+                                    <div class="mb-3"><label class="form-label" for="address"><strong>Új jelszó újra</strong></label><input class="form-control" type="text" id="address-1" placeholder="Sunset Blvd, 38" name="address"></div>
+                                    <div class="mb-3"><button class="btn btn-primary btn-sm buttonDesign" type="submit">Módosít<br></button></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-white sticky-footer" style="background: #1e2833 !important;"></footer>
+{% endblock %}

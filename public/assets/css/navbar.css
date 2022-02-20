@@ -424,7 +424,7 @@ button:not(:disabled), [type=button]:not(:disabled), [type=reset]:not(:disabled)
   display: inline !important;
 }
 footer.sticky-footer {
-  padding: 2rem 0;
+  padding: 0.5rem 0;
   flex-shrink: 0;
 }
 
