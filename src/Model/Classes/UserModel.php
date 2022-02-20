@@ -43,10 +43,8 @@ class UserModel implements UserModelInterface
         $phoneNumber = $request->request->get("newPhoneNumber");
         $role = $request->request->get("newRole");
         if ($request->request->get("newPassword") === $request->request->get("newPasswordAgain")){
-           if ($this->checkUser($user) === false){
-                $this->securityService->addUser($user,$request->request->get("newPasswordAgain"), $fullName, $email, $phoneNumber, $role);
-                return true;
-           }else return false;
+            $this->securityService->addUser($user,$request->request->get("newPasswordAgain"), $fullName, $email, $phoneNumber, $role);
+            return true;
         }else return false;
     }
 
@@ -71,49 +69,33 @@ class UserModel implements UserModelInterface
         }else return false;
     }
 
-    public function changePass(Request $request, User $user): bool
-    {
-        if($request){
-            $password = $request->request->get("old");
-            if($this->securityService->checkPassword($user->getUsername(),$password) === true){
-                $user->setPassword($this->encoder->encodePassword($user,$request->request->get("new")));
-                $this->securityService->updateUser($user->getId());
-                return true;
-            }
-            return false;
+    public function updateLoggedUser(Request $request, User $user): bool{
+        if($request->isMethod("POST")){
+            $user->setFullName($request->request->get("fullName"));
+            $user->setUsername($request->request->get("username"));
+            $user->setEmail($request->request->get("email"));
+            $user->setPhoneNumber((int)$request->request->get("phoneNumber"));
+            $this->securityService->updateUser($user->getId());
+            return true;
         }
         return false;
     }
 
-
-    public function AllUserDetails(): Response
+    public function changePass(Request $request, User $user): bool
     {
-        // TODO: Implement getAllUserDetails() method.
-    }
-
-    public function oneUserDetails(Request $request, User $user): User
-    {
-        //if($user){
-            $user->getFullName($request->request->get("fullName"));
-            $user->getEmail($request->request->get("email"));
-            $user->getPhoneNumber($request->request->get("phoneNumber"));
-            return $user;
-        //}else return $user=null;
-
-    }
-
-    public function removeUser(Request $request): bool
-    {
-        if($request){
-            $user = $this->securityService->getOneUserById($request->request->get("users"));
-            $this->securityService->removeUser($user->getId());
-            return true;
-        }else return false;
-    }
-
-    public function getAllUser(): Response
-    {
-        // TODO: Implement getAllUser() method.
+        if($request->isMethod("POST")){
+            $password = $request->request->get("oldPass");
+            if($this->securityService->checkPassword($user->getUsername(),$password) === true){
+                if ($request->request->get("newPass1") === $request->request->get("newPass2")){
+                    $user->setPassword($this->encoder->encodePassword($user, $request->request->get("newPass1")));
+                    $this->securityService->updateUser($user->getId());
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+        return false;
     }
 
     public function checkUser(string $username): bool

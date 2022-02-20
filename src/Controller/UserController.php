@@ -140,13 +140,32 @@ class UserController extends AbstractController
         if ($request->isMethod("POST")) {
             if ($this->isGranted("ROLE_ADMIN")) {
                 if($this->userModel->updateUser($request, $userId) === true){
-                    //Egy másik oldallal tér vissza, HA sikertelen! Amin csak egy alert szerepel!
                     return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser(),
                         "resultMessage"=> "Sikeres módosítás!", "resultColor" => "success"]);
                 }else return $this->render("user/updateFailed.html.twig", ["user" => $this->security->getOneUserById($userId),
                     "resultMessage"=> "Sikertelen adatmódosítás!", "resultColor" => "red"]);
             }else return new Response("Hozzáférés megtagadva");
         }else return $this->redirect($this->allUsers());
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="updateLoggedUser", path="/updateLoggedUser")
+     */
+    public function updateLoggedUser(Request $request): Response{
+        /** @var User $user */
+        $user = $this->getUser();
+        if($request->isMethod("POST")){
+            if($this->userModel->updateLoggedUser($request, $user) === true){
+                return $this->render("user/profile.html.twig", ["user" =>$this->getUser(),"resultMessage"=> "Sikeres adatmódosítás!", "resultColor" => "success"]);
+            }else {
+                return $this->render("user/profile.html.twig", ["user" =>$this->getUser(),"resultMessage"=> "Sikertelen adatmódosítás!", "resultColor" => "danger"]);
+            }
+        }
+        return $this->render("user/profile.html.twig", ["user" => $this->getUser(),
+            "resultMessage"=> "", "resultColor" => ""]);
+
     }
 
     /**
@@ -164,15 +183,15 @@ class UserController extends AbstractController
      * @Route(name="passChange", path="/passChange")
      */
     public function changePass(Request $request): Response{
+        /** @var User $user */
+        $user = $this->getUser();
         if($request->isMethod("POST")){
-            if($this->isGranted("ROLE_ADMIN")){
-                $user = $this->getUser();
-                if($this->userModel->changePass($request, $user) === true){
-                    return new Response("SIKERES modosítás");
-                }else return new Response("sikertelen modosítás");
-            }else return new Response("HOZZÁFÉRÉS MEGTAGADVA");
+            if($this->userModel->changePass($request,$user)){
+                return $this->render("user/profile.html.twig", ["user" =>$this->getUser(),"resultMessage"=> "Sikeres jelszó módosítás!", "resultColor" => "success"]);
+            }else return $this->render("user/profile.html.twig", ["user" =>$this->getUser(),"resultMessage"=> "Sikertelen jelszó módosítás! A jelszók nem egyeznek, vagy rossz jelenlegi ", "resultColor" => "danger"]);
         }
-        return $this->render("User/UserPassChange.html.twig", ["user" => $this->getUser()]);
+        return $this->render("user/profile.html.twig", ["user" => $this->getUser(),
+            "resultMessage"=> "", "resultColor" => ""]);
     }
 
 
