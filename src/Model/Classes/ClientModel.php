@@ -68,43 +68,36 @@ class ClientModel implements ClientModelInterface
     public function addClient(Request $request, User $user): bool
     {
         if($request){
-            $client = new Client();
-            $client->setClientName($request->request->get("client_name"));
-            $client->setVatNumber($request->request->get("vatNumber"));
-            $this->clientService->addClient($client);
-            //$country = $this->countryService->getOneCountryById($request->request->get("country"));
-            //$region = $this->regionService->getOneRegionByName($request->request->get("region_name"));
-            $postalCode = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postalCode"));
+            $postalCode = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postCode"));
             $delivery = new Delivery_address();
-            $delivery->setClientID($this->clientService->getOneClientById($client->getId()));
             $delivery->setSettlementID($this->settlementService->getOneSettlementById($postalCode->getId()));
-            $delivery->setaddress($request->request->get("address"));
+            $delivery->setaddress($request->request->get("newAddress"));
             $this->deliveryService->addAddress($delivery);
-
             $contact = new Contact();
-            $contact->setFullName($request->request->get("contact_fullName"));
-            $contact->setEmail($request->request->get("contact_Email"));
-            $contact->setPhoneNumber($request->request->get("contact_PhoneNumber"));
-            $contact->setClientID($this->clientService->getOneClientById($client->getId()));
+            $contact->setFullName($request->request->get("newContact_Fullname"));
+            $contact->setEmail($request->request->get("newContact_Email"));
+            $contact->setPhoneNumber($request->request->get("newContact_Phonenumber"));
             $this->contactService->addContact($contact);
-
+            $client = new Client();
+            $client->setClientName($request->request->get("newClientName"));
+            $client->setVatNumber($request->request->get("newVatNumber"));
+            $client->setDeliveryID($this->deliveryService->getOneAddressById($delivery->getId()));
+            $client->setContactID($this->contactService->getOneContactById($contact->getId()));
+            $this->clientService->addClient($client);
             return true;
-        }else{
-            return false;
         }
+        return false;
 
     }
-
-    public function updateClient(Request $request): bool
+    //módosítás
+    public function updateClient(Request $request, int $clientId): bool
     {
+        $client = $this->clientService->getOneClientById($clientId);
         if($request){
-            $client = $this->clientService->getOneClientById($request->request->get("clients"));
-            $client->setClientName($request->request->get("client_name"));
+            $client->setClientName($request->request->get("clientName"));
             $client->setVatNumber($request->request->get("vatNumber"));
             $this->clientService->updateClient($client->getId());
-
             $settlement = $this->settlementService->getOneSettlementByPostalcode("postalCode");
-
             $address = $this->deliveryService->getOneAddressById($request->request->get("address"));
             $address->setaddress($request->request->get("address"));
             $address->setSettlementID($settlement);

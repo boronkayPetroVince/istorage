@@ -13,7 +13,7 @@ interface ClientModelInterface
 {
     public function addClient(Request $request, User $user): bool;
 
-    public function updateClient(Request $request): bool;
+    public function updateClient(Request $request, int $clientId): bool;
 
     public function getOneSettlement(Request $request):Response;
 

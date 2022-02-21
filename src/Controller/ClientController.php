@@ -16,6 +16,10 @@ use App\Service\Interfaces\ClientServiceInterface;
 use App\Service\Interfaces\CountryServiceInterface;
 use App\Service\Interfaces\SecurityServiceInterface;
 use App\Service\Interfaces\SettlementServiceInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,6 +65,58 @@ class ClientController extends AbstractController
         $this->countryService = $countryService;
     }
 
+    /**
+     * @Route(name="generateClientPDF", path="/generateClientPDF")
+     */
+    public function generatePDF(){
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+        $html = $this->renderView('Client/clientsPDF.html.twig', ["clients" => $this->clientService->getAllClient()]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        ob_get_clean();
+        $dompdf->stream("ugyfelek.pdf", [
+            "Attachment" => true
+        ]);
+    }
+
+    /**
+     * @Route(name="generateClientExcel", path="/generateClientExcel")
+     */
+    public function generateExcel(){
+        /** @var Client[] $clients */
+        $clients = $this->clientService->getAllClient();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'ID');
+        $sheet->setCellValue('B1', 'Ügyfél neve');
+        $sheet->setCellValue('C1', 'Adószám');
+        $sheet->setCellValue('D1', 'Kapcsolattartó név');
+        $sheet->setCellValue('E1', 'Kapcsolattartó telefon');
+        $sheet->setCellValue('F1', 'Kapcsolattartó email');
+        $sheet->setCellValue('G1', 'Cím');
+        $counter = 2;
+        foreach ($clients as $client){
+            $sheet->setCellValue('A'.$counter, $client->getId());
+            $sheet->setCellValue('B'.$counter, $client->getClientName());
+            $sheet->setCellValue('C'.$counter, $client->getVatNumber());
+            $sheet->setCellValue('D'.$counter, $client->getContactID()->getFullName());
+            $sheet->setCellValue('E'.$counter, $client->getContactID()->getPhoneNumber());
+            $sheet->setCellValue('F'.$counter, $client->getContactID()->getEmail());
+            $sheet->setCellValue('G'.$counter, $client->getDeliveryID()->getSettlementID()->getPostalCode(). " ".
+                $client->getDeliveryID()->getSettlementID()->getPostalCode()." ".$client->getDeliveryID()->getAddress());
+            $counter++;
+        }
+        $writer = new Xlsx($spreadsheet);
+        $filename = "ugyfelek";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        $writer->save('php://output');
+        die();
+    }
+
 
     /**
      * @param Request $request
@@ -73,41 +129,54 @@ class ClientController extends AbstractController
         $user = $this->getUser();
         if ($request->isMethod("POST")){
             if($this->clientModel->addClient($request, $user)){
-                return $this->render("Client/addClient.html.twig", ["result" => "Sikeres hozzáadás!"]);
-            }
-            else{
-                return $this->render("Client/addClient.html.twig", ["result" => "Sikertelen!"]);
+                return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
+                    "resultMessage"=> "Sikeres hozzáadás!", "resultColor" => "success"]);
+            }else{
+                return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
+                    "resultMessage"=> "Sikertelen hozzáadás!", "resultColor" => "danger"]);
             }
         }else{
-            return $this->render("Client/addClient.html.twig", ["result" => ""]);
+            return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
+                "resultMessage"=> "", "resultColor" => ""]);
         }
     }
     /**
      * @param Request $request
+     * @param int $clientId
      * @return Response
-     * @Route(name="updateClient", path="/updateClient")
+     * @Route(name="updateClient", path="/updateClient/{clientId}")
      */
-    public function updateClient(Request $request): Response{
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+    public function updateClient(Request $request, int $clientId): Response{
         if ($request->isMethod("POST")){
-            if($this->clientModel->updateClient($request) == true){
-                return $this->render("Client/updateClient.html.twig", ["result" =>"Sikeres frissítés"]);
+            if($this->clientModel->updateClient($request,$clientId) === true){
+                return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
+                    "resultMessage"=> "Sikeres módosítás!", "resultColor" => "success"]);
             }else{
-                return $this->render("Client/updateClient.html.twig", ["result" =>"Sikertelen"]);
+                return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
+                    "resultMessage"=> "Sikertelen módosítás!", "resultColor" => "danger"]);
             }
-        }else{
-            return $this->render("Client/updateClient.html.twig", ["result" =>""]);
         }
+        return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
+            "resultMessage"=> "", "resultColor" => ""]);
     }
 
     /**
      * @param Request $request
      * @return Response
-     * @Route(name="getOneSettlement")
+     * @Route(name="getOneSettlementForUpdating", path="/getOneSettlementForUpdating")
      */
-    public function getOneSettlement(Request $request):Response{
-        //$postalCode = $this->clientModel->getOneSettlement($request);
+    public function getOneSettlementForUpdating(Request $request):Response{
         $postalCode = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postalCode"));
+        return new JsonResponse($postalCode);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="getOneSettlementForAdding", path="/getOneSettlementForAdding")
+     */
+    public function getOneSettlementForAdding(Request $request):Response{
+        $postalCode = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postCode"));
         return new JsonResponse($postalCode);
     }
 
@@ -127,9 +196,8 @@ class ClientController extends AbstractController
      * @Route(name="allClients", path="/allClients")
      */
     public function allClients(Request $request): Response{
-        //$clients = $this->clientService->getAllClient();
-        $clients = $this->clientModel->allClients();
-        return $this->render("Client/clients.html.twig");
+        return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
+            "resultMessage"=> "", "resultColor" => ""]);
     }
 
 

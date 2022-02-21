@@ -6,6 +6,9 @@
         <div id="content" style="background: rgba(177,233,254,0.6);">
             <div class="container-fluid">
                 <h3 class="text-dark mb-4">Ügyfelek<br></h3>
+                <div class="alert alert-{{ resultColor }} hide" role="alert">
+                    {{ resultMessage }}
+                </div>
                 <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
                     <div class="card-body" style="background: rgba(255,255,255,0.5);">
                         <div class="row">
@@ -18,19 +21,24 @@
                                         </select>&nbsp;</label></div>
                             </div>
                             <div class="col-md-6">
-                                <div class="text-md-end dataTables_filter" id="dataTable_filter"><button class="btn btn-primary buttonDesign" type="button">Excel</button><button class="btn btn-primary buttonDesign" type="button">PDF</button><button class="btn btn-primary buttonDesign" type="button" data-bs-target="#addClient" data-bs-toggle="modal">Hozzáadás</button></div>
+                                <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                                    <a href="{{ path('generateClientExcel') }}" class="btn btn-primary buttonDesign" type="button">Excel</a>
+                                    <a href="{{ path('generateClientPDF') }}" class="btn btn-primary buttonDesign" type="button">PDF</a>
+                                    <button class="btn btn-primary buttonDesign" type="button" data-bs-target="#addClient" data-bs-toggle="modal">Hozzáadás</button>
+                                </div>
                             </div>
                         </div>
                         <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
                             <table class="table my-0" id="dataTable">
                                 <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Ügyfél neve</th>
                                     <th>Adószám</th>
-                                    <th>Cím</th>
                                     <th>Kapcsolattartó név</th>
                                     <th>Kapcsolattartó telefon<br></th>
                                     <th>Kapcsolattartó email<br></th>
+                                    <th>Cím</th>
                                     <th>Módosítás</th>
                                 </tr>
                                 </thead>
@@ -39,16 +47,18 @@
                                     <tr id="{{ counter }}">
                                         <td id="id{{ counter }}">{{ client.id }}</td>
                                         <td id="clientName{{ counter }}">{{ client.clientName }}</td>
-                                        <td id="fullName{{ counter }}">{{ user.fullName }}</td>
-                                        <td id="email{{ counter }}">{{ user.email }}</td>
-                                        <td id="phoneNumber{{ counter }}">{{ user.phoneNumber }}</td>
-                                        {% if user.roles[0] == "ROLE_ADMIN" %}
-                                            <td id="role{{ counter }}">{{ user.roles[0] }}</td>
-                                        {% elseif user.roles[0] == "ROLE_USER" %}
-                                            <td id="role{{ counter }}">{{ user.roles[0] }}</td>
-                                        {% endif %}
+                                        <td id="vatNumber{{ counter }}">{{ client.vatNumber }}</td>
+                                        <td id="contactName{{ counter }}">{{ client.contactID.fullName }}</td>
+                                        <td id="contactPhone{{ counter }}">{{ client.contactID.phoneNumber }}</td>
+                                        <td id="contactEmail{{ counter }}">{{ client.contactID.email }}</td>
                                         <td>
-                                            <button id="btn{{ counter }}" class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateUser" data-bs-toggle="modal" onclick="updateUser(this.id)"><i class="fas fa-edit operationIcon"></i></button>
+                                            <span class="d-none" id="region{{ counter }}">{{ client.deliveryID.settlementID.regionID.regionName }}</span>
+                                            <span id="postalCode{{ counter }}">{{ client.deliveryID.settlementID.postalCode }}</span>
+                                            <span id="settlement{{ counter }}">{{ client.deliveryID.settlementID.settlementName }}</span>,
+                                            <span id="address{{ counter }}">{{ client.deliveryID.address }}</span>
+                                        </td>
+                                        <td>
+                                            <button id="btn{{ counter }}" class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateClient" data-bs-toggle="modal" onclick="updateClient(this.id)"><i class="fas fa-edit operationIcon"></i></button>
                                         </td>
                                     </tr>
                                     {% set counter = counter + 1 %}
@@ -57,10 +67,7 @@
                             </table>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 align-self-center">
-                                <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
-                            </div>
-                            <div class="col-md-6">
+                            <div style="margin-left: auto" class="col-md-6">
                                 <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
                                     <ul class="pagination">
                                         <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
@@ -76,7 +83,7 @@
                 </div>
             </div>
         </div>
-        <footer class="bg-white sticky-footer" style="background: #1e2833 !important;"></footer>
+
     </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="updateClient">
@@ -85,35 +92,77 @@
                 <div class="modal-header modalHeaderFooter">
                     <h5 class="w-100 text-center"><strong>Ügyfél adat frissítés</strong><br></h5><button type="button" class="btn-close gomb" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body modalBody">
-                    <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
-                        <div class="card-body">
-                            <form>
-                                <div class="row">
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="username"><strong>Ügyfél név</strong></label><input class="form-control" type="text" id="username" placeholder="user.name" name="username"></div>
+                <form id="updateForm" action="{{ path('updateClient', {"clientId" : "id"}) }}" method="post">
+                    <div class="modal-body modalBody">
+                        <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
+                            <div class="card-body">
+
+                                    <div class="row">
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="clientName"><strong>Ügyfél név</strong></label>
+                                                <input class="form-control" type="text" id="clientName" name="clientName">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="vatNumber"><strong>Adószám</strong><br></label>
+                                                <input class="form-control" type="number" id="vatNumber" name="vatNumber">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12 col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="postalCode"><strong>Irányítószám</strong><br></label>
+                                                <input class="form-control" type="number" id="postalCode" name="postalCode" onchange="loadUpdateData()">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12 col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="region"><strong>Megye</strong><br></label>
+                                                <input class="form-control" type="text" id="region" name="region">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12 col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="settlement"><strong>Város</strong><br></label>
+                                                <input class="form-control" type="text" id="settlement" name="settlement">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12 col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="address"><strong>Utca, házszám</strong><br></label>
+                                                <input class="form-control" type="text" id="address" name="address">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="contact_FullName"><strong>Kontakt neve</strong><br></label>
+                                                <input class="form-control" type="text" id="contact_FullName" name="contact_FullName">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="contact_PhoneNumber"><strong>Kontakt telefonszáma</strong><br></label>
+                                                <input class="form-control" type="number" id="contact_PhoneNumber" name="contact_PhoneNumber">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="contact_Email"><strong>Kontaktqwe email</strong><br></label>
+                                                <input class="form-control" type="email" id="contact_Email" name="contact_Email">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="email"><strong>Adószám</strong><br></label><input class="form-control" type="email" id="email" placeholder="user@example.com" name="adoszam"></div>
-                                    </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="first_name"><strong>Szállítási cím</strong><br></label><input class="form-control" type="text" id="first_name" placeholder="John" name="first_name"></div>
-                                    </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt neve</strong><br></label><input class="form-control" type="text" id="last_name" placeholder="Doe" name="last_name"></div>
-                                    </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt telefonszáma</strong><br></label><input class="form-control" type="text" id="last_name-1" placeholder="Doe" name="last_name"></div>
-                                    </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt email</strong><br></label><input class="form-control" type="text" id="last_name-4" placeholder="Doe" name="last_name"></div>
-                                    </div>
-                                </div>
-                            </form>
+
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer modalHeaderFooter"><button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button><button class="btn btn-primary modalSaveButton" type="button">Mentés</button></div>
+                    <div class="modal-footer modalHeaderFooter">
+                        <button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button>
+                        <button class="btn btn-primary modalSaveButton" type="submit">Mentés</button>
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>
@@ -123,38 +172,127 @@
                 <div class="modal-header modalHeaderFooter">
                     <h5 class="w-100 text-center"><strong>Ügyfél hozzáadása</strong><br></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body modalBody">
-                    <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
-                        <div class="card-body">
-                            <form>
-                                <div class="row">
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="username"><strong>Ügyfél név</strong></label><input class="form-control" type="text" id="username-1" placeholder="user.name" name="username"></div>
+                <form action="{{ path('addClient') }}" method="post">
+                    <div class="modal-body modalBody">
+                        <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
+                            <div class="card-body">
+                                    <div class="row">
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newClientName"><strong>Ügyfél név</strong></label>
+                                                <input class="form-control" type="text" id="newClientName" name="newClientName">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newVatNumber"><strong>Adószám</strong><br></label>
+                                                <input class="form-control" type="number" id="newVatNumber" name="newVatNumber">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12 col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="postCode"><strong>Irányítószám</strong><br></label>
+                                                <input class="form-control" type="number" id="postCode" name="postCode" onchange="loadAddData()">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12 col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newRegion"><strong>Megye</strong><br></label>
+                                                <input class="form-control" type="text" id="newRegion" name="newRegion">
+                                            </div>
+                                        </div>
+                                        <div class="col col-sm-12 col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newSettlement"><strong>Város</strong><br></label>
+                                                <input class="form-control" type="text" id="newSettlement" name="newSettlement">
+                                            </div>
+                                        </div>
+                                        <div class="col col-sm-12 col-lg-6">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newAddress"><strong>Utca, házszám</strong><br></label>
+                                                <input class="form-control" type="text" id="newAddress" name="newAddress">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newContact_Fullname"><strong>Kontakt neve</strong><br></label>
+                                                <input class="form-control" type="text" id="newContact_Fullname" name="newContact_Fullname">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newContact_Phonenumber"><strong>Kontakt telefonszáma</strong><br></label>
+                                                <input class="form-control" type="number" id="newContact_Phonenumber" name="newContact_Phonenumber">
+                                            </div>
+                                        </div>
+                                        <div class="col col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="newContact_Email"><strong>Kontakt email</strong><br></label>
+                                                <input class="form-control" type="email" id="newContact_Email" name="newContact_Email">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="email"><strong>Adószám</strong><br></label><input class="form-control" type="email" id="email-1" placeholder="user@example.com" name="adoszam"></div>
-                                    </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="first_name"><strong>Szállítási cím</strong><br></label><input class="form-control" type="text" id="first_name-1" placeholder="John" name="first_name"></div>
-                                    </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt neve</strong><br></label><input class="form-control" type="text" id="last_name-2" placeholder="Doe" name="last_name"></div>
-                                    </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt telefonszáma</strong><br></label><input class="form-control" type="text" id="last_name-3" placeholder="Doe" name="last_name"></div>
-                                    </div>
-                                    <div class="col col-12">
-                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Kontakt email</strong><br></label><input class="form-control" type="text" id="last_name-5" placeholder="Doe" name="last_name"></div>
-                                    </div>
-                                </div>
-                            </form>
+
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer modalHeaderFooter"><button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button><button class="btn btn-primary modalSaveButton" type="button">Hozzáadás</button></div>
+                    <div class="modal-footer modalHeaderFooter">
+                        <button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button>
+                        <button class="btn btn-primary modalSaveButton" type="submit">Hozzáadás</button>
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>
+    <script>
+        function loadAddData(){
+            $.ajax({
+                url:"{{ path('getOneSettlementForAdding') }}",
+                method: "POST",
+                data:{
+                    "postCode": document.getElementById("postCode").value
+                },
+                success:function(result){
+                    console.log(result);
+                    $("#newSettlement").val(result.settlementName);
+                    $("#newRegion").val(result.region_ID.region_name);
+                }
+            });
+        }
+        function loadUpdateData(){
+            $.ajax({
+                url:"{{ path('getOneSettlementForUpdating') }}",
+                method: "POST",
+                data:{
+                    "postalCode": document.getElementById("postalCode").value
+                },
+                success:function(result){
+                    console.log(result);
+                    $("#settlement").val(result.settlementName);
+                    $("#region").val(result.region_ID.region_name);
+                }
+            });
+        }
+        function updateClient(rowId){
+            rowId = rowId.replace("btn", "");
+            id = document.getElementById("id"+rowId).innerHTML;
+            document.getElementById("clientName").value = document.getElementById("clientName"+rowId).innerHTML;
+            document.getElementById("vatNumber").value = document.getElementById("vatNumber"+rowId).innerHTML;
+            document.getElementById("postalCode").value = document.getElementById("postalCode"+rowId).innerHTML;
+            document.getElementById("region").value = document.getElementById("region"+rowId).innerHTML;
+            document.getElementById("settlement").value = document.getElementById("settlement"+rowId).innerHTML;
+            document.getElementById("address").value = document.getElementById("address"+rowId).innerHTML;
+            document.getElementById("contact_FullName").value = document.getElementById("contactName"+rowId).innerHTML;
+            document.getElementById("contact_PhoneNumber").value = document.getElementById("contactPhone"+rowId).innerHTML;
+            document.getElementById("contact_Email").value = document.getElementById("contactEmail"+rowId).innerHTML;
+
+            let url = document.getElementById("updateForm").action;
+            var newUrl = url.replace("id", parseInt(id));
+            document.getElementById("updateForm").action = newUrl;
+            $("#updateClient").show();
+        }
+    </script>
 {% endblock %}
 
 

@@ -135,7 +135,7 @@
                     </div>
                     <div class="modal-footer modalHeaderFooter">
                         <button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button>
-                        <button class="btn btn-primary modalSaveButton" type="submit" onclick="update()">Mentés</button>
+                        <button class="btn btn-primary modalSaveButton" type="submit">Mentés</button>
                     </div>
                 </form>
             </div>
@@ -207,8 +207,6 @@
         </div>
     </div>
     <script>
-        var id = 0;
-        var rowId = 0;
         function updateUser(rowId){
             rowId = rowId.replace("btn","");
             id = document.getElementById("id"+rowId).innerHTML;

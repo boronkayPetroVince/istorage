@@ -22,13 +22,6 @@ class Contact
     private $id;
 
     /**
-     * @var Client
-     * @ORM\JoinColumn(name="client_ID", referencedColumnName="id")
-     * @ORM\ManyToOne(targetEntity="Client")
-     */
-    private $client_ID;
-
-    /**
      * @var string|null
      * @ORM\Column(type="string", length=100, nullable=true)
      */
@@ -52,22 +45,6 @@ class Contact
     public function getId(): int
     {
         return $this->id;
-    }
-
-    /**
-     * @return Client
-     */
-    public function getClientID(): Client
-    {
-        return $this->client_ID;
-    }
-
-    /**
-     * @param Client $client_ID
-     */
-    public function setClientID(Client $client_ID): void
-    {
-        $this->client_ID = $client_ID;
     }
 
     /**

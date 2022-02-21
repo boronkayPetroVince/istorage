@@ -13,11 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Settlement implements \JsonSerializable
 {
-    public function jsonSerialize()
-    {
-        return ["id" =>$this->id,"region_ID" => $this->region_ID, "settlementName" =>$this->settlementName, "postalCode" => $this->postalCode];
-    }
-
     /**
      * @var int
      * @ORM\Column(type="integer")
@@ -99,6 +94,11 @@ class Settlement implements \JsonSerializable
     public function setPostalCode(int $postalCode): void
     {
         $this->postalCode = $postalCode;
+    }
+
+    public function jsonSerialize()
+    {
+        return ["id" =>$this->id,"region_ID" => $this->region_ID, "settlementName" =>$this->settlementName, "postalCode" => $this->postalCode];
     }
 
 

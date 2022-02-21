@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/navbar.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/statics.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/users.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/stock.css') }}">
 </head>
 
 <body id="page-top">
@@ -36,7 +37,7 @@
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link active" href="{{ path('app_login') }}"><i class="fa fa-bar-chart"></i><span>Statisztika</span></a></li>
                     <li class="nav-item"><a class="nav-link active" href="{{ path('users') }}"><i class="fas fa-user"></i><span>Raktárosok</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="table.html"><i class="fas fa-table"></i><span>Ügyfelek</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ path('allClients') }}"><i class="fas fa-table"></i><span>Ügyfelek</span></a></li>
                     <li class="nav-item dropdown"><a class="dropdown-toggle nav-link active" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-warehouse"></i>Raktár</a>
                         <div class="dropdown-menu animated--grow-in"><a class="dropdown-item" href="#">Készlet</a><a class="dropdown-item" href="#">Bejövő</a></div>
                     </li>
@@ -190,10 +191,10 @@
 
         </div>
     </div>
-    <script src="{{ asset('/assets/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('/assets/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/chart.min.js') }}"></script>
     <script src="{{ asset('assets/js/bs-init.js') }}"></script>
-    <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/js/theme.js') }}"></script>
 {% endblock %}
 </body>

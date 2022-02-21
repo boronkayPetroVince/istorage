@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{# @var clients \App\Entity\Client[] #}
+
+{% block title %}
+    Raktárosok - PDF
+{% endblock %}
+
+{% block body %}
+    <h1 style="margin-bottom: 5px; text-align: center;">Összes ügyfél adata</h1><br>
+    <div>
+        <table class="table my-0" id="dataTable">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Ügyfél neve</th>
+                <th>Adószám</th>
+                <th>Kapcsolattartó név</th>
+                <th>Kapcsolattartó telefon<br></th>
+                <th>Kapcsolattartó email<br></th>
+                <th>Cím</th>
+            </tr>
+            </thead>
+            {% for client in clients %}
+                <tr >
+                    <td>{{ client.id }}</td>
+                    <td>{{ client.clientName }}</td>
+                    <td>{{ client.vatNumber }}</td>
+                    <td>{{ client.contactID.fullName }}</td>
+                    <td>{{ client.contactID.phoneNumber }}</td>
+                    <td>{{ client.contactID.email }}</td>
+                    <td>
+                        <span class="d-none" >{{ client.deliveryID.settlementID.regionID.regionName }}</span>
+                        <span >{{ client.deliveryID.settlementID.postalCode }}</span>
+                        <span >{{ client.deliveryID.settlementID.settlementName }}</span>,
+                        <span >{{ client.deliveryID.address }}</span>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

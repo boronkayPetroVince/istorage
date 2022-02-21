@@ -13,11 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Client implements \JsonSerializable
 {
-    public function jsonSerialize()
-    {
-        return ["id"=>$this->id,"clientName" => $this->clientName, "vatNumber" => $this->vatNumber];
-    }
-
     /**
      * @var int
      * @ORM\Column(type="integer")
@@ -39,10 +34,18 @@ class Client implements \JsonSerializable
     private $vatNumber;
 
     /**
-     * @var int|null
-     * @ORM\Column(type="integer", nullable=true)
+     * @var Contact
+     * @ORM\JoinColumn(name="contact_ID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Contact")
      */
-    private $vatNumberEU;
+    private $contact_ID;
+
+    /**
+     * @var Delivery_address
+     * @ORM\JoinColumn(name="delivery_ID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Delivery_address")
+     */
+    private $delivery_ID;
 
     /**
      * @return int
@@ -85,23 +88,41 @@ class Client implements \JsonSerializable
     }
 
     /**
-     * @return int|null
+     * @return Contact
      */
-    public function getVatNumberEU(): ?int
+    public function getContactID(): Contact
     {
-        return $this->vatNumberEU;
+        return $this->contact_ID;
     }
 
     /**
-     * @param int|null $vatNumberEU
+     * @param Contact $contact_ID
      */
-    public function setVatNumberEU(?int $vatNumberEU): void
+    public function setContactID(Contact $contact_ID): void
     {
-        $this->vatNumberEU = $vatNumberEU;
+        $this->contact_ID = $contact_ID;
     }
 
+    /**
+     * @return Delivery_address
+     */
+    public function getDeliveryID(): Delivery_address
+    {
+        return $this->delivery_ID;
+    }
 
+    /**
+     * @param Delivery_address $delivery_ID
+     */
+    public function setDeliveryID(Delivery_address $delivery_ID): void
+    {
+        $this->delivery_ID = $delivery_ID;
+    }
 
+    public function jsonSerialize()
+    {
+        return ["id"=>$this->id,"clientName" => $this->clientName, "vatNumber" => $this->vatNumber, "contactID" => $this->contact_ID, "deliveryID" => $this->delivery_ID];
+    }
 
 
 }
