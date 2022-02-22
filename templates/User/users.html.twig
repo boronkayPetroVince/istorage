@@ -5,8 +5,8 @@
 {% block content %}
     <div class="container-fluid">
         <h3 class="text-dark mb-1">Raktárosok</h3>
-        <div class="alert alert-{{ resultColor }} hide" role="alert">
-            {{ resultMessage }}
+        <div class="alert alert-{{ resultColor }}" role="alert">
+            <span class="fw-bold">{{ resultMessage }}</span>
         </div>
         <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
             <div class="card-body" style="background: rgba(255,255,255,0.5);">

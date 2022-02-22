@@ -60,7 +60,12 @@ class Stock implements \JsonSerializable
      */
     private $date;
 
-
+    /**
+     * @var User
+     * @ORM\JoinColumn(name="userID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="User")
+     */
+    private $userID;
 
     /**
      * @return int
@@ -166,11 +171,28 @@ class Stock implements \JsonSerializable
         $this->date = $date;
     }
 
+    /**
+     * @return User
+     */
+    public function getUserID(): User
+    {
+        return $this->userID;
+    }
+
+    /**
+     * @param User $userID
+     */
+    public function setUserID(User $userID): void
+    {
+        $this->userID = $userID;
+    }
+
+
 
     public function jsonSerialize()
     {
         return ["id" => $this->id, "amount" => $this->amount, "purchasePrice" => $this->purchasePrice,"statusID" => $this->statusID,
-            "warehouseID" => $this->warehouseID, "phoneID" => $this->phoneID, "date" => $this->date];
+            "warehouseID" => $this->warehouseID, "phoneID" => $this->phoneID, "date" => $this->date, "userID" => $this->userID];
     }
 
 

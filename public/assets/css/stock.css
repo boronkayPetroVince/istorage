@@ -1,6 +1,7 @@
 .buttonFilter:hover, .buttonFilter:focus, .buttonFilter:active {
   background-color: rgb(30,40,51) !important;
   border-color: rgb(205,240,253) !important;
+  color: rgb(205,240,253) !important;
   box-shadow: 0 0 0 0 rgba(255,255,255,0.2);
 }
 

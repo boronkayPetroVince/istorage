@@ -7,7 +7,7 @@
             <div class="container-fluid">
                 <h3 class="text-dark mb-4">Ügyfelek<br></h3>
                 <div class="alert alert-{{ resultColor }} hide" role="alert">
-                    {{ resultMessage }}
+                    <span class="fw-bold">{{ resultMessage }}</span>
                 </div>
                 <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
                     <div class="card-body" style="background: rgba(255,255,255,0.5);">
@@ -95,7 +95,7 @@
                 <form id="updateForm" action="{{ path('updateClient', {"clientId" : "id"}) }}" method="post">
                     <div class="modal-body modalBody">
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
-                            <div class="card-body">
+                            <div class="card-body" style="background: rgba(255,255,255,0.5);">
 
                                     <div class="row">
                                         <div class="col col-12">
@@ -175,7 +175,7 @@
                 <form action="{{ path('addClient') }}" method="post">
                     <div class="modal-body modalBody">
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
-                            <div class="card-body">
+                            <div class="card-body" style="background: rgba(255,255,255,0.5);">
                                     <div class="row">
                                         <div class="col col-12">
                                             <div class="mb-3">

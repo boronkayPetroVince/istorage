@@ -99,9 +99,9 @@ class PhoneModel implements PhoneModelInterface
             $phone->setColorID($this->colorService->getOneColorById($color->getId()));
             $phone->setCapacityID($this->capacityService->getOneCapacityById($capacity->getId()));
             $this->phoneService->addPhone($phone);
-            if ($this->checkPhone($phone) === true){
-                return $this->phoneService->removePhone($phone->getId());
-            }
+//            if ($this->checkPhone($phone) === true){
+//                return $this->phoneService->removePhone($phone->getId());
+//            }
             return $phone;
 
     }

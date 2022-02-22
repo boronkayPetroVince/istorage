@@ -12,8 +12,7 @@ thead, tbody, tfoot, tr, td, th {
   border-style: solid;
   border-width: 0;
 }
-
-.showSelect {
+.shoSelect {
   background-color: #cdf0fd;
   width: 100%;
   height: auto;

@@ -12,4 +12,6 @@ interface StatusServiceInterface
 
     public function getOneStatusById(int $id):Status;
 
+    public function getOneStatusByName(string $name):Status;
+
 }

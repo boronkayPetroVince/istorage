@@ -10,17 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 interface StockModelInterface
 {
-    public function listAllStock(Request $request): bool;
-
     public function addStock(Request $request): bool;
-
-    public function editStock(Request $request): bool;
 
     public function filteredStock(Request $request):iterable;
 
-    public function removeStock(Request $request): bool;
-
-    public function changeStatusBystockID(Request $request, int $stockId): bool;
+    public function edit(Request $request, int $stockId): bool;
 
     public function allWarehouse():iterable;
 

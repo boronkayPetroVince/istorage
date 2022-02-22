@@ -5,10 +5,16 @@ namespace App\Controller;
 
 
 
+use App\Entity\Stock;
 use App\Model\Interfaces\PhoneModelInterface;
 use App\Model\Interfaces\StockModelInterface;
 use App\Service\Classes\StatusService;
 use App\Service\Interfaces\SecurityServiceInterface;
+use App\Service\Interfaces\StockServiceInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,27 +29,21 @@ class StockController extends AbstractController
     /** @var SecurityServiceInterface */
     private $securityService;
 
-    /** @var PhoneModelInterface */
-    private $phoneModel;
-
-    /** @var StatusService */
-    private $statusService;
+    /** @var StockServiceInterface */
+    private $stockService;
 
     /**
      * StockController constructor.
      * @param StockModelInterface $stockModel
      * @param SecurityServiceInterface $securityService
-     * @param PhoneModelInterface $phoneModel
-     * @param StatusService $statusService
+     * @param StockServiceInterface $stockService
      */
-    public function __construct(StockModelInterface $stockModel, SecurityServiceInterface $securityService, PhoneModelInterface $phoneModel, StatusService $statusService)
+    public function __construct(StockModelInterface $stockModel, SecurityServiceInterface $securityService, StockServiceInterface $stockService)
     {
         $this->stockModel = $stockModel;
         $this->securityService = $securityService;
-        $this->phoneModel = $phoneModel;
-        $this->statusService = $statusService;
+        $this->stockService = $stockService;
     }
-
 
     /**
      * @param Request $request
@@ -53,13 +53,43 @@ class StockController extends AbstractController
     public function addStock(Request $request):Response{
         if($request->isMethod("POST")){
             if($this->stockModel->addStock($request)=== true){
-                return new Response("SIKERES0");
+                return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
+                    "resultMessage"=> "Sikeres hozzáadás!", "resultColor" => "success"]);
             }
-            return new Response("nem sikerült");
+            return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->filteredStock($request), "user" => $this->getUser(),
+                "resultMessage"=> "Sikertelen hozzáadás!", "resultColor" => "danger"]);
         }
-        return $this->render("Stock/addstock.html.twig", ["user" => $this->getUser()]);
+        return $this->redirectToRoute('allStock');
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="orderedStock", path="/orderedStock")
+     */
+    public function orderedStock(Request $request):Response{
+        if ($request->isMethod("POST")){
+            return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->filteredStock($request), "user" => $this->getUser(),
+                "resultMessage"=> "", "resultColor" => ""]);
+        }
+        return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
+            "resultMessage"=> "", "resultColor" => ""]);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="allStock", path="/allStock")
+     */
+    public function allStock(Request $request):Response{
+        if ($request->isMethod("POST")){
+            return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->filteredStock($request), "user" => $this->getUser(),
+                "resultMessage"=> "", "resultColor" => ""]);
+        }
+        return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
+            "resultMessage"=> "", "resultColor" => ""]);
+
+    }
     /**
      * @param Request $request
      * @param int $stockId
@@ -73,19 +103,6 @@ class StockController extends AbstractController
             }
         }
         return $this->render("Stock/edit.html.twig", ["user" => $this->getUser(), "stock" => $this->stockModel->oneStockById($stockId)]);
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="orderedStock", path="/orderedStock")
-     */
-    public function orderedStock(Request $request):Response{
-        if ($request->isMethod("POST")){
-            return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->filteredStock($request), "user" => $this->getUser()]);
-        }else{
-            return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser()]);
-        }
     }
 
     /**
@@ -106,26 +123,130 @@ class StockController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="allStock", path="/allStock")
-     */
-    public function allStock(Request $request):Response{
-        if ($request->isMethod("POST")){
-            return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->filteredStock($request), "user" => $this->getUser()]);
-        }else{
-            return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser()]);
-        }
-
-    }
-
-    /**
      * @return Response
      * @Route(name="allStatus", path="/allStatus")
      */
     public function allStatus():Response{
         $status = $this->stockModel->allStatus();
         return new JsonResponse($status);
+    }
+
+    /**
+     * @Route(name="generateOrderedPDF", path="/generateOrderedPDF")
+     */
+    public function generateOrderedPDF(){
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+        $html = $this->renderView('Stock/orderedStockPDF.html.twig', ["stocks" => $this->stockService->getAllStock()]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        ob_get_clean();
+        $dompdf->stream("rendeltKeszlet.pdf", [
+            "Attachment" => true
+        ]);
+    }
+
+    /**
+     * @Route(name="generateOrderedExcel", path="/generateOrderedExcel")
+     */
+    public function generateOrderedExcel(){
+        /** @var Stock[] $stocks */
+        $stocks = $this->stockService->getAllStock();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Mennyiség');
+        $sheet->setCellValue('B1', 'Beszerzési ár (Ft)');
+        $sheet->setCellValue('C1', 'Eladási ár (Ft)');
+        $sheet->setCellValue('D1', 'Telefon');
+        $sheet->setCellValue('E1', 'Raktár');
+        $sheet->setCellValue('F1', 'Státusz');
+        $sheet->setCellValue('G1', 'Dátum');
+        $sheet->setCellValue('H1', 'Felhasználó');
+        $spreadsheet->getActiveSheet()->getStyle('A1:H1')->getFont()->setBold(true);
+        $counter = 2;
+        foreach ($stocks as $stock){
+            if ($stock->getStatusID()->getStatus() == "Megrendelve"){
+                $sellingPrice = $stock->getPurchasePrice() * 1.27;
+                $sheet->setCellValue('A'.$counter, $stock->getAmount());
+                $sheet->setCellValue('B'.$counter, $stock->getPurchasePrice());
+                $sheet->setCellValue('C'.$counter, $sellingPrice);
+                $sheet->setCellValue('D'.$counter, $stock->getPhoneID()->getBrandID()->getBrandName()." ".
+                    $stock->getPhoneID()->getModelID()->getModelName()." ".$stock->getPhoneID()->getColorID()->getPhoneColor()." ".
+                    $stock->getPhoneID()->getCapacityID()->getCapacity());
+                $sheet->setCellValue('E'.$counter, $stock->getWarehouseID()->getWhName());
+                $sheet->setCellValue('F'.$counter, $stock->getStatusID()->getStatus());
+                $sheet->setCellValue('G'.$counter, $stock->getDate());
+                $sheet->setCellValue('H'.$counter, $stock->getUserID()->getUsername()." (".$stock->getUserID()->getRoles()[0].")" );
+                $counter++;
+            }
+        }
+        $writer = new Xlsx($spreadsheet);
+        $filename = "rendeltKeszlet";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        $writer->save('php://output');
+        die();
+    }
+
+    /**
+     * @Route(name="generateArrivedPDF", path="/generateArrivedPDF")
+     */
+    public function generateArrivedPDF(){
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+        $html = $this->renderView('Stock/arrivedStockPDF.html.twig', ["stocks" => $this->stockService->getAllStock()]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        ob_get_clean();
+        $dompdf->stream("keszlet.pdf", [
+            "Attachment" => true
+        ]);
+    }
+
+    /**
+     * @Route(name="generateArrivedExcel", path="/generateArrivedExcel")
+     */
+    public function generateArrivedExcel(){
+        /** @var Stock[] $stocks */
+        $stocks = $this->stockService->getAllStock();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Mennyiség');
+        $sheet->setCellValue('B1', 'Beszerzési ár (Ft)');
+        $sheet->setCellValue('C1', 'Eladási ár (Ft)');
+        $sheet->setCellValue('D1', 'Telefon');
+        $sheet->setCellValue('E1', 'Raktár');
+        $sheet->setCellValue('F1', 'Státusz');
+        $sheet->setCellValue('G1', 'Dátum');
+        $sheet->setCellValue('H1', 'Felhasználó');
+        $spreadsheet->getActiveSheet()->getStyle('A1:H1')->getFont()->setBold(true);
+        $counter = 2;
+        foreach ($stocks as $stock){
+            if ($stock->getStatusID()->getStatus() == "Beérkezett"){
+                $sellingPrice = $stock->getPurchasePrice() * 1.27;
+                $sheet->setCellValue('A'.$counter, $stock->getAmount());
+                $sheet->setCellValue('B'.$counter, $stock->getPurchasePrice());
+                $sheet->setCellValue('C'.$counter, $sellingPrice);
+                $sheet->setCellValue('D'.$counter, $stock->getPhoneID()->getBrandID()->getBrandName()." ".
+                    $stock->getPhoneID()->getModelID()->getModelName()." ".$stock->getPhoneID()->getColorID()->getPhoneColor()." ".
+                    $stock->getPhoneID()->getCapacityID()->getCapacity());
+                $sheet->setCellValue('E'.$counter, $stock->getWarehouseID()->getWhName());
+                $sheet->setCellValue('F'.$counter, $stock->getStatusID()->getStatus());
+                $sheet->setCellValue('G'.$counter, $stock->getDate());
+                $sheet->setCellValue('H'.$counter, $stock->getUserID()->getUsername()." (".$stock->getUserID()->getRoles()[0].")" );
+                $counter++;
+            }
+        }
+        $writer = new Xlsx($spreadsheet);
+        $filename = "keszlet";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        $writer->save('php://output');
+        die();
     }
 
 
