@@ -6,11 +6,12 @@ namespace App\Model\Interfaces;
 
 use App\Entity\Status;
 use App\Entity\Stock;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 
 interface StockModelInterface
 {
-    public function addStock(Request $request): bool;
+    public function addStock(Request $request, User $user): bool;
 
     public function filteredStock(Request $request):iterable;
 

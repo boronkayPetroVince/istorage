@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-lg-4 col-lg-12">
                     <div class="card mb-3" style="background: rgba(255,255,255,0.5);">
-                        <div class="card-body text-center shadow"><img style="border: 1px solid black" class="rounded-circle mb-3 mt-4 profileImgSet" src="assets/img/unknow.jpg" width="160" height="160">
+                        <div class="card-body text-center shadow" style="background: rgba(255,255,255,0.5);"><img style="border: 1px solid black" class="rounded-circle mb-3 mt-4 profileImgSet" src="assets/img/unknow.jpg" width="160" height="160">
                             <div class="mb-3">
                                 <p style="font-weight: bold">{{ user.username }}
                                     {% if is_granted("ROLE_ADMIN")%} (Admin)
@@ -27,10 +27,10 @@
                 <div class="row ">
                     <div class="col col-lg-6 col-sm-12">
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
-                            <div class="card-header py-3">
+                            <div class="card-header py-3" >
                                 <p class="text-primary m-0 fw-bold">Felhasználói adat módosítás</p>
                             </div>
-                            <div class="card-body" style="color: #1e2833;">
+                            <div class="card-body" style="background: rgba(255,255,255,0.5);color: #1e2833;">
                                 <form action="{{ path('updateLoggedUser') }}" method="post">
                                     <div class="row">
                                         <div class="col">
@@ -72,7 +72,7 @@
                             <div class="card-header py-3">
                                 <p class="text-primary m-0 fw-bold">Jelszó módosítás</p>
                             </div>
-                            <div class="card-body" style="color: #1e2833;">
+                            <div class="card-body" style="background: rgba(255,255,255,0.5);color: #1e2833;">
 
                                     <form action="{{ path('passChange') }}" method="post">
                                         <div class="row">

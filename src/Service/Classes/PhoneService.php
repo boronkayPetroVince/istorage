@@ -51,7 +51,7 @@ class PhoneService extends CrudService implements PhoneServiceInterface
         return $query->getResult();
     }
 
-    public function getAllPhoneByModel(int $model_ID):iterable{ //DISTINCT
+    public function getAllPhoneByModel(int $model_ID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("phone")
             ->from(Phone::class, "phone")

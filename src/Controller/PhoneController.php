@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PhoneController extends AbstractController
@@ -64,18 +65,65 @@ class PhoneController extends AbstractController
     /**
      * @param Request $request
      * @return Response
+     * @Route(name="addPhone", path="/addPhone")
+     */
+    public function addPhone(Request $request): Response{
+        if($request->isMethod("POST")){
+            if($this->phoneModel->addPhone($request)){
+                return $this->render("Phone/addPhone.html.twig", ["resultMessage"=> "Sikeresen hozzáadtál egy új eszközt! 
+            Innentől kezdve mikor rendelnél, hozzáadnál, illetve módosítanál, akkor ez a tipusú telefon is megfog jelenni a választási lehetőségekben! ",
+                    "resultColor" => "success", "user" =>$this->getUser()]);
+            }
+        }
+        return $this->render("Phone/addPhone.html.twig", ["resultMessage"=> "", "resultColor" => "", "user" =>$this->getUser()]);
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
      * @Route(name="updatePhone", path="/updatePhone")
      */
     public function updatePhone(Request $request): Response{
-//        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-//        if($request->isMethod("POST")){
-//            $selected = $this->phoneService->getAllPhoneByBrand($request->request->get("brands"));
-//            $phone = $this->phoneService->getAllPhone();
-//            return $this->render("phone/removePhone.html.twig", ["kivalasztott" => $selected, "phones"=>$this->phoneService->getAllPhone()]);
-//
-//        }else return $this->render("phone/removePhone.html.twig",["kivalasztott" => "", "phones"=>""]);
-        return $this->render("phone/updatePhone.html.twig");
+        $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
+            "resultMessage"=> "", "resultColor" => "",
+            "addResultColor"=>"success", "addResultMessage" => "Sikeresen hozzáadtad a telefont!" ]);
     }
+
+    /**
+     * @return Response
+     * @Route(name="allBrands", path="/allBrands")
+     */
+    public function allBrands(): Response{
+        return new JsonResponse($this->phoneModel->getAllBrand());
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="allModelByBrand", path="/allModelByBrand")
+     */
+    public function allModelByBrand(Request $request): Response{
+        return new JsonResponse($this->phoneModel->allModelByBrand($request));
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="allColorByModel", path="/allColorByModel")
+     */
+    public function allColorByModel(Request $request): Response{
+        return new JsonResponse($this->phoneModel->allColorByModel($request));
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="allCapacityByColor", path="/allCapacityByColor")
+     */
+    public function allCapacityByColor(Request $request): Response{
+        return new JsonResponse($this->phoneModel->allCapacityByColor($request));
+    }
+
 
     /**
      * @return Response
@@ -96,7 +144,7 @@ class PhoneController extends AbstractController
     /**
      * @param Request $request
      * @return Response
-     * @Route(name="allArrivedColor", path="/allColorByModel")
+     * @Route(name="allArrivedColor", path="/allArrivedColor")
      */
     public function allArrivedPhoneColorByModel(Request $request): Response{
         return new JsonResponse($this->phoneModel->allArrivedColor($request));

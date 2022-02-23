@@ -14,18 +14,18 @@
                 <form action="{{ path('allStock') }}" method="post">
                     <div class="row d-flex align-items-center text-center">
                         <div class="col-3">
-                            <select name="brands" id="brands" class="showSelect" onchange="brandChanged()">
+                            <select name="brands" id="brands" class="showSelect" onchange="filterBrandChanged()">
                                 <option value="">Válassz márkát!</option>
                             </select>
                         </div>
                         <div class="col-3">
-                            <select name="models" id="models" class="showSelect" onchange="modelChanged()"></select>
+                            <select name="models" id="models" class="showSelect" onchange="filterModellChanged()"></select>
                         </div>
                         <div class="col-2">
-                            <select name="colors" id="colors" class="showSelect" onchange="colorChanged()"></select>
+                            <select name="colors" id="colors" class="showSelect" onchange="filterColorChanged()"></select>
                         </div>
                         <div class="col-2">
-                            <select name="capacities" id="capacities" class="showSelect" onchange="capacityChanged()"></select>
+                            <select name="capacities" id="capacities" class="showSelect" onchange="filterCapacityChanged()"></select>
                         </div>
                         <div class="col-2">
                             <button id="szures" class="btn buttonDesign w-100">Szűrés</button>
@@ -36,18 +36,18 @@
             <div class="card-body" style="background: rgba(255,255,255,0.5);">
                 <div class="row">
                     <div class="col-md-6 text-nowrap">
-                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm showSelect">
+                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show<select class="d-inline-block form-select form-select-sm showSelect">
                                     <option value="10" selected="">10</option>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
-                                </select>&nbsp;</label></div>
+                                </select></label></div>
                     </div>
                     <div class="col-md-6">
                         <div class="text-md-end dataTables_filter" id="dataTable_filter">
                             <a href="{{ path('generateArrivedExcel') }}" class="btn btn-primary buttonDesign" type="button">Excel</a>
                             <a href="{{ path('generateArrivedPDF') }}" class="btn btn-primary buttonDesign" type="button">PDF</a>
-                            <button class="btn btn-primary buttonDesign" type="button" data-bs-target="#addOrder" data-bs-toggle="modal">Hozzáadás</button>
+                            <button onclick="addingStock()" class="btn btn-primary buttonDesign" type="button" data-bs-target="#addOrder" data-bs-toggle="modal">Hozzáadás</button>
                         </div>
                     </div>
                 </div>
@@ -122,51 +122,57 @@
                 </div>
                 <form action="{{ path('addStock') }}" method="post">
                     <div class="modal-body modalBody">
+                        <div class="row">
+                            <div class="col-12 text-md-end" >
+                                <a href="{{ path('addPhone') }}"  class="btn buttonDesign">Új telefon hozzáadása</a>
+                            </div>
+                        </div>
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
-                            <div class="card-body">
-
+                            <div class="card-body" style="background: rgba(255,255,255,0.5);">
                                     <div class="row">
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="brandName"><strong>Márka</strong></label>
-                                                <input class="form-control" type="text" id="brandName" name="brandName">
+                                                <select name="brandName" id="brandName" class="form-select orderSelect" onchange="addBrandChange()" required>
+                                                    <option value="">Válassz márkát!</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
-                                                <label class="form-label" for="modelName"><strong>Model</strong><br></label>
-                                                <input class="form-control" type="text" id="modelName" name="modelName">
+                                                <label class="form-label" for="modelName"><strong>Modell</strong><br></label>
+                                                <select name="modelName" id="modelName" class="form-select orderSelect" onchange="addModellChange()" required>
+                                                    <option value="">Válassz modellt!</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="colorName"><strong>Szín</strong><br></label>
-                                                <input class="form-control" type="text" id="colorName" name="colorName">
+                                                <select name="colorName" id="colorName" class="form-select orderSelect" onchange="addColorChange()" required></select>
                                             </div>
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="capacity"><strong>Kapacitás</strong><br></label>
-                                                <input class="form-control" type="number" id="capacity" name="capacity">
+                                                <select name="capacity" id="capacity" class="form-select orderSelect" required></select>
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label" for="warehouse"><strong>Raktár</strong><br></label>
-                                            <select name="warehouse" id="warehouse" class="form-select orderSelect">
-                                                <option value="">Válassz raktárt!</option>
-                                            </select>
+                                            <select name="warehouse" id="warehouse" class="form-select orderSelect" required></select>
                                         </div>
                                         <div class="row">
                                             <div class="col col-sm-6 col-12">
                                                 <div class="mb-3">
                                                     <label class="form-label" for="amount"><strong>Mennyiség</strong><br></label>
-                                                    <input class="form-control" type="number" id="amount" name="amount">
+                                                    <input class="form-control" type="number" id="amount" name="amount" required>
                                                 </div>
                                             </div>
                                             <div class="col col-sm-6 col-12">
                                                 <div class="mb-3">
                                                     <label class="form-label" for="purchase"><strong>Beszerzési ár</strong><br></label>
-                                                    <input class="form-control" type="text" id="purchase" name="purchase">
+                                                    <input class="form-control" type="text" id="purchase" name="purchase" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -195,7 +201,6 @@
                     });
                 }
             });
-
             $("#models").hide();
             $("#colors").hide();
             $("#capacities").hide();
@@ -211,8 +216,91 @@
                 }
             });
         })
-        function brandChanged(){
+        function addingStock(){
+            $("#modelName").prop('disabled', 'disabled');
+            $("#colorName").prop('disabled', 'disabled');
+            $("#capacity").prop('disabled', 'disabled');
+            $.ajax({
+                url:"{{ path('allBrands') }}",
+                method: "post",
+                success: function (result){
+
+                    $.each(result, function (key,value){
+                        var brandOption = $('<option>', {value:value.id, text:value.brandName});
+                        $("#brandName").append(brandOption);
+                    });
+                }
+            });
+        }
+        function addBrandChange(){
+            $.ajax({
+                url:"{{ path('allModelByBrand') }}",
+                method: "post",
+                data:{
+                    "brandNameID": document.getElementById("brandName").value
+                },
+                success:function (result){
+                    $("#modelName").html("");
+                    $("#modelName").prop('disabled', false);
+                    $("#colorName").prop('disabled', 'disabled');
+                    $("#capacity").prop('disabled', 'disabled');
+                    var defaultVal = $('<option>', {value:"", text:"Válassz modellt!"});
+                    $("#modelName").append(defaultVal);
+                    $.each(result, function (key,value){
+                        var modelOption = $('<option>', {value:value.modelID.id, text:value.modelID.modelName});
+                        $("#modelName").append(modelOption);
+                    });
+
+
+                }
+            });
+        }
+        function addModellChange(){
+            $.ajax({
+                url:"{{ path('allColorByModel') }}",
+                method: "post",
+                data:{
+                    "modelNameID": document.getElementById("modelName").value
+                },
+                success:function (result){
+                    $("#colorName").html("");
+                    $("#colorName").prop('disabled', false);
+                    $("#capacity").prop('disabled', 'disabled');
+                    var defaultVal = $('<option>', {value:"", text:"Válassz színt!"});
+                    $("#colorName").append(defaultVal);
+                    $.each(result, function (key,value){
+                        var colorOption = $('<option>', {value:value.colorID.id, text:value.colorID.phoneColor});
+                        $("#colorName").append(colorOption);
+                    });
+
+                }
+            });
+        }
+        function addColorChange(){
+            $.ajax({
+                url:"{{ path('allCapacityByColor') }}",
+                method: "post",
+                data:{
+                    "colorNameID": document.getElementById("colorName").value
+                },
+                success:function (result){
+                    $("#capacity").html("");
+                    $("#capacity").prop('disabled', false);
+                    var defaultVal = $('<option>', {value:"", text:"Válassz kapacitást!"});
+                    $("#capacity").append(defaultVal);
+                    $.each(result, function (key,value){
+                        var capacityOption = $('<option>', {value:value.capacityID.id, text:value.capacityID.capacity});
+                        $("#capacity").append(capacityOption);
+                    });
+                }
+            });
+        }
+
+        function filterBrandChanged(){
             $("#models").show();
+            $("#colors").hide();
+            $("#capacities").hide();
+            $("#szures").hide();
             $.ajax({
                 url: "{{ path('allArrivedModel') }}",
                 method: "post",
@@ -220,7 +308,6 @@
                     "brandID":document.getElementById("brands").value
                 },
                 success: function (result){
-                    console.log(result);
                     $("#models").find("option").remove();
                     var defaultVal = $('<option>', {value:"", text:"Válassz modelt"});
                     $("#models").append(defaultVal);
@@ -232,8 +319,10 @@
 
             });
         }
-        function modelChanged(){
+        function filterModellChanged(){
             $("#colors").show();
+            $("#capacities").hide();
+            $("#szures").hide();
             $.ajax({
                 url: "{{ path('allArrivedColor') }}",
                 method: "post",
@@ -241,6 +330,7 @@
                     "modelID":document.getElementById("models").value
                 },
                 success: function (result){
+                    console.log(result);
                     $("#colors").find("option").remove();
                     var defaultVal = $('<option>', {value:"", text:"Válassz színt"});
                     $("#colors").append(defaultVal);
@@ -252,8 +342,9 @@
 
             });
         }
-        function colorChanged(){
+        function filterColorChanged(){
             $("#capacities").show();
+            $("#szures").hide();
             $.ajax({
                 url: "{{ path('allArrivedCapacityByColor') }}",
                 method: "post",
@@ -272,7 +363,7 @@
 
             });
         }
-        function capacityChanged(){
+        function filterCapacityChanged(){
             $("#szures").show();
         }
     </script>

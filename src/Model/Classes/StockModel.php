@@ -7,9 +7,16 @@ namespace App\Model\Classes;
 use App\Entity\Phone;
 use App\Entity\Status;
 use App\Entity\Stock;
+use App\Entity\User;
 use App\Entity\Warehouse;
 use App\Model\Interfaces\PhoneModelInterface;
 use App\Model\Interfaces\StockModelInterface;
+use App\Service\Interfaces\BrandServiceInterface;
+use App\Service\Interfaces\CapacityServiceInterface;
+use App\Service\Interfaces\ColorServiceInterface;
+use App\Service\Interfaces\ModelServiceInterface;
+use App\Service\Interfaces\PhoneServiceInterface;
+use App\Service\Interfaces\SecurityServiceInterface;
 use App\Service\Interfaces\StatusServiceInterface;
 use App\Service\Interfaces\StockServiceInterface;
 use App\Service\Interfaces\WarehouseServiceInterface;
@@ -29,6 +36,23 @@ class StockModel implements StockModelInterface
     /** @var StatusServiceInterface */
     private $statusService;
 
+    /** @var SecurityServiceInterface */
+    private $securityService;
+
+    /** @var CapacityServiceInterface */
+    private $capacityService;
+
+    /** @var ColorServiceInterface */
+    private $colorService;
+
+    /** @var ModelServiceInterface */
+    private $modelService;
+
+    /** @var BrandServiceInterface */
+    private $brandService;
+
+    /** @var PhoneServiceInterface */
+    private $phoneService;
 
     /**
      * StockModel constructor.
@@ -36,30 +60,48 @@ class StockModel implements StockModelInterface
      * @param WarehouseServiceInterface $warehouseService
      * @param StockServiceInterface $stockService
      * @param StatusServiceInterface $statusService
+     * @param SecurityServiceInterface $securityService
+     * @param CapacityServiceInterface $capacityService
+     * @param ColorServiceInterface $colorService
+     * @param ModelServiceInterface $modelService
+     * @param BrandServiceInterface $brandService
+     * @param PhoneServiceInterface $phoneService
      */
-    public function __construct(PhoneModelInterface $phoneModel, WarehouseServiceInterface $warehouseService, StockServiceInterface $stockService, StatusServiceInterface $statusService)
+    public function __construct(PhoneModelInterface $phoneModel, WarehouseServiceInterface $warehouseService, StockServiceInterface $stockService, StatusServiceInterface $statusService, SecurityServiceInterface $securityService, CapacityServiceInterface $capacityService, ColorServiceInterface $colorService, ModelServiceInterface $modelService, BrandServiceInterface $brandService, PhoneServiceInterface $phoneService)
     {
         $this->phoneModel = $phoneModel;
         $this->warehouseService = $warehouseService;
         $this->stockService = $stockService;
         $this->statusService = $statusService;
+        $this->securityService = $securityService;
+        $this->capacityService = $capacityService;
+        $this->colorService = $colorService;
+        $this->modelService = $modelService;
+        $this->brandService = $brandService;
+        $this->phoneService = $phoneService;
     }
 
 
-    public function addStock(Request $request): bool
-    {
+    public function addStock(Request $request, User $user): bool
+    {//elvileg megy a hozzáadás selectből.
         if($request){
             $warehouse = $this->warehouseService->getOneWarehouseById($request->request->get("warehouse"));
-            $phone = $this->phoneModel->addPhone($request);
+            $phone = $this->phoneModel->existPhone(
+                $this->brandService->getOneBrandById($request->request->get("brandName")),
+                $this->modelService->getOneModelById($request->request->get("modelName")),
+                $this->colorService->getOneColorById($request->request->get("colorName")),
+                $this->capacityService->getOneCapacityById($request->request->get("capacity"))
+            );
             if($phone != null){
                 if ($this->checkCapacity($warehouse, $request->request->get("amount")) === true){
                     $stock = new Stock();
                     $stock->setAmount($request->request->get("amount"));
                     $stock->setWarehouseID($warehouse);
-                    $stock->setPhoneID($phone);
+                    $stock->setPhoneID($this->phoneService->getOnePhoneById($phone->getId()));
                     $stock->setDate(new \DateTime());
                     $stock->setPurchasePrice($request->request->get("purchase"));
                     $stock->setStatusID($this->statusService->getOneStatusByName("Megrendelve"));
+                    $stock->setUserID($this->securityService->getOneUserById($user->getId()));
                     $this->stockService->addStock($stock);
                     return true;
                 }
@@ -89,8 +131,9 @@ class StockModel implements StockModelInterface
 
     public function edit(Request $request, int $stockId): bool
     {
+        //set phone id -> phoneModel = updatePhones, minden modellt név alapján módosítom
         if($request){
-            $status = $this->statusService->getOneStatusById($request->request->get("status"));
+            $status = $this->statusService->getOneStatusById($request->request->get("updateStatus"));
             $stock = $this->stockService->getOneStockById($stockId);
             $stock->setStatusID($status);
             $stock->setDate(new \DateTime());

@@ -59,8 +59,9 @@ class PhoneModel implements PhoneModelInterface
     }
 
 
-    public function addPhone(Request $request): Phone
+    public function addPhone(Request $request): bool
     {
+        if($request){
             if($this->checkBrand(strtolower($request->request->get("brandName"))) === false){
                 $brand = new Brand();
                 $brand->setBrandName(strtolower($request->request->get("brandName")));
@@ -99,30 +100,32 @@ class PhoneModel implements PhoneModelInterface
             $phone->setColorID($this->colorService->getOneColorById($color->getId()));
             $phone->setCapacityID($this->capacityService->getOneCapacityById($capacity->getId()));
             $this->phoneService->addPhone($phone);
-//            if ($this->checkPhone($phone) === true){
-//                return $this->phoneService->removePhone($phone->getId());
-//            }
-            return $phone;
-
-    }
-
-    public function checkPhone(Phone $phone):bool{
-        /** @var Phone[] $existingPhones */
-        $existingPhones = $this->phoneService->getAllPhone();
-        foreach($existingPhones as $exphone){
-            if($exphone->getBrandID()->getId() === $phone->getBrandID()->getId() && $exphone->getModelID()->getId() === $phone->getModelID()->getId()
-            && $exphone->getColorID()->getId() === $phone->getColorID()->getId() && $exphone->getCapacityID()->getId() === $phone->getCapacityID()->getId()){
-                $this->phoneService->removePhone($phone->getId());
-                return true;
-            }
+            return true;
         }
         return false;
 
+
     }
 
-    public function updatePhone(Request $request): bool
-    {
+    public function existPhone(Brand $brand, Model $model, Color $color, Capacity $capacity):Phone{
+        /** @var Phone $phone */
+        $phone = null;
+        /** @var Phone[] $existingPhones */
+        $existingPhones = $this->phoneService->getAllPhone();
+        foreach($existingPhones as $exphone){
+            if($exphone->getBrandID()->getId() === $brand->getId() && $exphone->getModelID()->getId() === $model->getId()
+                && $exphone->getColorID()->getId() === $color->getId() && $exphone->getCapacityID()->getId() === $capacity->getId()){
+                $phone = $exphone;
+                return $phone;
+            }
+        }
+        return $phone;
+    }
 
+    public function updatePhone(Request $request, int $phoneID): Phone
+    {
+        $phone = $this->phoneService->getOnePhoneById($phoneID);
+        $phone->setBrandID();
     }
 
     public function allPhones(): iterable
@@ -159,7 +162,6 @@ class PhoneModel implements PhoneModelInterface
         return $this->stockService->getAllModelByStatusAndBrand(3,$request->request->get("brandID"));
     }
 
-
     public function allArrivedColor(Request $request): iterable
     {
         return $this->stockService->getAllColorByStatusAndModel(3,$request->request->get("modelID"));
@@ -170,19 +172,22 @@ class PhoneModel implements PhoneModelInterface
         return $this->stockService->getAllCapacityByStatusAndColor(3,$request->request->get("colorID"));
     }
 
+    public function getAllBrand():iterable{
+        return $this->brandService->getAllBrand();
+    }
 
     public function allModelByBrand(Request $request): iterable
     {
-        return $this->phoneService->getAllPhoneByBrand($request->request->get("brandID"));
+        return $this->phoneService->getAllPhoneByBrand($request->request->get("brandNameID"));
     }
 
     public function allColorByModel(Request $request): iterable
     {
-        return $this->phoneService->getAllPhoneByModel($request->request->get("modelID"));
+        return $this->phoneService->getAllPhoneByModel($request->request->get("modelNameID"));
     }
 
     public function allCapacityByColor(Request $request): iterable{
-        return $this->phoneService->getAllPhoneByColor($request->request->get("colorID"));
+        return $this->phoneService->getAllPhoneByColor($request->request->get("colorNameID"));
     }
 
     public function filteredPhones(Request $request): iterable

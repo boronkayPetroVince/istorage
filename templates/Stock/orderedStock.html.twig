@@ -14,18 +14,18 @@
                     <form action="{{ path('orderedStock') }}" method="post">
                         <div class="row d-flex align-items-center text-center">
                             <div class="col-3">
-                                <select name="brands" id="brands" class="showSelect" onchange="brandChanged()">
+                                <select name="brands" id="brands" class="w-100 showSelect" onchange="filterBrandChanged()">
                                     <option value="">Válassz márkát!</option>
                                 </select>
                             </div>
                             <div class="col-3">
-                                <select name="models" id="models" class="showSelect" onchange="modelChanged()"></select>
+                                <select name="models" id="models" class="showSelect" onchange="filterModellChanged()"></select>
                             </div>
                             <div class="col-2">
-                                <select name="colors" id="colors" class="showSelect" onchange="colorChanged()"></select>
+                                <select name="colors" id="colors" class="showSelect" onchange="filterColorChanged()"></select>
                             </div>
                             <div class="col-2">
-                                <select name="capacities" id="capacities" class="showSelect" onchange="capacityChanged()"></select>
+                                <select name="capacities" id="capacities" class="showSelect" onchange="filterCapacityChanged()"></select>
                             </div>
                             <div class="col-2">
                                 <button id="szures" class="btn buttonDesign w-100">Szűrés</button>
@@ -52,10 +52,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                <div class="table-responsive table mt-2" id="dataTable" role="grid" >
                     <table class="table my-0" id="dataTable">
                         <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Mennyiség</th>
                             <th>Beszerzési ár</th>
                             <th>Telefon</th>
@@ -71,20 +72,25 @@
                         {% for stock in stocks %}
                             {% if stock.statusID.status == "Megrendelve" %}
                                 <tr id="{{ counter }}">
+                                    <td id="id{{ counter }}">{{ stock.id }}</td>
                                     <td id="amount{{ counter }}">{{ stock.amount }}</td>
                                     <td id="purchasePrice{{ counter }}">{{ stock.purchasePrice }}</td>
                                     <td>
                                         <span id="brand{{ counter }}">{{ stock.phoneID.brandID.brandName }} </span>
                                         <span id="model{{ counter }}">{{ stock.phoneID.modelID.modelName }} </span>
                                         <span id="color{{ counter }}">{{ stock.phoneID.colorID.phoneColor }} </span>
-                                        <span id="capacity{{ counter }}">{{ stock.phoneID.capacityID.capacity }} GB </span>
+                                        <span id="phoneCapacity{{ counter }}">{{ stock.phoneID.capacityID.capacity }} GB </span>
                                     </td>
-                                    <td id="warehouse{{ counter }}">{{ stock.warehouseID.whName }}</td>
+                                    <td id="warehouse{{ counter }}">
+                                        {{ stock.warehouseID.whName }}
+                                        <span class="d-none" id="whID{{ counter }}">{{ stock.warehouseID.id }}</span>
+                                    </td>
                                     <td id="status{{ counter }}">{{ stock.statusID.status }}</td>
+                                    <span class="d-none" id="statusID{{ counter }}">{{ stock.statusID.id }}</span>
                                     <td id="date{{ counter }}">{{ stock.date|date('Y-m-d H:i:s') }}</td>
                                     <td id="user{{ counter }}">{{ stock.userID.username }} ({{ stock.userID.roles[0] }})</td>
                                     <td>
-                                        <button id="btn{{ counter }}" class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateOrder" data-bs-toggle="modal" onclick="updateOrder(this.id)"><i class="fas fa-edit operationIcon"></i></button>
+                                        <button id="btn{{ counter }}" class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateOrder" data-bs-toggle="modal" onclick="updateItem(this.id)"><i class="fas fa-edit operationIcon"></i></button>
                                     </td>
                                 </tr>
                             {% endif %}
@@ -125,56 +131,59 @@
                 <div class="modal-header modalHeaderFooter">
                     <h5 class="w-100 text-center"><strong>Megrendelt eszköz módosítása</strong><br></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ path('updateOrderedStock', {"stockId": "id"}) }}">
+                <form id="updateForm" action="{{ path('updateOrderedStock', {"stockId": "id"}) }}" method="post">
                     <div class="modal-body modalBody">
+                        <div class="row">
+                            <div class="col-12 text-md-end" >
+                                <a href="{{ path('addPhone') }}"  class="btn buttonDesign">Új telefon hozzáadása</a>
+                            </div>
+                        </div>
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
-                            <div class="card-body">
+                            <div class="card-body" style="background: rgba(255,255,255,0.5);">
                                     <div class="row">
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
-                                                <label class="form-label" for="brand"><strong>Márka</strong></label>
-                                                <input class="form-control" type="text" id="username" placeholder="user.name" name="username" disabled="">
+                                                <label class="form-label" for="updateBrand"><strong>Márka</strong></label>
+                                                <input class="form-control" type="text" id="updateBrand" name="updateBrand">
                                             </div>
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
-                                                <label class="form-label" for="email"><strong>Model</strong><br></label>
-                                                <input class="form-control" type="email" id="email" placeholder="user@example.com" name="email" disabled="">
+                                                <label class="form-label" for="updateModel"><strong>Model</strong><br></label>
+                                                <input class="form-control" type="text" id="updateModel" name="updateModel">
                                             </div>
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
-                                                <label class="form-label" for="first_name"><strong>Szín</strong><br></label>
-                                                <input class="form-control" type="text" id="first_name" placeholder="John" name="first_name" disabled="">
+                                                <label class="form-label" for="updateColor"><strong>Szín</strong><br></label>
+                                                <input class="form-control" type="text" id="updateColor" name="updateColor">
                                             </div>
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
-                                                <label class="form-label" for="last_name"><strong>Kapacitás</strong><br></label>
-                                                <input class="form-control" type="text" id="last_name" placeholder="Doe" name="last_name" disabled="">
+                                                <label class="form-label" for="updateCapacity"><strong>Kapacitás</strong><br></label>
+                                                <input class="form-control" type="number" id="updateCapacity" name="updateCapacity">
                                             </div>
                                         </div>
-                                        <div class="col col-12">
+                                        <div class="col-12">
+                                            <label class="form-label" for="updateWarehouse"><strong>Raktár</strong><br></label>
+                                            <select name="updateWarehouse" id="updateWarehouse" class="form-select orderSelect"></select>
+                                        </div>
+                                        <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
-                                                <label class="form-label" for="last_name"><strong>Raktár</strong><br></label>
-                                                <input class="form-control" type="text" id="last_name-4" placeholder="Doe" name="last_name" disabled="">
+                                                <label class="form-label" for="updateAmount"><strong>Mennyiség</strong><br></label>
+                                                <input class="form-control" type="number" id="updateAmount" name="updateAmount">
                                             </div>
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
-                                                <label class="form-label" for="last_name"><strong>Mennyiség</strong><br></label>
-                                                <input class="form-control" type="text" id="last_name-1" placeholder="Doe" name="last_name">
-                                            </div>
-                                        </div>
-                                        <div class="col col-sm-6 col-12">
-                                            <div class="mb-3">
-                                                <label class="form-label" for="last_name"><strong>Beszerzési ár</strong><br></label>
-                                                <input class="form-control" type="text" id="last_name-2" placeholder="Doe" name="last_name">
+                                                <label class="form-label" for="updatePrice"><strong>Beszerzési ár</strong><br></label>
+                                                <input class="form-control" type="number" id="updatePrice" name="updatePrice">
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <div class="mb-3"><label class="form-label" for="last_name"><strong>Státusz</strong><br></label>
-                                                <select class="form-select orderSelect" name="status" id="status"></select>
+                                            <div class="mb-3"><label class="form-label" for="updateStatus"><strong>Státusz</strong><br></label>
+                                                <select class="form-select orderSelect" name="updateStatus" id="updateStatus"></select>
                                             </div>
                                         </div>
                                     </div>
@@ -198,51 +207,57 @@
                 </div>
                 <form action="{{ path('addStock') }}" method="post">
                     <div class="modal-body modalBody">
+                        <div class="row">
+                            <div class="col-12 text-md-end" >
+                                <a href="{{ path('addPhone') }}"  class="btn buttonDesign">Új telefon hozzáadása</a>
+                            </div>
+                        </div>
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
-                            <div class="card-body">
-
+                            <div class="card-body" style="background: rgba(255,255,255,0.5);">
                                 <div class="row">
                                     <div class="col col-sm-6 col-12">
                                         <div class="mb-3">
                                             <label class="form-label" for="brandName"><strong>Márka</strong></label>
-                                            <input class="form-control" type="text" id="brandName" name="brandName">
+                                            <select name="brandName" id="brandName" class="form-select orderSelect" onchange="addBrandChange()" required>
+                                                <option value="">Válassz márkát!</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col col-sm-6 col-12">
                                         <div class="mb-3">
-                                            <label class="form-label" for="modelName"><strong>Model</strong><br></label>
-                                            <input class="form-control" type="text" id="modelName" name="modelName">
+                                            <label class="form-label" for="modelName"><strong>Modell</strong><br></label>
+                                            <select name="modelName" id="modelName" class="form-select orderSelect" onchange="addModellChange()" required>
+                                                <option value="">Válassz modellt!</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col col-sm-6 col-12">
                                         <div class="mb-3">
                                             <label class="form-label" for="colorName"><strong>Szín</strong><br></label>
-                                            <input class="form-control" type="text" id="colorName" name="colorName">
+                                            <select name="colorName" id="colorName" class="form-select orderSelect" onchange="addColorChange()" required></select>
                                         </div>
                                     </div>
                                     <div class="col col-sm-6 col-12">
                                         <div class="mb-3">
                                             <label class="form-label" for="capacity"><strong>Kapacitás</strong><br></label>
-                                            <input class="form-control" type="number" id="capacity" name="capacity">
+                                            <select name="capacity" id="capacity" class="form-select orderSelect" required></select>
                                         </div>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="warehouse"><strong>Raktár</strong><br></label>
-                                        <select name="warehouse" id="warehouse" class="form-select orderSelect">
-                                            <option value="">Válassz raktárt!</option>
-                                        </select>
+                                        <select name="warehouse" id="warehouse" class="form-select orderSelect" required></select>
                                     </div>
                                     <div class="row">
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="amount"><strong>Mennyiség</strong><br></label>
-                                                <input class="form-control" type="number" id="amount" name="amount">
+                                                <input class="form-control" type="number" id="amount" name="amount" required>
                                             </div>
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="purchase"><strong>Beszerzési ár</strong><br></label>
-                                                <input class="form-control" type="text" id="purchase" name="purchase">
+                                                <input class="form-control" type="text" id="purchase" name="purchase" required>
                                             </div>
                                         </div>
                                     </div>
@@ -262,27 +277,6 @@
     <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
     <script>
         $(document).ready(function (){
-            $.ajax({
-                url: "{{ path('allWarehouse') }}",
-                success: function (eredmeny){
-                    $.each(eredmeny, function (key,value){
-                        var warehouseOption = $('<option>', {value:value.id, text:value.whName});
-                        $('#warehouse').append(warehouseOption);
-                    });
-                }
-            });
-
-            $.ajax({
-                url: "{{ path('allStatus') }}",
-                success: function (eredmeny){
-                    console.log(eredmeny);
-                    $.each(eredmeny, function (key,value){
-                        var statusOption = $('<option>',{ value: value.id, text: value.status});
-                        $("#status").append(statusOption);
-                    });
-                }
-            });
-
             $("#models").hide();
             $("#colors").hide();
             $("#capacities").hide();
@@ -298,10 +292,129 @@
                 }
             });
         });
-        function updateOrder(rowId){
+        function updateItem(rowId){
+            $.ajax({
+                url: "{{ path('allWarehouse') }}",
+                success: function (result){
+                    $.each(result, function (key,value){
+                        var warehouseOption = $('<option>', {value:value.id, text:value.whName});
+                        $('#warehouse').append(warehouseOption);
+                        $('#updateWarehouse').append(warehouseOption);
+                    });
+                    document.getElementById("updateWarehouse").value = document.getElementById("whID"+rowId).innerHTML;
+                }
+            });
+            $("#updateStatus").html("");
+            $.ajax({
+                url: "{{ path('allStatus') }}",
+                success: function (result){
+                    $.each(result, function (key,value){
+                        var statusOption = $('<option>',{ value: value.id, text: value.status});
+                        $("#updateStatus").append(statusOption);
+                    });
+                    document.getElementById("updateStatus").value = document.getElementById("statusID"+rowId).innerHTML;
+                    console.log(document.getElementById("updateStatus").value);
+                }
+            });
 
+            rowId = rowId.replace("btn","");
+            id = document.getElementById("id"+rowId).innerHTML;
+            capacity = document.getElementById("phoneCapacity"+rowId).innerHTML.replace("GB", "");
+            document.getElementById("updateAmount").value = document.getElementById("amount"+rowId).innerHTML;
+            document.getElementById("updatePrice").value = document.getElementById("purchasePrice"+rowId).innerHTML;
+            document.getElementById("updateBrand").value = document.getElementById("brand"+rowId).innerHTML;
+            document.getElementById("updateModel").value = document.getElementById("model"+rowId).innerHTML;
+            document.getElementById("updateColor").value = document.getElementById("color"+rowId).innerHTML;
+            document.getElementById("updateCapacity").value = parseInt(capacity);
+            console.log(document.getElementById("updateStatus").value);
+            console.log(document.getElementById("status"+rowId).innerHTML);
+            console.log(parseInt(document.getElementById("statusID"+rowId).innerHTML));
+
+            let url = document.getElementById("updateForm").action;
+            var newUrl = url.replace("id", parseInt(id));
+            document.getElementById("updateForm").action = newUrl;
+            $("#updateOrder").show();
         }
-        function brandChanged(){
+        function addingStock(){
+            $("#modelName").prop('disabled', 'disabled');
+            $("#colorName").prop('disabled', 'disabled');
+            $("#capacity").prop('disabled', 'disabled');
+            $.ajax({
+                url:"{{ path('allBrands') }}",
+                method: "post",
+                success: function (result){
+
+                    $.each(result, function (key,value){
+                        var brandOption = $('<option>', {value:value.id, text:value.brandName});
+                        $("#brandName").append(brandOption);
+                    });
+                }
+            });
+        }
+        function addBrandChange(){
+            $.ajax({
+                url:"{{ path('allModelByBrand') }}",
+                method: "post",
+                data:{
+                    "brandNameID": document.getElementById("brandName").value
+                },
+                success:function (result){
+                    $("#modelName").html("");
+                    $("#modelName").prop('disabled', false);
+                    $("#colorName").prop('disabled', 'disabled');
+                    $("#capacity").prop('disabled', 'disabled');
+                    var defaultVal = $('<option>', {value:"", text:"Válassz modellt!"});
+                    $("#modelName").append(defaultVal);
+                    $.each(result, function (key,value){
+                        var modelOption = $('<option>', {value:value.modelID.id, text:value.modelID.modelName});
+                        $("#modelName").append(modelOption);
+                    });
+
+
+                }
+            });
+        }
+        function addModellChange(){
+            $.ajax({
+                url:"{{ path('allColorByModel') }}",
+                method: "post",
+                data:{
+                    "modelNameID": document.getElementById("modelName").value
+                },
+                success:function (result){
+                    $("#colorName").html("");
+                    $("#colorName").prop('disabled', false);
+                    $("#capacity").prop('disabled', 'disabled');
+                    var defaultVal = $('<option>', {value:"", text:"Válassz színt!"});
+                    $("#colorName").append(defaultVal);
+                    $.each(result, function (key,value){
+                        var colorOption = $('<option>', {value:value.colorID.id, text:value.colorID.phoneColor});
+                        $("#colorName").append(colorOption);
+                    });
+
+                }
+            });
+        }
+        function addColorChange(){
+            $.ajax({
+                url:"{{ path('allCapacityByColor') }}",
+                method: "post",
+                data:{
+                    "colorNameID": document.getElementById("colorName").value
+                },
+                success:function (result){
+                    $("#capacity").html("");
+                    $("#capacity").prop('disabled', false);
+                    var defaultVal = $('<option>', {value:"", text:"Válassz kapacitást!"});
+                    $("#capacity").append(defaultVal);
+                    $.each(result, function (key,value){
+                        var capacityOption = $('<option>', {value:value.capacityID.id, text:value.capacityID.capacity});
+                        $("#capacity").append(capacityOption);
+                    });
+                }
+            });
+        }
+        function filterBrandChanged(){
             $("#models").show();
             $("#colors").hide();
             $("#capacities").hide();
@@ -324,7 +437,7 @@
 
             });
         }
-        function modelChanged(){
+        function filterModellChanged(){
             $("#colors").show();
             $("#capacities").hide();
             $("#szures").hide();
@@ -347,7 +460,7 @@
 
             });
         }
-        function colorChanged(){
+        function filterColorChanged(){
             $("#capacities").show();
             $("#szures").hide();
             $.ajax({
@@ -368,7 +481,7 @@
 
             });
         }
-        function capacityChanged(){
+        function filterCapacityChanged(){
             $("#szures").show();
         }
     </script>

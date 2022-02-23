@@ -6,6 +6,7 @@ namespace App\Controller;
 
 
 use App\Entity\Stock;
+use App\Entity\User;
 use App\Model\Interfaces\PhoneModelInterface;
 use App\Model\Interfaces\StockModelInterface;
 use App\Service\Classes\StatusService;
@@ -51,15 +52,17 @@ class StockController extends AbstractController
      * @Route(name="addStock", path="/addStock")
      */
     public function addStock(Request $request):Response{
+        /** @var User $user */
+        $user = $this->getUser();
         if($request->isMethod("POST")){
-            if($this->stockModel->addStock($request)=== true){
-                return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
+            if($this->stockModel->addStock($request, $user)=== true){
+                return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
                     "resultMessage"=> "Sikeres hozzáadás!", "resultColor" => "success"]);
             }
-            return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->filteredStock($request), "user" => $this->getUser(),
+            return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->filteredStock($request), "user" => $this->getUser(),
                 "resultMessage"=> "Sikertelen hozzáadás!", "resultColor" => "danger"]);
         }
-        return $this->redirectToRoute('allStock');
+        return $this->redirectToRoute('orderedStock');
     }
 
     /**
@@ -98,11 +101,14 @@ class StockController extends AbstractController
      */
     public function updateOrdered(Request $request, int $stockId): Response{
         if($request->isMethod("POST")){
-            if($this->stockModel->changeStatusBystockID($request, $stockId) === true){
-                return new Response("Sikeres módosítás");
-            }
+            if($this->stockModel->edit($request, $stockId) === true){
+                return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
+                    "resultMessage"=> "Sikeres módosítás", "resultColor" => "success"]);
+            }else return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
+                "resultMessage"=> "Sikertelen módosítás", "resultColor" => "danger"]);
         }
-        return $this->render("Stock/edit.html.twig", ["user" => $this->getUser(), "stock" => $this->stockModel->oneStockById($stockId)]);
+        return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
+            "resultMessage"=> "", "resultColor" => ""]);
     }
 
     /**
