@@ -27,14 +27,23 @@ class ClientService extends CrudService implements ClientServiceInterface
     public function getOneClientById(int $id):Client{
         return $this->getRepo()->find($id);
     }
+
+    public function getOneClientBySelect(int $id): iterable
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select("client")
+            ->from(Client::class, "client")
+            ->where("client.id = :id")
+            ->setParameter("id",$id);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
     public function addClient(Client $client):void{
         $this->em->persist($client);
         $this->em->flush();
     }
-    public function removeClientById(int $id):void{
-        $this->em->remove($this->getOneClientById($id));
-        $this->em->flush();
-    }
+
     public function updateClient(int $id):void{
         $client = $this->getOneClientById($id);
         $this->em->persist($client);

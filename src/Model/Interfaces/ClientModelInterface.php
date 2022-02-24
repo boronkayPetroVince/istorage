@@ -4,6 +4,7 @@
 namespace App\Model\Interfaces;
 
 
+use App\Entity\Client;
 use App\Entity\Settlement;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,4 +21,6 @@ interface ClientModelInterface
     public function getAllCountry():Response;
 
     public function allClients(): iterable;
+
+    public function getOneClientById(Request $request): iterable;
 }

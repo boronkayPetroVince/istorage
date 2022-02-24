@@ -199,6 +199,23 @@ class ClientController extends AbstractController
         return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
             "resultMessage"=> "", "resultColor" => ""]);
     }
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="selectAllClients", path="/selectAllClients")
+     */
+    public function selectAllClients(Request $request): Response{
+        return new JsonResponse($this->clientModel->allClients());
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="oneClientById", path="/oneClientById")
+     */
+    public function oneClientById(Request $request):Response{
+        return new JsonResponse($this->clientModel->getOneClientById($request));
+    }
 
 
 

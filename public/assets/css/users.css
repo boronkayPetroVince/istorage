@@ -17,19 +17,20 @@ thead, tbody, tfoot, tr, td, th {
   box-shadow: 0 0 0 0.3rem rgba(0,50,71, 0.2) !important;
   background-color: #1e2833 !important;
   border-color: #1e2833 !important;
-  color: #fff;
+  color: #fff !important;
 }
 
 .showSelect:hover {
   background-color: #1e2833 !important;
   border-color: #1e2833 !important;
-  color: #fff;
+  color: #fff !important;
 }
 
 .showSelect {
   background-color: #cdf0fd !important;
   width: 100%;
   height: auto;
+  color: #003247;
   border: 3px solid #003247;
   border-radius: .35rem;
   transition: color .15s ease-in-out,background-color .3s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;

@@ -38,52 +38,18 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route(name="generateUserPDF", path="/generateUserPDF")
+     * @param Request $request
+     * @return Response
+     * @Route(name="main", path="/main")
      */
-    public function generatePDF(){
-        $pdfOptions = new Options();
-        $pdfOptions->set('defaultFont', 'Arial');
-        $dompdf = new Dompdf($pdfOptions);
-        $html = $this->renderView('user/usersPDF.html.twig', ["users" => $this->security->getAllUser()]);
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-        ob_get_clean();
-        $dompdf->stream("raktarosok.pdf", [
-            "Attachment" => true
-        ]);
-    }
+    public function mainMenu(Request $request):Response{
+        //Mikor rányom megint kéri a usert, nem menti el.
+        /** @var User $user */
+        $user = $this->getUser();
+        return $this->render("index.html.twig", ["user" => $user]);
 
-    /**
-     * @Route(name="generateUserExcel", path="/generateUserExcel")
-     */
-    public function generateExcel(){
-        /** @var User[] $users */
-        $users = $this->security->getAllUser();
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'ID');
-        $sheet->setCellValue('B1', 'Felhasználónév');
-        $sheet->setCellValue('C1', 'Teljes név');
-        $sheet->setCellValue('D1', 'Email');
-        $sheet->setCellValue('E1', 'Telefonszám');
-        $sheet->setCellValue('F1', 'Jogosultság');
-        $counter = 2;
-        foreach ($users as $user){
-            $sheet->setCellValue('A'.$counter, $user->getId());
-            $sheet->setCellValue('B'.$counter, $user->getUsername());
-            $sheet->setCellValue('C'.$counter, $user->getFullName());
-            $sheet->setCellValue('D'.$counter, $user->getEmail());
-            $sheet->setCellValue('E'.$counter, $user->getPhoneNumber());
-            $sheet->setCellValue('F'.$counter, $user->getRoles()[0]);
-            $counter++;
-        }
-        $writer = new Xlsx($spreadsheet);
-        $filename = "raktarosok";
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
-        $writer->save('php://output');
-        die();
+
+
     }
 
     /**
@@ -115,7 +81,6 @@ class UserController extends AbstractController
         $user = $this->getUser();
         if ($request->isMethod("POST")){
             if ($this->userModel->loginAction($request,$user) == true){
-                //return $this->render("user/login.html.twig",["username"=>"Sikeresen bejelentkeztél: ".$user->getUsername()."!"]);
                 return $this->render("index.html.twig", ["user" => $this->getUser()]);
             }else return $this->render("user/login.html.twig", ["username" => "Rossz felhasználónév, vagy jelszó!", "user" => $this->getUser()]);
         }else return $this->render("user/login.html.twig", ["username" => "", "user" => $this->getUser()]);
@@ -192,6 +157,55 @@ class UserController extends AbstractController
         }
         return $this->render("user/profile.html.twig", ["user" => $this->getUser(),
             "resultMessage"=> "", "resultColor" => ""]);
+    }
+
+    /**
+     * @Route(name="generateUserPDF", path="/generateUserPDF")
+     */
+    public function generatePDF(){
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+        $html = $this->renderView('user/usersPDF.html.twig', ["users" => $this->security->getAllUser()]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        ob_get_clean();
+        $dompdf->stream("raktarosok.pdf", [
+            "Attachment" => true
+        ]);
+    }
+
+    /**
+     * @Route(name="generateUserExcel", path="/generateUserExcel")
+     */
+    public function generateExcel(){
+        /** @var User[] $users */
+        $users = $this->security->getAllUser();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'ID');
+        $sheet->setCellValue('B1', 'Felhasználónév');
+        $sheet->setCellValue('C1', 'Teljes név');
+        $sheet->setCellValue('D1', 'Email');
+        $sheet->setCellValue('E1', 'Telefonszám');
+        $sheet->setCellValue('F1', 'Jogosultság');
+        $counter = 2;
+        foreach ($users as $user){
+            $sheet->setCellValue('A'.$counter, $user->getId());
+            $sheet->setCellValue('B'.$counter, $user->getUsername());
+            $sheet->setCellValue('C'.$counter, $user->getFullName());
+            $sheet->setCellValue('D'.$counter, $user->getEmail());
+            $sheet->setCellValue('E'.$counter, $user->getPhoneNumber());
+            $sheet->setCellValue('F'.$counter, $user->getRoles()[0]);
+            $counter++;
+        }
+        $writer = new Xlsx($spreadsheet);
+        $filename = "raktarosok";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        $writer->save('php://output');
+        die();
     }
 
 

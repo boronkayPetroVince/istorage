@@ -80,13 +80,16 @@ class PhoneController extends AbstractController
 
     /**
      * @param Request $request
+     * @param int $phoneID
      * @return Response
-     * @Route(name="updatePhone", path="/updatePhone")
+     * @Route(name="updatePhone", path="/updatePhone/{phoneID}")
      */
-    public function updatePhone(Request $request): Response{
-        $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
-            "resultMessage"=> "", "resultColor" => "",
-            "addResultColor"=>"success", "addResultMessage" => "Sikeresen hozzáadtad a telefont!" ]);
+    public function updatePhone(Request $request, int $phoneID): Response{
+        if($this->phoneModel->updatePhone($request,$phoneID)){
+            $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
+                "resultMessage"=> "", "resultColor" => ""]);
+        }
+
     }
 
     /**

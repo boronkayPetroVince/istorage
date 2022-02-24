@@ -3,10 +3,10 @@
 {# @var stocks \App\Entity\Stock[] #}
 {% block content %}
     <div class="container-fluid">
-        <h3 class="text-dark mb-4">Megrendelt eszközök<br></h3>
         <div class="alert alert-{{ resultColor }}" role="alert">
             <span class="fw-bold">{{ resultMessage }}</span>
         </div>
+        <h3 class="text-dark mb-4">Megrendelt eszközök</h3>
         <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
             <div class="card-header py-3" style="background: rgb(0,50,71);color: rgb(255,255,255);">
                 <h5>Szűréshez kövesse a kért utasításokat!<br></h5>
@@ -48,7 +48,7 @@
                         <div class="text-md-end dataTables_filter" id="dataTable_filter">
                             <a href="{{ path('generateOrderedExcel') }}" class="btn btn-primary buttonDesign" type="button">Excel</a>
                             <a href="{{ path('generateOrderedPDF') }}" class="btn btn-primary buttonDesign" type="button">PDF</a>
-                            <button class="btn btn-primary buttonDesign" type="button" data-bs-target="#addOrder" data-bs-toggle="modal">Hozzáadás</button>
+                            <button onclick="addingStock()" class="btn btn-primary buttonDesign" type="button" data-bs-target="#addOrder" data-bs-toggle="modal">Hozzáadás</button>
                         </div>
                     </div>
                 </div>
@@ -133,11 +133,6 @@
                 </div>
                 <form id="updateForm" action="{{ path('updateOrderedStock', {"stockId": "id"}) }}" method="post">
                     <div class="modal-body modalBody">
-                        <div class="row">
-                            <div class="col-12 text-md-end" >
-                                <a href="{{ path('addPhone') }}"  class="btn buttonDesign">Új telefon hozzáadása</a>
-                            </div>
-                        </div>
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
                             <div class="card-body" style="background: rgba(255,255,255,0.5);">
                                     <div class="row">
@@ -200,27 +195,36 @@
         </div>
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="addOrder">
-        <div class="modal-dialog modal-lg modal-fullscreen-lg-down" role="document">
+        <div class="modal-dialog modal-xl modal-fullscreen-xl-down" role="document">
             <div class="modal-content">
                 <div class="modal-header modalHeaderFooter">
                     <h5 class="w-100 text-center"><strong>Készülék rendelése</strong></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{{ path('addStock') }}" method="post">
                     <div class="modal-body modalBody">
-                        <div class="row">
-                            <div class="col-12 text-md-end" >
-                                <a href="{{ path('addPhone') }}"  class="btn buttonDesign">Új telefon hozzáadása</a>
-                            </div>
-                        </div>
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
                             <div class="card-body" style="background: rgba(255,255,255,0.5);">
                                 <div class="row">
+                                    <div class="col col-12">
+                                        <label class="form-label" for="clientName"><strong>Ügyfél</strong></label>
+                                        <div class="input-group mb-3">
+                                            <select name="clientName" id="clientName" class="form-select orderSelect" onchange="addClientChange()" required>
+                                                <option value="">Válassz ügyfelet!</option>
+                                            </select>
+                                            <div class="input-group-append">
+                                                <a style="border-radius: 0 !important;" href="{{ path('allClients') }}"  class="btn buttonDesign">+</a>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col col-sm-6 col-12">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="brandName"><strong>Márka</strong></label>
+                                        <label class="form-label" for="brandName"><strong>Márka</strong></label>
+                                        <div class="input-group mb-3">
                                             <select name="brandName" id="brandName" class="form-select orderSelect" onchange="addBrandChange()" required>
                                                 <option value="">Válassz márkát!</option>
                                             </select>
+                                            <div class="input-group-append">
+                                                <a style="border-radius: 0 !important;" href="{{ path('addPhone') }}"  class="btn buttonDesign">+</a>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col col-sm-6 col-12">
@@ -277,11 +281,20 @@
     <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
     <script>
         $(document).ready(function (){
+            $.ajax({
+                url: "{{ path('allWarehouse') }}",
+                success: function (eredmeny){
+                    $.each(eredmeny, function (key,value){
+                        var warehouseOption = $('<option>', {value:value.id, text:value.whName});
+                        $('#warehouse').append(warehouseOption);
+                    });
+                }
+            });
+            $("#alertClientInf").hide();
             $("#models").hide();
             $("#colors").hide();
             $("#capacities").hide();
             $("#szures").hide();
-
             $.ajax({
                 url: "{{ path('allOrderedBrand') }}",
                 success: function (result){
@@ -291,7 +304,9 @@
                     });
                 }
             });
+
         });
+
         function updateItem(rowId){
             $.ajax({
                 url: "{{ path('allWarehouse') }}",
@@ -335,7 +350,10 @@
             document.getElementById("updateForm").action = newUrl;
             $("#updateOrder").show();
         }
+
         function addingStock(){
+            $("#clientName").html("");
+            $("#brandName").html("");
             $("#modelName").prop('disabled', 'disabled');
             $("#colorName").prop('disabled', 'disabled');
             $("#capacity").prop('disabled', 'disabled');
@@ -343,14 +361,26 @@
                 url:"{{ path('allBrands') }}",
                 method: "post",
                 success: function (result){
-
+                    var defaultVal = $('<option>', {value:"", text:"Válassz modellt!"});
+                    $("#brandName").append(defaultVal);
                     $.each(result, function (key,value){
                         var brandOption = $('<option>', {value:value.id, text:value.brandName});
                         $("#brandName").append(brandOption);
                     });
                 }
             });
+            $.ajax({
+                url:"{{ path('selectAllClients') }}",
+                method: "post",
+                success: function (result){
+                    $.each(result, function (key,value){
+                        var clientOption = $('<option>', {value:value.id, text:value.clientName});
+                        $("#clientName").append(clientOption);
+                    });
+                }
+            });
         }
+
         function addBrandChange(){
             $.ajax({
                 url:"{{ path('allModelByBrand') }}",
@@ -374,6 +404,7 @@
                 }
             });
         }
+
         function addModellChange(){
             $.ajax({
                 url:"{{ path('allColorByModel') }}",
@@ -395,6 +426,7 @@
                 }
             });
         }
+
         function addColorChange(){
             $.ajax({
                 url:"{{ path('allCapacityByColor') }}",
@@ -414,6 +446,7 @@
                 }
             });
         }
+
         function filterBrandChanged(){
             $("#models").show();
             $("#colors").hide();
@@ -437,6 +470,7 @@
 
             });
         }
+
         function filterModellChanged(){
             $("#colors").show();
             $("#capacities").hide();
@@ -460,6 +494,7 @@
 
             });
         }
+
         function filterColorChanged(){
             $("#capacities").show();
             $("#szures").hide();
@@ -481,8 +516,13 @@
 
             });
         }
+
         function filterCapacityChanged(){
             $("#szures").show();
         }
+
+
+
+
     </script>
 {% endblock %}

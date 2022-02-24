@@ -4,10 +4,11 @@
 {# @var stocks \App\Entity\Stock[] #}
 {% block content %}
     <div class="container-fluid">
-        <h3 class="text-dark mb-4">Készlet<br></h3>
+
         <div class="alert alert-{{ resultColor }}" role="alert">
             <span class="fw-bold">{{ resultMessage }}</span>
         </div>
+        <h3 class="text-dark">Készlet</h3>
         <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
             <div class="card-header py-3" style="background: #003247;">
                 <h5 style="color: rgb(255,255,255);">Szűréshez kövesse a kért utasításokat!</h5>
@@ -124,18 +125,21 @@
                     <div class="modal-body modalBody">
                         <div class="row">
                             <div class="col-12 text-md-end" >
-                                <a href="{{ path('addPhone') }}"  class="btn buttonDesign">Új telefon hozzáadása</a>
+
                             </div>
                         </div>
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
                             <div class="card-body" style="background: rgba(255,255,255,0.5);">
                                     <div class="row">
                                         <div class="col col-sm-6 col-12">
-                                            <div class="mb-3">
-                                                <label class="form-label" for="brandName"><strong>Márka</strong></label>
+                                            <label class="form-label" for="brandName"><strong>Márka</strong></label>
+                                            <div class="input-group mb-3">
                                                 <select name="brandName" id="brandName" class="form-select orderSelect" onchange="addBrandChange()" required>
                                                     <option value="">Válassz márkát!</option>
                                                 </select>
+                                                <div class="input-group-append">
+                                                    <a style="border-radius: 0 !important;" href="{{ path('addPhone') }}"  class="btn buttonDesign">+</a>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col col-sm-6 col-12">
@@ -217,6 +221,7 @@
             });
         })
         function addingStock(){
+            $("#brandName").html("");
             $("#modelName").prop('disabled', 'disabled');
             $("#colorName").prop('disabled', 'disabled');
             $("#capacity").prop('disabled', 'disabled');
@@ -224,7 +229,8 @@
                 url:"{{ path('allBrands') }}",
                 method: "post",
                 success: function (result){
-
+                    var defaultVal = $('<option>', {value:"", text:"Válassz márkát!"});
+                    $("#brandName").append(defaultVal);
                     $.each(result, function (key,value){
                         var brandOption = $('<option>', {value:value.id, text:value.brandName});
                         $("#brandName").append(brandOption);

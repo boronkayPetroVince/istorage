@@ -29,7 +29,7 @@ class StockService extends CrudService implements StockServiceInterface
         $qb = $this->em->createQueryBuilder();
         $qb->select("stock")
             ->from(Stock::class, "stock")
-            ->where("stock.warehouse_ID =: warehouse_ID")
+            ->where("stock.warehouse_ID = :warehouse_ID")
             ->setParameter("warehouse_ID", $warehouse_ID);
         $query = $qb->getQuery();
         return $query->getResult();

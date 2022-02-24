@@ -128,8 +128,12 @@ class ClientModel implements ClientModelInterface
 
     public function allClients(): iterable
     {
-        $clients = $this->clientService->getAllClient();
-        return $clients;
+        return $this->clientService->getAllClient();
+    }
+
+    public function getOneClientById(Request $request): iterable
+    {
+        return $this->clientService->getOneClientBySelect($request->request->get("clientNameID"));
     }
 
 

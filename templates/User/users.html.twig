@@ -4,11 +4,13 @@
 
 {% block content %}
     <div class="container-fluid">
-        <h3 class="text-dark mb-1">Raktárosok</h3>
         <div class="alert alert-{{ resultColor }}" role="alert">
             <span class="fw-bold">{{ resultMessage }}</span>
         </div>
         <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
+            <div class="card-header py-3" style="background: #003247;">
+                <h3 style="color: rgb(255,255,255) !important;" class="text-dark mb-1">Raktárosok</h3>
+            </div>
             <div class="card-body" style="background: rgba(255,255,255,0.5);">
                 <div class="row">
                     <div class="col-md-6 text-nowrap">
