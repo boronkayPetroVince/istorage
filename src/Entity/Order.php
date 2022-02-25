@@ -29,11 +29,11 @@ class Order
     private $user_ID;
 
     /**
-     * @var Delivery_address
-     * @ORM\JoinColumn(name="deliveryAddress_ID", referencedColumnName="id")
-     * @ORM\ManyToOne(targetEntity="Delivery_address")
+     * @var Client
+     * @ORM\JoinColumn(name="clientID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Client")
      */
-    private $deliveryAddress_ID;
+    private $clientID;
 
     /**
      * @var Phone
@@ -98,19 +98,19 @@ class Order
     }
 
     /**
-     * @return Deliveryaddress
+     * @return Client
      */
-    public function getDeliveryAddressID(): Deliveryaddress
+    public function getClientID(): Client
     {
-        return $this->deliveryAddress_ID;
+        return $this->clientID;
     }
 
     /**
-     * @param Deliveryaddress $deliveryAddress_ID
+     * @param Client $clientID
      */
-    public function setDeliveryAddressID(Deliveryaddress $deliveryAddress_ID): void
+    public function setClientID(Client $clientID): void
     {
-        $this->deliveryAddress_ID = $deliveryAddress_ID;
+        $this->clientID = $clientID;
     }
 
     /**
