@@ -1,0 +1,236 @@
+{% extends 'index.html.twig' %}
+{#
+    Eladott tábla adatain végig megyek for ciklussal, és hozzászúrom egy js string változóhoz amit majd elküldök inputként a backendhez
+#}
+{# @var stocks \App\Entity\Stock[] #}
+{% block content %}
+<div class="container-fluid">
+    <h3 class="text-dark mb-4">Eladás<br></h3>
+    <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
+        <div class="card-header py-3" style="background: #003247;">
+            <h5 style="color: rgb(255,255,255);">Kérem válasszon ki egy ügyfelet!</h5>
+            <div class="row d-flex align-items-center text-center">
+                <div class="col"><select class="showSelect">
+                        <optgroup label="This is a group">
+                            <option value="12" selected="">This is item 1</option>
+                            <option value="13">This is item 2</option>
+                            <option value="14">This is item 3</option>
+                        </optgroup>
+                    </select></div>
+                <div class="col"><select class="showSelect">
+                        <optgroup label="This is a group">
+                            <option value="12" selected="">This is item 1</option>
+                            <option value="13">This is item 2</option>
+                            <option value="14">This is item 3</option>
+                        </optgroup>
+                    </select></div>
+                <div class="col"><button class="btn btn-primary buttonFilter w-100" type="button">Kiválasztás</button></div>
+            </div>
+        </div>
+        <div class="alert alert-success client" role="alert">
+            <h4 class="text-center" style="color: rgb(0,50,71);">Ügyfél adatai</h4>
+            <hr class="clientInfHr">
+            <div class="clientInf">
+                <div class="row">
+                    <div class="col">
+                        <p class="m-0" style="text-align: right;">Ügyfél:</p>
+                    </div>
+                    <div class="col">
+                        <p class="m-0">teszt</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p class="m-0" style="text-align: right;">Adószám:</p>
+                    </div>
+                    <div class="col">
+                        <p class="m-0">1233313</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p class="m-0" style="text-align: right;">Szállítási cím:</p>
+                    </div>
+                    <div class="col">
+                        <p class="m-0">&nbsp;2600 Vác, Bottyán utca 17.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p class="m-0" style="text-align: right;">Kontakt neve:</p>
+                    </div>
+                    <div class="col">
+                        <p class="m-0">Petroleum Lámpa</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p class="m-0" style="text-align: right;">Kontakt email:</p>
+                    </div>
+                    <div class="col">
+                        <p class="m-0">petroleum@lampa.hu</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p class="m-0" style="text-align: right;">Kontakt telefon:</p>
+                    </div>
+                    <div class="col">
+                        <p class="m-0">06306453535</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr style="margin: 0;height: 0.5rem;width: 100%;opacity: 1;color: rgb(200,234,247);">
+        <div class="card-body" style="background: #e6f8fe;">
+            <div class="row">
+                <div class="col-md-6 text-nowrap col-md-12">
+                    <div id="dataTable_length-1" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm showSelect">
+                                <option value="10" selected="">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>&nbsp;</label></div>
+                </div>
+            </div>
+            <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
+                <table class="table my-0" id="dataTable">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Mennyiség</th>
+                        <th>Beszerzési ár</th>
+                        <th>Telefon</th>
+                        <th>Dátum</th>
+                        <th>Raktár</th>
+                        <th>Hozzáadás</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% set counter = 0 %}
+                    {% for stock in stocks %}
+                        {% if stock.statusID.status == "Megrendelve" %}
+                            <tr id="{{ counter }}">
+                                <td id="id{{ counter }}">{{ stock.id }}</td>
+                                <td id="amount{{ counter }}">{{ stock.amount }}</td>
+                                <td id="purchasePrice{{ counter }}">{{ stock.purchasePrice }}</td>
+                                <td>
+                                    <span id="brand{{ counter }}">{{ stock.phoneID.brandID.brandName }} </span>
+                                    <span class="d-none" id="brandID{{ counter }}">{{ stock.phoneID.brandID.id }}</span>
+                                    <span id="model{{ counter }}">{{ stock.phoneID.modelID.modelName }} </span>
+                                    <span class="d-none" id="modelID{{ counter }}">{{ stock.phoneID.modelID.id }}</span>
+                                    <span id="color{{ counter }}">{{ stock.phoneID.colorID.phoneColor }} </span>
+                                    <span class="d-none" id="colorID{{ counter }}">{{ stock.phoneID.colorID.id }}</span>
+                                    <span id="phoneCapacity{{ counter }}">{{ stock.phoneID.capacityID.capacity }} GB </span>c
+                                    <span class="d-none" id="phoneCapacityID{{ counter }}">{{ stock.phoneID.capacityID.id }}</span>
+                                </td>
+                                <td id="warehouse{{ counter }}">
+                                    {{ stock.warehouseID.whName }}
+                                    <span class="d-none" id="whID{{ counter }}">{{ stock.warehouseID.id }}</span>
+                                </td>
+                                <span class="d-none" id="statusID{{ counter }}">{{ stock.statusID.id }}</span>
+                                <td id="date{{ counter }}">{{ stock.date|date('Y-m-d H:i:s') }}</td>
+                                <td id="client{{ counter }}">
+                                    {{ stock.clientID.clientName }}
+                                    <span class="d-none" id="clientID{{ counter }}">{{ stock.clientID.id }}</span>
+                                </td>
+                                <td id="user{{ counter }}">{{ stock.userID.username }} ({{ stock.userID.roles[0] }})</td>
+                                <td>
+                                    <button id="btn{{ counter }}" class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateOrder" data-bs-toggle="modal" onclick="updateItem(this.id)"><i class="fas fa-edit operationIcon"></i></button>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        {% set counter = counter + 1 %}
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr></tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-6 align-self-center">
+                    <p id="dataTable_info-1" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
+                </div>
+                <div class="col-md-6">
+                    <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <hr style="height: 0.5rem;width: 100%;opacity: 1;color: rgb(200,234,247);">
+        <div class="table-responsive table mt-2" id="sellingTable" role="grid" aria-describedby="dataTable_info">
+            <table class="table my-0" id="dataTable">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Mennyiség</th>
+                    <th>Beszerzési ár</th>
+                    <th>Márka</th>
+                    <th>Model</th>
+                    <th>Szín</th>
+                    <th>Kapacitás</th>
+                    <th>Dátum</th>
+                    <th>Raktár</th>
+                    <th>Törlés</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                <tr></tr>
+                </tbody>
+                <tfoot>
+                <tr></tr>
+                </tfoot>
+            </table>
+        </div>
+        <p class="mx-3" style="text-align: right;">Végösszeg: 1000Ft</p>
+        <div class="row">
+            <div class="col d-flex justify-content-end"><button class="btn btn-primary my-2 mx-2 buttonDesign" type="button" style="width: 25%;">Elfogadás</button></div>
+        </div>
+    </div>
+</div>
+
+            <footer class="bg-white sticky-footer" style="background: #1e2833 !important;"></footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="addOrder">
+        <div class="modal-dialog modal-lg modal-fullscreen-lg-down" role="document">
+            <div class="modal-content">
+                <div class="modal-header modalHeaderFooter"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                <div class="modal-body modalBody">
+                    <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
+                        <div class="card-body">
+                            <form>
+                                <div class="row">
+                                    <div class="col col-12">
+                                        <div class="mb-3"><label class="form-label" for="username"><strong>Mennyiség (max: 10)</strong></label><input class="form-control" type="text" id="username" placeholder="user.name" name="username"></div>
+                                    </div>
+                                    <div class="col col-12">
+                                        <div class="mb-3"><label class="form-label" for="email"><strong>Price&nbsp;</strong></label><input class="form-control" type="email" id="email" placeholder="user@example.com" name="email"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer modalHeaderFooter"><button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button><button class="btn btn-primary modalSaveButton" type="button">Hozzáadás</button></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

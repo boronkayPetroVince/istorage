@@ -68,10 +68,11 @@ class Order
     private $date;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=30, nullable=false)
+     * @var Status
+     * @ORM\JoinColumn(name="statusID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Status")
      */
-    private $status;
+    private $statusID;
 
     /**
      * @return int
@@ -194,20 +195,22 @@ class Order
     }
 
     /**
-     * @return string
+     * @return Status
      */
-    public function getStatus(): string
+    public function getStatusID(): Status
     {
-        return $this->status;
+        return $this->statusID;
     }
 
     /**
-     * @param string $status
+     * @param Status $statusID
      */
-    public function setStatus(string $status): void
+    public function setStatusID(Status $statusID): void
     {
-        $this->status = $status;
+        $this->statusID = $statusID;
     }
+
+
 
 
 

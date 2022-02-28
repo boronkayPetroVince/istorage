@@ -28,8 +28,8 @@ class Client implements \JsonSerializable
     private $clientName;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer", nullable=false)
+     * @var string
+     * @ORM\Column(type="string", nullable=false, length=30)
      */
     private $vatNumber;
 
@@ -72,17 +72,17 @@ class Client implements \JsonSerializable
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getVatNumber(): int
+    public function getVatNumber(): string
     {
         return $this->vatNumber;
     }
 
     /**
-     * @param int $vatNumber
+     * @param string $vatNumber
      */
-    public function setVatNumber(int $vatNumber): void
+    public function setVatNumber(string $vatNumber): void
     {
         $this->vatNumber = $vatNumber;
     }

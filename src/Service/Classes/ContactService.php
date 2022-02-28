@@ -53,4 +53,9 @@ class ContactService extends CrudService implements ContactServiceInterface
         $this->em->remove($this->getOneContactById($id));
         $this->em->flush();
     }
+    public function updateContact(int $id):void{
+        $contact = $this->getOneContactById($id);
+        $this->em->persist($contact);
+        $this->em->flush();
+    }
 }

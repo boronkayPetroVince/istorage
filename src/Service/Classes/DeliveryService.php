@@ -59,6 +59,11 @@ class DeliveryService extends CrudService implements DeliveryServiceInterface
         $query = $qb->getQuery();
         return $query->getResult();
     }
+    public function getOneBrandByName(string $name): Delivery_address
+    {
+        return $this->getRepo()->findOneBy(["address" => $name]);
+    }
+
     public function getOneAddressById(int $id):Delivery_address{
         return $this->getRepo()->find($id);
     }

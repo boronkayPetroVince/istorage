@@ -19,7 +19,9 @@ interface StockModelInterface
 
     public function allWarehouse():iterable;
 
-    public function allStock():iterable;
+    public function allArrivedStock():iterable;
+
+    public function allOrderedStock():iterable;
 
     public function allStatus():iterable;
 

@@ -23,4 +23,9 @@ interface ClientModelInterface
     public function allClients(): iterable;
 
     public function getOneClientById(Request $request): iterable;
+
+    public function checkClient(string $clientName): bool;
+
+
+
 }

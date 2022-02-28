@@ -103,55 +103,55 @@
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="clientName"><strong>Ügyfél név</strong></label>
-                                                <input class="form-control" type="text" id="clientName" name="clientName">
+                                                <input class="form-control" type="text" id="clientName" name="clientName" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="vatNumber"><strong>Adószám</strong><br></label>
-                                                <input class="form-control" type="number" id="vatNumber" name="vatNumber">
+                                                <input class="form-control" type="text" id="vatNumber" name="vatNumber" required>
                                             </div>
                                         </div>
                                         <div class="col col-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="postalCode"><strong>Irányítószám</strong><br></label>
-                                                <input class="form-control" type="number" id="postalCode" name="postalCode" onchange="loadUpdateData()">
+                                                <input class="form-control" type="number" id="postalCode" name="postalCode" onchange="loadUpdateData()" required>
                                             </div>
                                         </div>
                                         <div class="col col-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="region"><strong>Megye</strong><br></label>
-                                                <input class="form-control" type="text" id="region" name="region">
+                                                <input class="form-control" type="text" id="region" name="region" required>
                                             </div>
                                         </div>
                                         <div class="col col-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="settlement"><strong>Város</strong><br></label>
-                                                <input class="form-control" type="text" id="settlement" name="settlement">
+                                                <input class="form-control" type="text" id="settlement" name="settlement" required>
                                             </div>
                                         </div>
                                         <div class="col col-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="address"><strong>Utca, házszám</strong><br></label>
-                                                <input class="form-control" type="text" id="address" name="address">
+                                                <input class="form-control" type="text" id="address" name="address" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="contact_FullName"><strong>Kontakt neve</strong><br></label>
-                                                <input class="form-control" type="text" id="contact_FullName" name="contact_FullName">
+                                                <input class="form-control" type="text" id="contact_FullName" name="contact_FullName" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="contact_PhoneNumber"><strong>Kontakt telefonszáma</strong><br></label>
-                                                <input class="form-control" type="number" id="contact_PhoneNumber" name="contact_PhoneNumber">
+                                                <input class="form-control" type="number" id="contact_PhoneNumber" name="contact_PhoneNumber" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="contact_Email"><strong>Kontaktqwe email</strong><br></label>
-                                                <input class="form-control" type="email" id="contact_Email" name="contact_Email">
+                                                <input class="form-control" type="email" id="contact_Email" name="contact_Email" required>
                                             </div>
                                         </div>
                                     </div>
@@ -182,59 +182,58 @@
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newClientName"><strong>Ügyfél név</strong></label>
-                                                <input class="form-control" type="text" id="newClientName" name="newClientName">
+                                                <input class="form-control" type="text" id="newClientName" name="newClientName" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newVatNumber"><strong>Adószám</strong><br></label>
-                                                <input class="form-control" type="number" id="newVatNumber" name="newVatNumber">
+                                                <input class="form-control" type="text" id="newVatNumber" name="newVatNumber" required>
                                             </div>
                                         </div>
                                         <div class="col col-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="postCode"><strong>Irányítószám</strong><br></label>
-                                                <input class="form-control" type="number" id="postCode" name="postCode" onchange="loadAddData()">
+                                                <input class="form-control" type="number" id="postCode" name="postCode" onchange="loadAddData()" required>
                                             </div>
                                         </div>
                                         <div class="col col-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newRegion"><strong>Megye</strong><br></label>
-                                                <input class="form-control" type="text" id="newRegion" name="newRegion">
+                                                <input class="form-control" type="text" id="newRegion" name="newRegion" required>
                                             </div>
                                         </div>
                                         <div class="col col-sm-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newSettlement"><strong>Város</strong><br></label>
-                                                <input class="form-control" type="text" id="newSettlement" name="newSettlement">
+                                                <input class="form-control" type="text" id="newSettlement" name="newSettlement" required>
                                             </div>
                                         </div>
                                         <div class="col col-sm-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newAddress"><strong>Utca, házszám</strong><br></label>
-                                                <input class="form-control" type="text" id="newAddress" name="newAddress">
+                                                <input class="form-control" type="text" id="newAddress" name="newAddress" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newContact_Fullname"><strong>Kontakt neve</strong><br></label>
-                                                <input class="form-control" type="text" id="newContact_Fullname" name="newContact_Fullname">
+                                                <input class="form-control" type="text" id="newContact_Fullname" name="newContact_Fullname" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newContact_Phonenumber"><strong>Kontakt telefonszáma</strong><br></label>
-                                                <input class="form-control" type="number" id="newContact_Phonenumber" name="newContact_Phonenumber">
+                                                <input class="form-control" type="number" id="newContact_Phonenumber" name="newContact_Phonenumber" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newContact_Email"><strong>Kontakt email</strong><br></label>
-                                                <input class="form-control" type="email" id="newContact_Email" name="newContact_Email">
+                                                <input class="form-control" type="email" id="newContact_Email" name="newContact_Email" required>
                                             </div>
                                         </div>
                                     </div>
-
                             </div>
                         </div>
                     </div>

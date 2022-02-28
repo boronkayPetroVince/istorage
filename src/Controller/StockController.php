@@ -14,6 +14,7 @@ use App\Service\Interfaces\SecurityServiceInterface;
 use App\Service\Interfaces\StockServiceInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use DragonBe\Vies\Vies;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -56,11 +57,12 @@ class StockController extends AbstractController
         $user = $this->getUser();
         if($request->isMethod("POST")){
             if($this->stockModel->addStock($request, $user)=== true){
-                return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
-                    "resultMessage"=> "Sikeres hozzáadás!", "resultColor" => "success"]);
+                return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
+                    "resultMessage"=> "Sikeres hozzáadás!", "resultColor" => "success", "allElement" => ""]);
             }
-            return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->filteredStock($request), "user" => $this->getUser(),
-                "resultMessage"=> "Sikertelen hozzáadás!", "resultColor" => "danger"]);
+            //"stocks" => $this->stockModel->filteredStock($request)
+            return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
+                "resultMessage"=> "Sikertelen hozzáadás!", "resultColor" => "danger", "allElement" => ""]);
         }
         return $this->redirectToRoute('orderedStock');
     }
@@ -71,12 +73,16 @@ class StockController extends AbstractController
      * @Route(name="orderedStock", path="/orderedStock")
      */
     public function orderedStock(Request $request):Response{
+        $limit = 5;
+        $offset = 1;
         if ($request->isMethod("POST")){
-            return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->filteredStock($request), "user" => $this->getUser(),
-                "resultMessage"=> "", "resultColor" => ""]);
+            $offset = $request->request->get("tableID");
+            $limit = $request->request->get("limit");
+            return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockService->loadTableData($limit,$offset, "Megrendelve"), "user" => $this->getUser(),
+                "resultMessage"=> $limit, "resultColor" => "", "allElement" => ceil(count($this->stockModel->allOrderedStock()) / $limit)]);
         }
-        return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
-            "resultMessage"=> "", "resultColor" => ""]);
+        return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
+            "resultMessage"=> "", "resultColor" => "","allElement" => ceil(count($this->stockModel->allOrderedStock()) / $limit)]);
     }
 
     /**
@@ -87,10 +93,10 @@ class StockController extends AbstractController
     public function allStock(Request $request):Response{
         if ($request->isMethod("POST")){
             return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->filteredStock($request), "user" => $this->getUser(),
-                "resultMessage"=> "", "resultColor" => ""]);
+                "resultMessage"=> "", "resultColor" => "", "allElement" => ""]);
         }
-        return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
-            "resultMessage"=> "", "resultColor" => ""]);
+        return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->allArrivedStock(), "user" => $this->getUser(),
+            "resultMessage"=> "", "resultColor" => "", "allElement" => ""]);
 
     }
     /**
@@ -100,16 +106,30 @@ class StockController extends AbstractController
      * @Route(name="updateOrderedStock", path="/updateOrdered/{stockId}")
      */
     public function updateOrdered(Request $request, int $stockId): Response{
+
         if($request->isMethod("POST")){
             if($this->stockModel->edit($request, $stockId) === true){
-                return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
-                    "resultMessage"=> "Sikeres módosítás", "resultColor" => "success"]);
-            }else return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
-                "resultMessage"=> "Sikertelen módosítás", "resultColor" => "danger"]);
+                return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
+                    "resultMessage"=> "Sikeres módosítás", "resultColor" => "success", "allElement" => ""]);
+            }else return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
+                "resultMessage"=> "Sikertelen módosítás", "resultColor" => "danger", "allElement" =>""]);
         }
-        return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
-            "resultMessage"=> "", "resultColor" => ""]);
+        return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
+            "resultMessage"=> "", "resultColor" => "", "allElement" => ""]);
     }
+
+    /**
+     * @param Request $request
+     * @return Response
+     * @Route(name="loadData", path="/loadData")
+     */
+    public function loadTableData(Request $request):Response{
+        $limit = $request->request->get("limit");
+        $offset = $request->request->get("tableID");
+
+        return new Response(json_encode($this->stockService->loadTableData($limit,$offset,"Megrendelve")));
+    }
+
 
     /**
      * @param Request $request
@@ -117,7 +137,7 @@ class StockController extends AbstractController
      * @Route(name="sellingStock", path="/sellingStock")
      */
     public function sellingStock(Request $request):Response{
-        return $this->render("Stock/addOrder.html.twig", ["stocks" => $this->stockModel->allStock(), "user" => $this->getUser()]);
+        return $this->render("Stock/sellingStock.html.twig", ["stocks" => $this->stockModel->allStock(), "user" => $this->getUser()]);
     }
 
     /**

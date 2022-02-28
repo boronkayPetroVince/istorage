@@ -121,10 +121,10 @@ class PhoneController extends AbstractController
     /**
      * @param Request $request
      * @return Response
-     * @Route(name="allCapacityByColor", path="/allCapacityByColor")
+     * @Route(name="allCapacityByModell", path="/allCapacityByModell")
      */
-    public function allCapacityByColor(Request $request): Response{
-        return new JsonResponse($this->phoneModel->allCapacityByColor($request));
+    public function allCapacityByModell(Request $request): Response{
+        return new JsonResponse($this->phoneModel->allCapacityByModell($request));
     }
 
 

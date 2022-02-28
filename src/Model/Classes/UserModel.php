@@ -37,15 +37,17 @@ class UserModel implements UserModelInterface
 
     public function addUser(Request $request): bool
     {
-        $user = $request->request->get("newUsername");
-        $fullName = $request->request->get("newFullname");
-        $email = $request->request->get("newEmail");
-        $phoneNumber = $request->request->get("newPhoneNumber");
-        $role = $request->request->get("newRole");
-        if ($request->request->get("newPassword") === $request->request->get("newPasswordAgain")){
-            $this->securityService->addUser($user,$request->request->get("newPasswordAgain"), $fullName, $email, $phoneNumber, $role);
+        if($this->checkUser($request->request->get("newUsername"))){
+            $user = $request->request->get("newUsername");
+            $fullName = $request->request->get("newFullname");
+            $email = $request->request->get("newEmail");
+            $phoneNumber = $request->request->get("newPhoneNumber");
+            $role = $request->request->get("newRole");
+            if ($request->request->get("newPassword") === $request->request->get("newPasswordAgain")){
+                $this->securityService->addUser($user,$request->request->get("newPasswordAgain"), $fullName, $email, $phoneNumber, $role);
+            }else return false;
             return true;
-        }else return false;
+        }return false;
     }
 
     public function loginAction(Request $request, User $user): bool
@@ -59,8 +61,10 @@ class UserModel implements UserModelInterface
     {
         $user = $this->securityService->getOneUserById($userId);
         if ($request){
+            if($this->checkUser($request->request->get("username"))){
+                $user->setUsername($request->request->get("username"));
+            }
             $user->setFullName($request->request->get("fullName"));
-            $user->setUsername($request->request->get("username"));
             $user->setEmail($request->request->get("email"));
             $user->setPhoneNumber((int)$request->request->get("phoneNumber"));
             $user->setRoles([$request->request->get("role")]);
@@ -103,9 +107,9 @@ class UserModel implements UserModelInterface
         /** @var User[] $arr */
         $arr = $this->securityService->getAllUser();
         foreach($arr as $user){
-            if ($user->getUsername() === $username) return true;
+            if (strtolower($user->getUsername()) === strtolower($username)) return false;
         }
-        return false;
+        return true;
     }
 
 }

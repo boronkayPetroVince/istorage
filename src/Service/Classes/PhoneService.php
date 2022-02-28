@@ -39,7 +39,6 @@ class PhoneService extends CrudService implements PhoneServiceInterface
 
     }
 
-
     public function getAllPhoneByBrand(int $brand_ID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("phone")
@@ -62,55 +61,17 @@ class PhoneService extends CrudService implements PhoneServiceInterface
         return $query->getResult();
     }
 
-    public function getAllPhoneByColor(int $color_ID):iterable{
+    public function getAllCapacityByModel(int $model_ID, int $color_ID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("phone")
             ->from(Phone::class, "phone")
-            ->where("phone.colorID = :color_ID")
-            ->setParameter("color_ID", $color_ID)
+            ->where("phone.modelID = :model_ID")->setParameter("model_ID", $model_ID)
+            ->andWhere("phone.colorID = :color_ID")->setParameter("color_ID", $color_ID)
             ->groupBy("phone.capacityID");
         $query = $qb->getQuery();
         return $query->getResult();
     }
 
-    public function getAllModelByBrand(int $brand_ID):iterable{
-        $qb = $this->em->createQueryBuilder();
-        $qb->select("phone")
-            ->from(Phone::class, "phone")
-            ->where("phone.brand_ID =: brand_ID")
-            ->setParameter("brand_ID", $brand_ID)
-            ->andWhere("phone.model_ID =: model_ID");
-        $query = $qb->getQuery();
-        return $query->getResult();
-    }
-    public function removeAllPhoneByBrand(int $brand_ID):iterable{
-        $qb = $this->em->createQueryBuilder();
-        $qb->delete()
-            ->from(Phone::class, "phone")
-            ->where("phone.brandID = :brand_ID")
-            ->setParameter("brand_ID", $brand_ID);
-        $query = $qb->getQuery();
-        return $query->getResult();
-    }
-    public function removeAllPhoneByModel(int $model_ID):iterable{
-        $qb = $this->em->createQueryBuilder();
-        $qb->delete()
-            ->from(Phone::class, "phone")
-            ->where("phone.modelID =:model_ID")
-            ->setParameter("model_ID", $model_ID);
-        $query = $qb->getQuery();
-        return $query->getResult();
-    }
-
-    public function removeAllPhoneByColor(int $color_ID):iterable{
-        $qb = $this->em->createQueryBuilder();
-        $qb->delete()
-            ->from(Phone::class, "phone")
-            ->where("phone.colorID =:color_ID")
-            ->setParameter("color_ID", $color_ID);
-        $query = $qb->getQuery();
-        return $query->getResult();
-    }
     public function getOnePhoneById(int $id):Phone{
         return $this->getRepo()->find($id);
     }

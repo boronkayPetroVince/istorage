@@ -133,7 +133,7 @@ class ClientController extends AbstractController
                     "resultMessage"=> "Sikeres hozzáadás!", "resultColor" => "success"]);
             }else{
                 return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
-                    "resultMessage"=> "Sikertelen hozzáadás!", "resultColor" => "danger"]);
+                    "resultMessage"=> "Sikertelen hozzáadás! Az ügyfél neve már létezik, vagy érvénytelen adószámot adott meg!", "resultColor" => "danger"]);
             }
         }else{
             return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
@@ -153,7 +153,7 @@ class ClientController extends AbstractController
                     "resultMessage"=> "Sikeres módosítás!", "resultColor" => "success"]);
             }else{
                 return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
-                    "resultMessage"=> "Sikertelen módosítás!", "resultColor" => "danger"]);
+                    "resultMessage"=> "Sikertelen módosítás! Érvénytelen adószámot adott meg!", "resultColor" => "danger"]);
             }
         }
         return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),

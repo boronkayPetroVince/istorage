@@ -20,6 +20,8 @@ interface DeliveryServiceInterface
 
     public function getOneAddressById(int $id):Delivery_address;
 
+    public function getOneBrandByName(string $name): Delivery_address;
+
     public function addAddress(Delivery_address $address):void;
 
     public function removeAddress(int $id):void;

@@ -25,6 +25,17 @@ class StockService extends CrudService implements StockServiceInterface
     public function getAllStock():iterable{
         return $this->getRepo()->findAll();
     }
+
+    public function getAllStockByStatus(string $statusName):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->select("stock")
+            ->from(Stock::class, "stock")
+            ->innerJoin("stock.statusID", "status", Join::WITH, $qb->expr()->eq('status.id', 'stock.statusID'))
+            ->where("status.status = :statusName")
+            ->setParameter("statusName", $statusName);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
     public function getAllStockByWarehouse(int $warehouse_ID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->select("stock")
@@ -105,6 +116,18 @@ class StockService extends CrudService implements StockServiceInterface
         $query = $qb->getQuery();
         return $query->getResult();
     }
+    public function loadTableData(int $limit, int $offset, string $statusName):iterable{
+        $qb = $this->em->createQueryBuilder();
+        $qb->select("stock")
+            ->from(Stock::class, "stock")
+            ->innerJoin("stock.statusID", "status", Join::WITH, $qb->expr()->eq('status.id', 'stock.statusID'))
+            ->where("status.status = :statusName")
+            ->setParameter("statusName", $statusName)
+            ->setMaxResults($limit)
+            ->setFirstResult($offset * $limit);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
 
     public function getOneStockById(int $id):Stock{
         return $this->getRepo()->find($id);
@@ -123,10 +146,7 @@ class StockService extends CrudService implements StockServiceInterface
         $this->em->flush();
     }
 
-    public function getAllStockByStatus(string $status): Stock
-    {
-        // TODO: Implement getAllStockByStatus() method.
-    }
+
 
 
 }

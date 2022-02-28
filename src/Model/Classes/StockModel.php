@@ -136,17 +136,26 @@ class StockModel implements StockModelInterface
         return $array;
     }
 
-    public function edit(Request $request, int $stockId): bool
-    {
-        //set phone id -> phoneModel = updatePhones, minden modellt név alapján módosítom
+    public function edit(Request $request, int $stockId): bool{
+
         if($request){
-            $status = $this->statusService->getOneStatusById($request->request->get("updateStatus"));
             $stock = $this->stockService->getOneStockById($stockId);
-            $stock->setStatusID($status);
-            $stock->setDate(new \DateTime());
-            //Ha módosítja a behozott darabszámot, akkor diff számolás és újból levonás/hozzáadás a tárhelybe
-            $this->stockService->updateStock($stockId);
-            return true;
+            $warehouse = $this->warehouseService->getOneWarehouseById($request->request->get("updateWarehouse"));
+            $phone = $this->phoneModel->updatePhone($request, $stock->getPhoneID()->getId());
+            $amount = $stock->getAmount();
+            if($this->checkCapacity($warehouse, $request->request->get("updateAmount"))){
+                $stock->setClientID($this->clientService->getOneClientById($request->request->get("updateClient")));
+                $stock->setPhoneID($phone);
+                $stock->setWarehouseID($warehouse);
+                $stock->setAmount($request->request->get("updateAmount"));
+                $stock->setPurchasePrice($request->request->get("updatePrice"));
+                $stock->setStatusID($this->statusService->getOneStatusById($request->request->get("updateStatus")));
+                $stock->setDate(new \DateTime());
+                $this->stockService->updateStock($stockId);
+                $warehouse->setCapacity($warehouse->getCapacity() + $amount);
+                $this->warehouseService->updateWarehouse($warehouse->getId());
+                return true;
+            }
         }
         return false;
     }
@@ -154,8 +163,13 @@ class StockModel implements StockModelInterface
     public function allWarehouse():iterable{
         return $this->warehouseService->getAllWarehouse();
     }
-    public function allStock():iterable{
-        return $this->stockService->getAllStock();
+
+    public function allArrivedStock():iterable{
+        return $this->stockService->getAllStockByStatus("Beérkezett");
+    }
+
+    public function allOrderedStock():iterable{
+        return $this->stockService->getAllStockByStatus("Megrendelve");
     }
 
     public function allStatus(): iterable

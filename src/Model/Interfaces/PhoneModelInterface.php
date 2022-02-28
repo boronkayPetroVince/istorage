@@ -20,15 +20,13 @@ interface PhoneModelInterface
 
     public function updatePhone(Request $request, int $phoneID): Phone;
 
-    public function allPhones(): iterable;
-
     public function getAllBrand():iterable;
 
     public function allModelByBrand(Request $request): iterable;
 
     public function allColorByModel(Request $request): iterable;
 
-    public function allCapacityByColor(Request $request): iterable;
+    public function allCapacityByModell(Request $request): iterable;
 
     public function filteredPhones(Request $request): iterable;
 

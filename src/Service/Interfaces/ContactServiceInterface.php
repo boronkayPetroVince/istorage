@@ -20,4 +20,6 @@ interface ContactServiceInterface
 
     public function removeContact(int $id):void;
 
+    public function updateContact(int $id):void;
+
 }

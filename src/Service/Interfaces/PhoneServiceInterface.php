@@ -12,19 +12,11 @@ interface PhoneServiceInterface
 
     public function getAllFilteredPhone(int $brand_ID,int $model_ID, int $color_ID, int $capacity_ID): iterable;
 
-    public function getAllPhoneByModel(int $model_ID):iterable;
-
-    public function getAllPhoneByColor(int $color_ID):iterable;
-
     public function getAllPhoneByBrand(int $brand_ID):iterable;
 
-    public function getAllModelByBrand(int $brand_ID):iterable;
+    public function getAllPhoneByModel(int $model_ID):iterable;
 
-    public function removeAllPhoneByBrand(int $brand_ID):iterable;
-
-    public function removeAllPhoneByModel(int $model_ID):iterable;
-
-    public function removeAllPhoneByColor(int $color_ID):iterable;
+    public function getAllCapacityByModel(int $model_ID, int $color_ID):iterable;
 
     public function getOnePhoneById(int $id):Phone;
 

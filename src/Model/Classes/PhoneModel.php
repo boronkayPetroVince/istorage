@@ -61,6 +61,7 @@ class PhoneModel implements PhoneModelInterface
 
     public function addPhone(Request $request): bool
     {
+        $phone = new Phone();
         if($request){
             if($this->checkBrand(strtolower($request->request->get("brandName"))) === false){
                 $brand = new Brand();
@@ -93,8 +94,6 @@ class PhoneModel implements PhoneModelInterface
             }else{
                 $capacity = $this->capacityService->getOneCapacityByMemory($request->request->get("capacity"));
             }
-
-            $phone = new Phone();
             $phone->setBrandID($this->brandService->getOneBrandById($brand->getId()));
             $phone->setModelID($this->modelService->getOneModelById($model->getId()));
             $phone->setColorID($this->colorService->getOneColorById($color->getId()));
@@ -103,8 +102,6 @@ class PhoneModel implements PhoneModelInterface
             return true;
         }
         return false;
-
-
     }
 
     public function existPhone(Brand $brand, Model $model, Color $color, Capacity $capacity):Phone{
@@ -125,14 +122,13 @@ class PhoneModel implements PhoneModelInterface
     public function updatePhone(Request $request, int $phoneID): Phone
     {
         $phone = $this->phoneService->getOnePhoneById($phoneID);
-        $phone->setBrandID();
+        $phone->setBrandID($this->brandService->getOneBrandById($request->request->get("updateBrand")));
+        $phone->setModelID($this->modelService->getOneModelById($request->request->get("updateModel")));
+        $phone->setColorID($this->colorService->getOneColorById($request->request->get("updateColor")));
+        $phone->setCapacityID($this->capacityService->getOneCapacityById($request->request->get("updateCapacity")));
+        $this->phoneService->updatePhone($phone->getId());
+        return $phone;
     }
-
-    public function allPhones(): iterable
-    {
-        // TODO: Implement allPhones() method.
-    }
-
 
     public function allOrderedBrand(): iterable
     {
@@ -186,8 +182,8 @@ class PhoneModel implements PhoneModelInterface
         return $this->phoneService->getAllPhoneByModel($request->request->get("modelNameID"));
     }
 
-    public function allCapacityByColor(Request $request): iterable{
-        return $this->phoneService->getAllPhoneByColor($request->request->get("colorNameID"));
+    public function allCapacityByModell(Request $request): iterable{
+        return $this->phoneService->getAllCapacityByModel($request->request->get("modelNameID",), $request->request->get("colorNameID"));
     }
 
     public function filteredPhones(Request $request): iterable

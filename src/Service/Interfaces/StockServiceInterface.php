@@ -10,9 +10,9 @@ interface StockServiceInterface
 {
     public function getAllStock():iterable;
 
-    public function getAllStockByWarehouse(int $warehouse_ID):iterable;
+    public function getAllStockByStatus(string $statusName):iterable;
 
-    public function getAllStockByStatus(string $status):Stock;
+    public function getAllStockByWarehouse(int $warehouse_ID):iterable;
 
     public function removeAllStockByWarehouse(int $warehouse_ID):iterable;
 
@@ -24,7 +24,7 @@ interface StockServiceInterface
 
     public function getAllColorByStatusAndModel(int $status_ID, int $model_ID):iterable;
 
-
+    public function loadTableData(int $limit, int $offset, string $statusName):iterable;
 
     public function getOneStockById(int $id):Stock;
 

@@ -17,6 +17,7 @@ use App\Service\Interfaces\DeliveryServiceInterface;
 use App\Service\Interfaces\RegionServiceInterface;
 use App\Service\Interfaces\SecurityServiceInterface;
 use App\Service\Interfaces\SettlementServiceInterface;
+use DragonBe\Vies\Vies;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,7 +68,8 @@ class ClientModel implements ClientModelInterface
 
     public function addClient(Request $request, User $user): bool
     {
-        if($request){
+        $vatNumber = $request->request->get("newVatNumber");
+        if($request && $this->checkVat($vatNumber)){
             $postalCode = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postCode"));
             $delivery = new Delivery_address();
             $delivery->setSettlementID($this->settlementService->getOneSettlementById($postalCode->getId()));
@@ -79,8 +81,10 @@ class ClientModel implements ClientModelInterface
             $contact->setPhoneNumber($request->request->get("newContact_Phonenumber"));
             $this->contactService->addContact($contact);
             $client = new Client();
-            $client->setClientName($request->request->get("newClientName"));
-            $client->setVatNumber($request->request->get("newVatNumber"));
+            if($this->checkClient($request->request->get("newClientName"))){
+                $client->setClientName($request->request->get("newClientName"));
+            }else return false;
+            $client->setVatNumber($vatNumber);
             $client->setDeliveryID($this->deliveryService->getOneAddressById($delivery->getId()));
             $client->setContactID($this->contactService->getOneContactById($contact->getId()));
             $this->clientService->addClient($client);
@@ -89,24 +93,33 @@ class ClientModel implements ClientModelInterface
         return false;
 
     }
-    //módosítás
+
     public function updateClient(Request $request, int $clientId): bool
     {
         $client = $this->clientService->getOneClientById($clientId);
-        if($request){
-            $client->setClientName($request->request->get("clientName"));
+        $vatNumber = $request->request->get("vatNumber");
+        if($this->checkVat($vatNumber)){
+            if($this->checkClient($request->request->get("clientName"))){
+                $client->setClientName($request->request->get("clientName"));
+            }
             $client->setVatNumber($request->request->get("vatNumber"));
             $this->clientService->updateClient($client->getId());
-            $settlement = $this->settlementService->getOneSettlementByPostalcode("postalCode");
-            $address = $this->deliveryService->getOneAddressById($request->request->get("address"));
+
+            $settlement = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postalCode"));
+
+            $address = $this->deliveryService->getOneAddressById($client->getDeliveryID()->getId());
             $address->setaddress($request->request->get("address"));
             $address->setSettlementID($settlement);
             $this->deliveryService->updateAddress($address->getId());
-            return true;
-        }else{
-            return false;
-        }
 
+            $contact = $this->contactService->getOneContactById($client->getContactID()->getId());
+            $contact->setFullName($request->request->get("contact_FullName"));
+            $contact->setPhoneNumber($request->request->get("contact_PhoneNumber"));
+            $contact->setEmail($request->request->get("contact_Email"));
+            $this->contactService->updateContact($contact->getId());
+            return true;
+        }
+        return false;
     }
 
     public function getOneSettlement(Request $request): Response
@@ -114,10 +127,8 @@ class ClientModel implements ClientModelInterface
         if($request){
             $postalCode = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postalCode"));
             return new JsonResponse($postalCode);
-        }else{
-            return new JsonResponse(null);
         }
-
+        return new JsonResponse(null);
     }
 
     public function getAllCountry(): Response
@@ -136,5 +147,25 @@ class ClientModel implements ClientModelInterface
         return $this->clientService->getOneClientBySelect($request->request->get("clientNameID"));
     }
 
+    public function checkClient(string $clientName): bool
+    {
+        /** @var Client[] $arr */
+        $arr = $this->clientService->getAllClient();
+        foreach($arr as $client){
+            if ($client->getClientName() === $clientName) return false;
+        }
+        return true;
+    }
+
+    private function checkVat(string $vatNumber):bool{
+        $vies = new Vies();
+        $vatResult = $vies->validateVat(
+            'HU',
+            $vatNumber,
+            'HU',
+            '56960646'
+        );
+        return $vatResult->isValid();
+    }
 
 }

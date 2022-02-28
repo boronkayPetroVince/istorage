@@ -38,7 +38,8 @@
                 <div class="row">
                     <div class="col-md-6 text-nowrap">
                         <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm showSelect">
-                                    <option value="10" selected="">10</option>
+                                    <option value="5" selected="">5</option>
+                                    <option value="10">10</option>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
@@ -52,7 +53,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive table mt-2" id="dataTable" role="grid" >
+                <div class="table-responsive table mt-2" id="dataTableDiv" role="grid" >
                     <table class="table my-0" id="dataTable">
                         <thead>
                         <tr>
@@ -82,7 +83,7 @@
                                             <span class="d-none" id="modelID{{ counter }}">{{ stock.phoneID.modelID.id }}</span>
                                         <span id="color{{ counter }}">{{ stock.phoneID.colorID.phoneColor }} </span>
                                             <span class="d-none" id="colorID{{ counter }}">{{ stock.phoneID.colorID.id }}</span>
-                                        <span id="phoneCapacity{{ counter }}">{{ stock.phoneID.capacityID.capacity }} GB </span>c
+                                        <span id="phoneCapacity{{ counter }}">{{ stock.phoneID.capacityID.capacity }} GB </span>
                                             <span class="d-none" id="phoneCapacityID{{ counter }}">{{ stock.phoneID.capacityID.id }}</span>
                                     </td>
                                     <td id="warehouse{{ counter }}">
@@ -116,11 +117,9 @@
                     <div class="col-md-6">
                         <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
                             <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+                                {% for i in 1..allElement %}
+                                    <li class="page-item active"><a class="page-link" href="#" onclick="loadNextTable({{ i }})">{{ i }}</a></li>
+                                {% endfor %}
                             </ul>
                         </nav>
                     </div>
@@ -152,14 +151,17 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-12">
+                                            <small style="color: red">Figyelem! Ha módosítja az eszközt, és nincs ilyen telefon típusból több a raktáron, akkor újra hozzá kell adnia ezt a típust!</small>
+                                        </div>
                                         <div class="col col-sm-6 col-12">
-                                                <label class="form-label" for="updateBrand"><strong>Márka</strong></label>
-                                                <div class="input-group mb-3">
-                                                    <select name="updateBrand" id="updateBrand" class="form-select orderSelect" onchange="updateBrandChange()" required></select>
-                                                    <div class="input-group-append">
-                                                        <a style="border-radius: 0 !important;" href="{{ path('addPhone') }}"  class="btn buttonDesign">+</a>
-                                                    </div>
+                                            <label class="form-label" for="updateBrand"><strong>Márka</strong></label>
+                                            <div class="input-group mb-3">
+                                                <select name="updateBrand" id="updateBrand" class="form-select orderSelect" onchange="updateBrandChange()" required></select>
+                                                <div class="input-group-append">
+                                                    <a style="border-radius: 0 !important;" href="{{ path('addPhone') }}"  class="btn buttonDesign">+</a>
                                                 </div>
+                                            </div>
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
@@ -298,6 +300,7 @@
     </div>
     <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
     <script>
+
         $(document).ready(function (){
             $.ajax({
                 url: "{{ path('allWarehouse') }}",
@@ -327,6 +330,7 @@
         var rowId="";
         function updateItem(rowId){
             rowId = rowId.replace("btn","");
+            console.log(rowId);
             id = document.getElementById("id"+rowId).innerHTML;
             capacity = document.getElementById("phoneCapacity"+rowId).innerHTML.replace("GB", "");
             document.getElementById("updateAmount").value = document.getElementById("amount"+rowId).innerHTML;
@@ -355,10 +359,10 @@
                     document.getElementById("updateWarehouse").value = document.getElementById("whID"+rowId).innerHTML;
                 }
             });
-
             $.ajax({
                 url: "{{ path('allStatus') }}",
                 success: function (result){
+
                     $.each(result, function (key,value){
                         var statusOption = $('<option>',{ value: value.id, text: value.status});
                         $("#updateStatus").append(statusOption);
@@ -392,66 +396,117 @@
                         $("#updateBrand").append(brandOption2);
                     });
                     document.getElementById("updateBrand").value = document.getElementById("brandID"+rowId).innerHTML;
-                    document.getElementById("updateModel").options.value = document.getElementById("modelID"+rowId).innerHTML;
-                    document.getElementById("updateModel").options.innerHTML = document.getElementById("model"+rowId).innerHTML;
+                    $.ajax({
+                        url:"{{ path('allModelByBrand') }}",
+                        method: "post",
+                        data:{
+                            "brandNameID": document.getElementById("updateBrand").value
+                        },
+                        success:function (result){
+                            $.each(result, function (key,value){
+                                var modelOption = $('<option>', {value:value.modelID.id, text:value.modelID.modelName});
+                                $("#updateModel").append(modelOption);
+                            });
+                            $("#updateModel").prop('disabled', false);
+                            document.getElementById("updateModel").value = document.getElementById("modelID"+rowId).innerHTML;
+                            $.ajax({
+                                url:"{{ path('allColorByModel') }}",
+                                method: "post",
+                                data:{
+                                    "modelNameID": document.getElementById("updateModel").value
+                                },
+                                success:function (result){
+                                    $.each(result, function (key,value){
+                                        var colorOption = $('<option>', {value:value.colorID.id, text:value.colorID.phoneColor});
+                                        $("#updateColor").append(colorOption);
+                                    });
+                                    $("#updateColor").prop('disabled', false);
+                                    document.getElementById("updateColor").value = document.getElementById("colorID"+rowId).innerHTML;
+                                    $.ajax({
+                                        url:"{{ path('allCapacityByModell') }}",
+                                        method: "post",
+                                        data:{
+                                            "modelNameID": document.getElementById("updateModel").value,
+                                            "colorNameID": document.getElementById("updateColor").value
+                                        },
+                                        success:function (result){
+                                            $.each(result, function (key,value){
+                                                var capacityOption = $('<option>', {value:value.capacityID.id, text:value.capacityID.capacity});
+                                                $("#updateCapacity").append(capacityOption);
+                                            });
+                                            document.getElementById("updateCapacity").value = document.getElementById("phoneCapacityID"+rowId).innerHTML;
+                                            $("#updateCapacity").prop('disabled', false);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
                 }
             });
         }
         function updateBrandChange(){
+            $("#updateModel").html("");
+            $("#updateColor").html("");
+            $("#updateCapacity").html("");
+            $("#updateColor").prop('disabled', 'disabled');
+            $("#updateCapacity").prop('disabled', 'disabled');
             $.ajax({
                 url:"{{ path('allModelByBrand') }}",
-                method: "post",
+                method:"post",
                 data:{
                     "brandNameID": document.getElementById("updateBrand").value
                 },
-                success:function (result){
-                    $("#updateModel").html("");
-                    $("#updateModel").prop('disabled', false);
-                    $.each(result, function (key,value){
-                        var modelOption = $('<option>', {value:value.modelID.id, text:value.modelID.modelName});
+                success:function (result) {
+                    var defaultVal = $('<option>', {value:"", text:"Válassz modellt!"});
+                    $("#updateModel").append(defaultVal);
+                    $.each(result, function (key, value) {
+                        var modelOption = $('<option>', {value: value.modelID.id, text: value.modelID.modelName});
                         $("#updateModel").append(modelOption);
                     });
-                    document.getElementById("updateModel").value = document.getElementById("modelID"+rowId).innerHTML;
                 }
-            });
+            })
         }
         function updateModellChange(){
+            $("#updateColor").html("");
+            $("#updateCapacity").html("");
             $.ajax({
                 url:"{{ path('allColorByModel') }}",
-                method: "post",
+                method:"post",
                 data:{
                     "modelNameID": document.getElementById("updateModel").value
                 },
-                success:function (result){
-                    $("#updateColor").html("");
+                success:function (result) {
                     $("#updateColor").prop('disabled', false);
-                    $.each(result, function (key,value){
+                    var defaultVal = $('<option>', {value:"", text:"Válassz színt!"});
+                    $("#updateColor").append(defaultVal);
+                    $.each(result, function (key, value) {
                         var colorOption = $('<option>', {value:value.colorID.id, text:value.colorID.phoneColor});
                         $("#updateColor").append(colorOption);
                     });
-                    document.getElementById("updateColor").value = document.getElementById("colorID"+rowId).innerHTML;
                 }
-            });
+            })
         }
         function updateColorChange(){
+            $("#updateCapacity").html("");
             $.ajax({
-                url:"{{ path('allCapacityByColor') }}",
-                method: "post",
+                url:"{{ path('allCapacityByModell') }}",
+                method:"post",
                 data:{
+                    "modelNameID": document.getElementById("updateModel").value,
                     "colorNameID": document.getElementById("updateColor").value
                 },
-                success:function (result){
-                    $("#updateCapacity").html("");
+                success:function (result) {
                     $("#updateCapacity").prop('disabled', false);
-                    $.each(result, function (key,value){
+                    var defaultVal = $('<option>', {value:"", text:"Válassz kapacitást!"});
+                    $("#updateCapacity").append(defaultVal);
+                    $.each(result, function (key, value) {
                         var capacityOption = $('<option>', {value:value.capacityID.id, text:value.capacityID.capacity});
                         $("#updateCapacity").append(capacityOption);
                     });
-                    document.getElementById("updateCapacity").value = document.getElementById("phoneCapacityID"+rowId).innerHTML;
                 }
-            });
+            })
         }
-
         function addingStock(){
             $("#clientName").html("");
             $("#brandName").html("");
@@ -483,7 +538,6 @@
                 }
             });
         }
-
         function addBrandChange(){
             $.ajax({
                 url:"{{ path('allModelByBrand') }}",
@@ -493,6 +547,8 @@
                 },
                 success:function (result){
                     $("#modelName").html("");
+                    $("#colorName").html("");
+                    $("#capacity").html("");
                     $("#modelName").prop('disabled', false);
                     $("#colorName").prop('disabled', 'disabled');
                     $("#capacity").prop('disabled', 'disabled');
@@ -514,6 +570,7 @@
                 },
                 success:function (result){
                     $("#colorName").html("");
+                    $("#capacity").html("");
                     $("#colorName").prop('disabled', false);
                     var defaultVal = $('<option>', {value:"", text:"Válassz színt!"});
                     $("#colorName").append(defaultVal);
@@ -526,9 +583,10 @@
         }
         function addColorChange(){
             $.ajax({
-                url:"{{ path('allCapacityByColor') }}",
+                url:"{{ path('allCapacityByModell') }}",
                 method: "post",
                 data:{
+                    "modelNameID": document.getElementById("modelName").value,
                     "colorNameID": document.getElementById("colorName").value
                 },
                 success:function (result){
@@ -543,7 +601,6 @@
                 }
             });
         }
-
         function filterBrandChanged(){
             $("#models").show();
             $("#colors").hide();
@@ -557,7 +614,7 @@
                 },
                 success: function (result){
                     $("#models").find("option").remove();
-                    var defaultVal = $('<option>', {value:"", text:"Válassz modelt"});
+                    var defaultVal = $('<option>', {value:"", text:"Válassz modellt"});
                     $("#models").append(defaultVal);
                     $.each(result, function (key,value){
                         var modelOption = $('<option>', {value:value.phoneID.modelID.id, text:value.phoneID.modelID.modelName});
@@ -567,7 +624,6 @@
 
             });
         }
-
         function filterModellChanged(){
             $("#colors").show();
             $("#capacities").hide();
@@ -591,7 +647,6 @@
 
             });
         }
-
         function filterColorChanged(){
             $("#capacities").show();
             $("#szures").hide();
@@ -613,13 +668,65 @@
 
             });
         }
-
         function filterCapacityChanged(){
             $("#szures").show();
         }
+        {#function loadNextTable(i){#}
+        {#    $.ajax({#}
+        {#        url: "{{ path('orderedStock') }}",#}
+        {#        method: "post",#}
+        {#        data:{#}
+        {#            "tableID":i,#}
+        {#            "limit": 10#}
+        {#        },#}
+        {#        success: function (result){#}
+        {#            console.log(result);#}
+        {#            $("#dataTable").remove();#}
+        {#            var nextTable = document.getElementById("dataTable");#}
+        {#            var counter = 0;#}
+        {#            $.each(result, function (key,value){#}
+
+        {#                //ide addOrder mintára.#}
+
+        {#                var row = nextTable.insertRow();#}
+        {#                var cell1 = row.insertCell(0);#}
+        {#                var cell2 = row.insertCell(1);#}
+        {#                var cell3 = row.insertCell(2);#}
+        {#                var cell4 = row.insertCell(3);#}
+        {#                var cell5 = row.insertCell(4);#}
+        {#                var cell6 = row.insertCell(5);#}
+        {#                var cell7 = row.insertCell(6);#}
+        {#                var cell8 = row.insertCell(7);#}
+        {#                var cell9 = row.insertCell(8);#}
 
 
+        {#                cell1.innerHTML = document.getElementById("id"+counter).innerHTML;#}
+        {#                cell1.id = "id"+counter;#}
+        {#                cell2.innerHTML = document.getElementById("amount"+counter).innerHTML;#}
+        {#                cell2.id = "amount"+counter;#}
+        {#                cell3.innerHTML = document.getElementById("purchasePrice"+counter).innerHTML;#}
+        {#                cell3.id = "purchasePrice"+counter;#}
+        {#                cell4.innerHTML = document.getElementById("brand"+counter).innerHTML + " "+document.getElementById("model"+counter).innerHTML + " "#}
+        {#                + document.getElementById("brand"+counter).innerHTML + " " + document.getElementById("color"+counter).innerHTML + " " +document.getElementById("phoneCapacity"+counter).innerHTML ;#}
+        {#                cell4.id = "phone"+counter;#}
+        {#                cell5.innerHTML = document.getElementById("warehouse"+counter).innerHTML;#}
+        {#                cell5.id = "warehouse"+counter;#}
+        {#                cell6.innerHTML = document.getElementById("date"+counter).innerHTML;#}
+        {#                cell6.id = "date"+counter;#}
+        {#                cell7.innerHTML = document.getElementById("client"+counter).innerHTML;#}
+        {#                cell7.id = "client"+counter;#}
+        {#                cell8.innerHTML = document.getElementById("user"+counter).innerHTML;#}
+        {#                cell8.id = "user"+counter;#}
+        {#                cell9.innerHTML = '<button id="btn'+counter+'" class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateOrder" data-bs-toggle="modal" onclick="updateItem(this.id)"><i class="fas fa-edit operationIcon"></i></button>'#}
 
 
+        {#                counter++;#}
+        {#            });#}
+        {#            console.log(result);#}
+
+        {#        }#}
+
+        {#    });#}
+        {#}#}
     </script>
 {% endblock %}

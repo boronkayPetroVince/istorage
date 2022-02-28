@@ -43,13 +43,9 @@ class UserController extends AbstractController
      * @Route(name="main", path="/main")
      */
     public function mainMenu(Request $request):Response{
-        //Mikor rányom megint kéri a usert, nem menti el.
         /** @var User $user */
         $user = $this->getUser();
         return $this->render("index.html.twig", ["user" => $user]);
-
-
-
     }
 
     /**
@@ -64,7 +60,7 @@ class UserController extends AbstractController
                     return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser(),
                         "resultMessage"=> "Sikeres hozzáadás!", "resultColor" => "success"]);
                 }else return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(), "user" => $this->getUser(),
-                    "resultMessage"=> "Sikertelen hozzáadás! A jelszók nem egyeznek!", "resultColor" => "danger"]);
+                    "resultMessage"=> "Sikertelen hozzáadás! Felhasználónév már foglalt, vagy a megadott jelszavak nem egyeznek!", "resultColor" => "danger"]);
             }else return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(), "user" => $this->getUser(),
                 "resultMessage"=> "Rosszul érkeztek be az adatok!", "resultColor" => "warning"]);
         }else return new Response("Hozzáférés megtagadva!");
