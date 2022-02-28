@@ -423,7 +423,7 @@
                                     $("#updateColor").prop('disabled', false);
                                     document.getElementById("updateColor").value = document.getElementById("colorID"+rowId).innerHTML;
                                     $.ajax({
-                                        url:"{{ path('allCapacityByModell') }}",
+                                        url:"{{ path('allCapacityByModel') }}",
                                         method: "post",
                                         data:{
                                             "modelNameID": document.getElementById("updateModel").value,
@@ -490,7 +490,7 @@
         function updateColorChange(){
             $("#updateCapacity").html("");
             $.ajax({
-                url:"{{ path('allCapacityByModell') }}",
+                url:"{{ path('allCapacityByModel') }}",
                 method:"post",
                 data:{
                     "modelNameID": document.getElementById("updateModel").value,
@@ -583,7 +583,7 @@
         }
         function addColorChange(){
             $.ajax({
-                url:"{{ path('allCapacityByModell') }}",
+                url:"{{ path('allCapacityByModel') }}",
                 method: "post",
                 data:{
                     "modelNameID": document.getElementById("modelName").value,

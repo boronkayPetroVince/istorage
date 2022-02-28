@@ -302,9 +302,10 @@
         }
         function addColorChange(){
             $.ajax({
-                url:"{{ path('allCapacityByColor') }}",
+                url:"{{ path('allCapacityByModel') }}",
                 method: "post",
                 data:{
+                    "modelNameID": document.getElementById("modelName").value,
                     "colorNameID": document.getElementById("colorName").value
                 },
                 success:function (result){

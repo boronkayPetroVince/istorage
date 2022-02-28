@@ -121,9 +121,9 @@ class PhoneController extends AbstractController
     /**
      * @param Request $request
      * @return Response
-     * @Route(name="allCapacityByModell", path="/allCapacityByModell")
+     * @Route(name="allCapacityByModel", path="/allCapacityByModel")
      */
-    public function allCapacityByModell(Request $request): Response{
+    public function allCapacityByModel(Request $request): Response{
         return new JsonResponse($this->phoneModel->allCapacityByModell($request));
     }
 
