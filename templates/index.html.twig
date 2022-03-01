@@ -41,9 +41,7 @@
                     <li class="nav-item dropdown"><a class="dropdown-toggle nav-link active" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-warehouse"></i>Raktár</a>
                         <div class="dropdown-menu animated--grow-in"><a class="dropdown-item" href="{{ path('allStock') }}">Készlet</a><a class="dropdown-item" href="{{ path('orderedStock') }}">Berendelt</a></div>
                     </li>
-                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link active" aria-expanded="true" data-bs-toggle="dropdown" href="#"><i class="far fa-credit-card"></i>Rendelés</a>
-                        <div class="dropdown-menu animated--grow-in"><a class="dropdown-item" href="#">Beszerzés</a><a class="dropdown-item" href="#">Eladás</a></div>
-                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ path('sellingStock') }}"><i class="far fa-credit-card"></i><span>Eladás</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>

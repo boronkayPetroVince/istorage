@@ -4,118 +4,127 @@
 #}
 {# @var stocks \App\Entity\Stock[] #}
 {% block content %}
-<div class="container-fluid">
-    <h3 class="text-dark mb-4">Eladás<br></h3>
-    <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
-        <div class="card-header py-3" style="background: #003247;">
-            <h5 style="color: rgb(255,255,255);">Kérem válassza ki azt az ügyfelet kinek eladni szeretne!</h5>
-            <div class="row d-flex align-items-center text-center">
-                <div class="col-3">
-                    <div class="mb-3">
-                        <select name="clientName" id="clientName" class="form-select orderSelect showSelect" required>
-                            <option value="">Válassz ügyfelet!</option>
-                        </select>
+   {#  <form action="{{ path('sellingStock') }}" method="post">#}
+        <div class="container-fluid">
+            <h3 class="text-dark mb-4">Eladás<br></h3>
+            <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
+                <div class="card-header py-3" style="background: #003247;">
+                    <h5 style="color: rgb(255,255,255);">Kérem válassza ki azt az ügyfelet kinek eladni szeretne!</h5>
+                    <div class="row d-flex align-items-center text-center">
+                        <div class="col-3">
+                            <div class="mb-3">
+                                <select name="clientName" id="clientName" class="form-select orderSelect showSelect">
+                                    <option value="">Válassz ügyfelet!</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="text" id="myInput" onkeyup="myFunction()">
+                <div class="card-body" style="background: #e6f8fe;">
+                    <div class="row">
+                        <div class="col-md-6 text-nowrap col-md-12">
+                            <div id="dataTable_length-1" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;
+                                    <select class="d-inline-block form-select form-select-sm showSelect">
+                                        <option value="10" selected="">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
+                        <table class="table my-0" id="tempTable">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Mennyiség</th>
+                                <th>Beszerzési ár</th>
+                                <th>Eladási ár</th>
+                                <th>Telefon</th>
+                                <th>Beérkezett</th>
+                                <th>Raktár</th>
+                                <th>Hozzáadás</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% set counter = 0 %}
+                            {% for stock in stocks %}
+                                <tr id="{{ counter }}">
+                                    <td id="id{{ counter }}">{{ stock.id }}</td>
+                                    <td id="amount{{ counter }}">{{ stock.amount }}</td>
+                                    <td id="purchasePrice{{ counter }}">{{ stock.purchasePrice }}</td>
+                                    <td>{% set sell = stock.purchasePrice * 1.27 %} {{ sell|round }}</td>
+                                    <td>
+                                        <span id="brand{{ counter }}">{{ stock.phoneID.brandID.brandName }} </span>
+                                        <span class="d-none" id="brandID{{ counter }}">{{ stock.phoneID.brandID.id }}</span>
+                                        <span id="model{{ counter }}">{{ stock.phoneID.modelID.modelName }} </span>
+                                        <span class="d-none" id="modelID{{ counter }}">{{ stock.phoneID.modelID.id }}</span>
+                                        <span id="color{{ counter }}">{{ stock.phoneID.colorID.phoneColor }} </span>
+                                        <span class="d-none" id="colorID{{ counter }}">{{ stock.phoneID.colorID.id }}</span>
+                                        <span id="phoneCapacity{{ counter }}">{{ stock.phoneID.capacityID.capacity }} GB </span>
+                                        <span class="d-none" id="phoneCapacityID{{ counter }}">{{ stock.phoneID.capacityID.id }}</span>
+                                    </td>
+                                    <td id="date{{ counter }}">{{ stock.date|date('Y-m-d H:i:s') }}</td>
+                                    <td id="warehouse{{ counter }}">
+                                        {{ stock.warehouseID.whName }}
+                                    </td>
+                                    <td>
+                                        <button id="btn{{ counter }}" class="btn btn-primary buttonDesign" data-bs-target="#orderingModal" data-bs-toggle="modal" type="button" onclick="makeOrder(this.id)">+</button>
+                                    </td>
+                                </tr>
+                                {% set counter = counter + 1 %}
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <tr></tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+                <hr style="background: #1a1e21;height: 5px;opacity: 1; margin:0;">
+                <div class="card-body" style="background: #e6f8fe;">
+                    <div class="table-responsive table mt-2" id="sellingTable" role="grid" aria-describedby="dataTable_info">
+                        <table class="table my-0" id="sellingTable">
+                            <thead>
+                            <tr >
+                                <th>ID</th>
+                                <th>Mennyiség</th>
+                                <th>Eladási ár</th>
+                                <th>Raktár</th>
+                                <th>Márka</th>
+                                <th>Model</th>
+                                <th>Szín</th>
+                                <th>Kapacitás</th>
+                                <th>Dátum</th>
+                                <th>Törlés</th>
+                            </tr>
+                            </thead>
+                            <tbody id="sellingTableBody">
+
+                            </tbody>
+                            <tfoot>
+                            <tr></tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <h5 class="mx-3" style="text-align: right;font-weight: bold;padding-top: 10px;">Végösszeg: <span id="fullPrice"></span></h5>
+                    <div class="row">
+                        <div class="col d-flex justify-content-end">
+                            <button  class="btn btn-primary my-2 mx-2 buttonDesign" type="submit" style="width: 25%;" onclick="finishSale()">Elfogadás</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card-body" style="background: #e6f8fe;">
-            <div class="row">
-                <div class="col-md-6 text-nowrap col-md-12">
-                    <div id="dataTable_length-1" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm showSelect">
-                                <option value="10" selected="">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select>&nbsp;</label></div>
-                </div>
-            </div>
-            <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
-                <table class="table my-0" id="tempTable">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Mennyiség</th>
-                        <th>Beszerzési ár</th>
-                        <th>Eladási ár</th>
-                        <th>Telefon</th>
-                        <th>Beérkezett</th>
-                        <th>Raktár</th>
-                        <th>Hozzáadás</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% set counter = 0 %}
-                    {% for stock in stocks %}
-                            <tr id="{{ counter }}">
-                                <td id="id{{ counter }}">{{ stock.id }}</td>
-                                <td id="amount{{ counter }}">{{ stock.amount }}</td>
-                                <td id="purchasePrice{{ counter }}">{{ stock.purchasePrice }}</td>
-                                <td>{% set sell = stock.purchasePrice * 1.27 %} {{ sell|round }}</td>
-                                <td>
-                                    <span id="brand{{ counter }}">{{ stock.phoneID.brandID.brandName }} </span>
-                                    <span class="d-none" id="brandID{{ counter }}">{{ stock.phoneID.brandID.id }}</span>
-                                    <span id="model{{ counter }}">{{ stock.phoneID.modelID.modelName }} </span>
-                                    <span class="d-none" id="modelID{{ counter }}">{{ stock.phoneID.modelID.id }}</span>
-                                    <span id="color{{ counter }}">{{ stock.phoneID.colorID.phoneColor }} </span>
-                                    <span class="d-none" id="colorID{{ counter }}">{{ stock.phoneID.colorID.id }}</span>
-                                    <span id="phoneCapacity{{ counter }}">{{ stock.phoneID.capacityID.capacity }} GB </span>
-                                    <span class="d-none" id="phoneCapacityID{{ counter }}">{{ stock.phoneID.capacityID.id }}</span>
-                                </td>
-                                <td id="date{{ counter }}">{{ stock.date|date('Y-m-d H:i:s') }}</td>
-                                <td id="warehouse{{ counter }}">
-                                    {{ stock.warehouseID.whName }}
-                                </td>
-                                <td>
-                                    <button id="btn{{ counter }}" class="btn btn-primary buttonDesign" type="button" onclick="makeOrder(this.id)">+</button>
-                                </td>
-                            </tr>
-                        {% set counter = counter + 1 %}
-                    {% endfor %}
-                    </tbody>
-                    <tfoot>
-                    <tr></tr>
-                    </tfoot>
-                </table>
+    </form>
 
-            </div>
-        </div>
-        <hr style="background: #1a1e21;height: 5px;opacity: 1; margin:0;">
-        <div class="card-body" style="background: #e6f8fe;">
-            <div class="table-responsive table mt-2" id="sellingTable" role="grid" aria-describedby="dataTable_info">
-                <table class="table my-0" id="sellingTable">
-                    <thead>
-                    <tr >
-                        <th>ID</th>
-                        <th>Mennyiség</th>
-                        <th>Beszerzési ár</th>
-                        <th>Márka</th>
-                        <th>Model</th>
-                        <th>Szín</th>
-                        <th>Kapacitás</th>
-                        <th>Dátum</th>
-                        <th>Raktár</th>
-                        <th>Törlés</th>
-                    </tr>
-                    </thead>
-                    <tbody id="sellingTableBody">
-
-                    </tbody>
-                    <tfoot>
-                    <tr></tr>
-                    </tfoot>
-                </table>
-            </div>
-
-            <h5 class="mx-3" style="text-align: right;font-weight: bold;padding-top: 10px;">Végösszeg: <span id="fullPrice"></span></h5>
-            <div class="row">
-                <div class="col d-flex justify-content-end"><button class="btn btn-primary my-2 mx-2 buttonDesign" type="button" style="width: 25%;">Elfogadás</button></div>
-            </div>
-        </div>
-    </div>
-</div>
 </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
-    <div class="modal " role="dialog" id="orderingModal" aria-hidden>
+    <div class="modal fade" role="dialog" id="orderingModal">
         <div class="modal-dialog modal-lg modal-fullscreen-lg-down" role="document">
             <div class="modal-content">
                 <div class="modal-header modalHeaderFooter">
@@ -143,42 +152,66 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-light modalCloseButton close" type="button" data-dismiss="modal" aria-hidden="true">Bezárás</button>
-                    <button type="button" onclick="addToList()" class="btn btn-primary">Add Device</button>
+                    <button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button>
+                    <button type="button" onclick="addToList()" class="modalSaveButton btn btn-primary">Add Device</button>
                 </div>
-                </form>
         </div>
     </div>
+        <input class="d-none" type="text" id="sellingTableData">
     <script>
         var id= "";
+        var tempID = "";
         var maxAmount = 0;
         var purchasePrice = 0;
+        var sellingPrice = 0;
+        $(document).ready(function () {
+            $('#tempTable').DataTable({
+                "scrollY": "200px",
+                "scrollCollapse": true,
+            });
+            $('.dataTables_length').addClass('bs-select');
+        });
+        function myFunction() {
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("tempTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[4];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
         function getTdById(id, type){
             return document.getElementById(type+id).innerHTML;
         }
         function setTdById(id, type, value){
             return document.getElementById(type+id).innerHTML = value;
         }
-
         function makeOrder(rowId){
             rowId = rowId.replace("btn", "");
-            console.log(rowId);
             id = rowId;
+            tempID = rowId;
             maxAmount = document.getElementById("amount"+rowId).innerHTML;
             purchasePrice = document.getElementById("purchasePrice"+rowId).innerHTML;
             document.getElementById("maxAmount").innerHTML = maxAmount;
             document.getElementById("price").value = purchasePrice;
-            $("#orderingModal").show();
         }
+        var counter = 0;
         function addToList() {
             var amount = document.getElementById("numberofdevice").value;
-            console.log(amount);
             var salePrice = document.getElementById("price").value;
-            //var comment = document.getElementById("pendingComment").value;
-
             if (parseFloat(maxAmount) < parseFloat(amount)) {
-                alert("Not enough amount in the stock")
-            } else {
+                alert("Ebből a készülékből összesen nincsen ennyi darab a raktáron!");
+            }else if(maxAmount == 0 || maxAmount < 0){
+                alert("Ebből a készülékből nincsen több a raktáron!");
+            }else {
                 var sellTable = document.getElementById("sellingTableBody");
                 var ID = 0;
                 var inSell = false;
@@ -193,9 +226,10 @@
                 }
                 if (inSell) {
                     var tempAmount = parseFloat(getTdById(ID, "sellAmount")) + parseFloat(amount);
-                    setTdById(ID, "sellAmount", tempAmount);
+                    setTdById(ID, "amount", tempAmount);
                 } else {
                     var row = sellTable.insertRow();
+                    row.id = "sellTable"+counter;
 
                     var cell1 = row.insertCell(0);
                     var cell2 = row.insertCell(1);
@@ -207,36 +241,65 @@
                     var cell8 = row.insertCell(7);
                     var cell9 = row.insertCell(8);
                     var cell10 = row.insertCell(9);
-                    var cell11 = row.insertCell(10);
 
                     cell1.innerHTML = getTdById(id, "id");
-                    cell1.id = "sellId" + id;
-                    cell2.innerHTML = getTdById(id, "amount");
-                    cell2.id = "sellAmount" + id;
-                    cell3.innerHTML = getTdById(id, "purchasePrice");
-                    cell3.id = "sellPrice" + id;
+                    cell1.id = "sellId" + counter;
+                    cell2.innerHTML = amount;
+                    cell2.id = "sellAmount" + counter;
+                    cell3.innerHTML = salePrice;
+                    cell3.id = "sellPrice" + counter;
                     cell4.innerHTML = getTdById(id, "warehouse");
-                    cell4.id = "sellWhName" + id;
+                    cell4.id = "sellWhName" + counter;
                     cell5.innerHTML = getTdById(id, "brand");
-                    cell5.id = "sellBrand" + id;
+                    cell5.id = "sellBrand" + counter;
                     cell6.innerHTML = getTdById(id, "model");
-                    cell6.id = "sellModel" + id;
+                    cell6.id = "sellModel" + counter;
                     cell7.innerHTML = getTdById(id, "color");
-                    cell7.id = "sellColor" + id;
+                    cell7.id = "sellColor" + counter;
                     cell8.innerHTML = getTdById(id, "phoneCapacity");
-                    cell8.id = "sellCapacity" + id;
-                    cell10.innerHTML = getTdById(id, "date");
-                    cell10.id = "sellDate" + id;
-                    cell11.innerHTML = "törlés";
-
+                    cell8.id = "sellCapacity" + counter;
+                    cell9.innerHTML = getTdById(id, "date");
+                    cell9.id = "sellDate" + counter;
+                    cell10.innerHTML = '<button id="btn'+counter+'" class="btn btn-primary buttonDesign" type="button"  onclick="deleteRow(this.id, tempID)">x</button>';
+                    counter++;
                 }
+
                 inSell = false;
                 setTdById(id, "amount", getTdById(id, "amount") - amount);
-                $("#orderingModal").hide();
                 document.getElementById("numberofdevice").value = "";
                 document.getElementById("price").value = "";
-                document.getElementById("fullPrice").innerHTML = getTdById(id, "sellPrice") * getTdById(id, "sellAmount");
+                sellingPrice =  sellingPrice + (amount * salePrice);
+                document.getElementById("fullPrice").innerHTML = sellingPrice;
             }
+        }
+        function deleteRow(rowId, id){
+            counter = 0;
+            var sellTable = document.getElementById("sellingTableBody");
+            rowId = rowId.replace("btn", "");
+            var sellingAmount = getTdById(rowId,"sellAmount");
+            var originalAmount = document.getElementById("amount"+id).innerHTML;
+            document.getElementById("amount"+id).innerHTML = parseInt(sellingAmount) + parseInt(originalAmount);
+            document.getElementById("sellTable"+rowId).remove();
+        }
+        function finishSale(){
+            //túl indexxel ezért i-1
+            var data = "";
+            var table = document.getElementById("sellingTableBody");
+            console.log("Össz sor: "+table.rows.length);
+            for (var i = 1; i <= table.rows.length; i++) {
+                console.log(i-1);
+                data +=
+                    document.getElementById("sellId"+(i-1)).innerHTML + " " +
+                    document.getElementById("sellAmount"+(i-1)).innerHTML + " " +
+                    document.getElementById("sellPrice"+(i-1)).innerHTML + " " +
+                    document.getElementById("sellWhName"+(i-1)).innerHTML + " " +
+                    document.getElementById("sellBrand"+(i-1)).innerHTML + " " +
+                    document.getElementById("sellModel"+(i-1)).innerHTML + " " +
+                    document.getElementById("sellColor"+(i-1)).innerHTML + " " +
+                    document.getElementById("sellCapacity"+(i-1)).innerHTML.replace("GB","")+";";
+            }
+            console.log(data);
+            document.getElementById("sellingTableData").value = data;
         }
     </script>
 {% endblock %}
