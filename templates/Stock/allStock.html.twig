@@ -8,44 +8,18 @@
         <div class="alert alert-{{ resultColor }}" role="alert">
             <span class="fw-bold">{{ resultMessage }}</span>
         </div>
-        <h3 class="text-dark">Készlet</h3>
         <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
             <div class="card-header py-3" style="background: #003247;">
-                <h5 style="color: rgb(255,255,255);">Szűréshez kövesse a kért utasításokat!</h5>
-                <form action="{{ path('allStock') }}" method="post">
-                    <div class="row d-flex align-items-center text-center">
-                        <div class="col-3">
-                            <select name="brands" id="brands" class="showSelect" onchange="filterBrandChanged()">
-                                <option value="">Válassz márkát!</option>
-                            </select>
-                        </div>
-                        <div class="col-3">
-                            <select name="models" id="models" class="showSelect" onchange="filterModellChanged()"></select>
-                        </div>
-                        <div class="col-2">
-                            <select name="colors" id="colors" class="showSelect" onchange="filterColorChanged()"></select>
-                        </div>
-                        <div class="col-2">
-                            <select name="capacities" id="capacities" class="showSelect" onchange="filterCapacityChanged()"></select>
-                        </div>
-                        <div class="col-2">
-                            <button id="szures" class="btn buttonDesign w-100">Szűrés</button>
-                        </div>
-                    </div>
-                </form>
+                <h3 style="color: white;">Készlet</h3>
             </div>
             <div class="card-body" style="background: rgba(255,255,255,0.5);">
                 <div class="row">
                     <div class="col-md-6 text-nowrap">
-                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                            <label class="form-label">Show
-                                <select class="d-inline-block form-select form-select-sm showSelect">
-                                    <option value="10" selected="">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            </label>
+                        <div class="input-group" >
+                            <div class="input-group-prepend">
+                                <button style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled><i class="fa fa-search"></i></button>
+                            </div>
+                            <input type="text" id="myInput" onkeyup="searchFilter()">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -56,8 +30,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                    <table class="table my-0" id="dataTable">
+                <div class="scrollIt table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                    <table class="table table-striped my-0" id="dataTable">
                         <thead>
                         <tr>
                             <th>Mennyiség</th>
@@ -97,22 +71,6 @@
                         <tr></tr>
                         </tfoot>
                     </table>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 align-self-center">
-                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
-                    </div>
-                    <div class="col-md-6">
-                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                            <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                            </ul>
-                        </nav>
-                    </div>
                 </div>
             </div>
         </div>
@@ -320,76 +278,22 @@
                 }
             });
         }
-
-        function filterBrandChanged(){
-            $("#models").show();
-            $("#colors").hide();
-            $("#capacities").hide();
-            $("#szures").hide();
-            $.ajax({
-                url: "{{ path('allArrivedModel') }}",
-                method: "post",
-                data:{
-                    "brandID":document.getElementById("brands").value
-                },
-                success: function (result){
-                    $("#models").find("option").remove();
-                    var defaultVal = $('<option>', {value:"", text:"Válassz modelt"});
-                    $("#models").append(defaultVal);
-                    $.each(result, function (key,value){
-                        var modelOption = $('<option>', {value:value.phoneID.modelID.id, text:value.phoneID.modelID.modelName});
-                        $("#models").append(modelOption);
-                    });
+        function searchFilter() {
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("dataTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[3];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
                 }
-
-            });
-        }
-        function filterModellChanged(){
-            $("#colors").show();
-            $("#capacities").hide();
-            $("#szures").hide();
-            $.ajax({
-                url: "{{ path('allArrivedColor') }}",
-                method: "post",
-                data:{
-                    "modelID":document.getElementById("models").value
-                },
-                success: function (result){
-                    console.log(result);
-                    $("#colors").find("option").remove();
-                    var defaultVal = $('<option>', {value:"", text:"Válassz színt"});
-                    $("#colors").append(defaultVal);
-                    $.each(result, function (key,value){
-                        var colorOption = $('<option>', {value:value.phoneID.colorID.id, text:value.phoneID.colorID.phoneColor});
-                        $("#colors").append(colorOption);
-                    });
-                }
-
-            });
-        }
-        function filterColorChanged(){
-            $("#capacities").show();
-            $("#szures").hide();
-            $.ajax({
-                url: "{{ path('allArrivedCapacityByColor') }}",
-                method: "post",
-                data:{
-                    "colorID":document.getElementById("colors").value
-                },
-                success: function (result){
-                    $("#capacities").find("option").remove();
-                    var defaultVal = $('<option>', {value:"", text:"Válassz méretet!"});
-                    $("#capacities").append(defaultVal);
-                    $.each(result, function (key,value){
-                        var capacityOption = $('<option>', {value:value.phoneID.capacityID.id, text:value.phoneID.capacityID.capacity});
-                        $("#capacities").append(capacityOption);
-                    });
-                }
-
-            });
-        }
-        function filterCapacityChanged(){
-            $("#szures").show();
+            }
         }
     </script>
 {% endblock %}

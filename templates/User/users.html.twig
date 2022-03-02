@@ -14,12 +14,12 @@
             <div class="card-body" style="background: rgba(255,255,255,0.5);">
                 <div class="row">
                     <div class="col-md-6 text-nowrap">
-                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block showSelect">
-                                    <option value="10" selected="">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>&nbsp;</label></div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled><i class="fa fa-search"></i></button>
+                            </div>
+                            <input type="text" id="myInput" onkeyup="searchFilter()">
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="text-md-end dataTables_filter" id="dataTable_filter">
@@ -29,8 +29,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                    <table class="table my-0" id="dataTable">
+                <div class="scrollIt table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                    <table class="table table-striped my-0" id="dataTable">
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -68,22 +68,6 @@
                         </tfoot>
                     </table>
                 </div>
-                <div class="row">
-                    <div class="col-md-6 align-self-center">
-                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
-                    </div>
-                    <div class="col-md-6">
-                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                            <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -99,11 +83,12 @@
                 <form id="updateForm" action="{{ path('updateUser', {"userId" : "id"}) }}" method="post">
                     <div class="modal-body modalBody">
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);color: #1e2833;">
-                            <div class="card-body">
+                            <div class="card-body" style="background: #e6f8fe;">
                                     <div class="row">
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="username"><strong>Felhasználónév</strong></label>
+                                                <small style="color:red">(Ha létező a megadott felhasználónév, akkor nem kerül módosításra!)</small>
                                                 <input class="form-control" type="text" id="username"  name="username" required>
                                             </div>
                                         </div>
@@ -153,7 +138,7 @@
                 <form action="{{ path('addUser') }}" method="post">
                     <div class="modal-body modalBody">
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
-                            <div class="card-body">
+                            <div class="card-body" style="background: #e6f8fe;">
                                     <div class="row">
                                         <div class="col col-12">
                                             <div class="mb-3">
@@ -211,6 +196,23 @@
         </div>
     </div>
     <script>
+        function searchFilter() {
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("dataTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
         function updateUser(rowId){
             rowId = rowId.replace("btn","");
             id = document.getElementById("id"+rowId).innerHTML;

@@ -4,7 +4,7 @@
 #}
 {# @var stocks \App\Entity\Stock[] #}
 {% block content %}
-   {#  <form action="{{ path('sellingStock') }}" method="post">#}
+   <form action="{{ path('sellingStock') }}" method="post">
         <div class="container-fluid">
             <h3 class="text-dark mb-4">Eladás<br></h3>
             <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
@@ -13,31 +13,28 @@
                     <div class="row d-flex align-items-center text-center">
                         <div class="col-3">
                             <div class="mb-3">
-                                <select name="clientName" id="clientName" class="form-select orderSelect showSelect">
-                                    <option value="">Válassz ügyfelet!</option>
+                                <select name="clientName" id="clientName" class="form-select orderSelect showSelect" required>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
-                <input type="text" id="myInput" onkeyup="myFunction()">
+
                 <div class="card-body" style="background: #e6f8fe;">
                     <div class="row">
-                        <div class="col-md-6 text-nowrap col-md-12">
-                            <div id="dataTable_length-1" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;
-                                    <select class="d-inline-block form-select form-select-sm showSelect">
-                                        <option value="10" selected="">10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select>
-                                </label>
+                        <div class="text-nowrap col-md-12">
+                            <div class="input-group" style="justify-content: end;">
+                                <div class="input-group-prepend">
+                                    <button style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled><i class="fa fa-search"></i></button>
+                                </div>
+                                <input type="text" id="myInput" onkeyup="searchFilter()">
                             </div>
                         </div>
+
                     </div>
-                    <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
-                        <table class="table my-0" id="tempTable">
-                            <thead>
+                    <div class="scrollIt table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
+                        <table class="table table-striped my-0" id="tempTable">
+                            <thead class="headerFixed">
                             <tr>
                                 <th>ID</th>
                                 <th>Mennyiség</th>
@@ -49,14 +46,14 @@
                                 <th>Hozzáadás</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody >
                             {% set counter = 0 %}
                             {% for stock in stocks %}
                                 <tr id="{{ counter }}">
                                     <td id="id{{ counter }}">{{ stock.id }}</td>
                                     <td id="amount{{ counter }}">{{ stock.amount }}</td>
                                     <td id="purchasePrice{{ counter }}">{{ stock.purchasePrice }}</td>
-                                    <td>{% set sell = stock.purchasePrice * 1.27 %} {{ sell|round }}</td>
+                                    <td id="sellingPrice{{ counter }}">{% set sell = stock.purchasePrice * 1.27 %} {{ sell|round }}</td>
                                     <td>
                                         <span id="brand{{ counter }}">{{ stock.phoneID.brandID.brandName }} </span>
                                         <span class="d-none" id="brandID{{ counter }}">{{ stock.phoneID.brandID.id }}</span>
@@ -87,8 +84,8 @@
                 </div>
                 <hr style="background: #1a1e21;height: 5px;opacity: 1; margin:0;">
                 <div class="card-body" style="background: #e6f8fe;">
-                    <div class="table-responsive table mt-2" id="sellingTable" role="grid" aria-describedby="dataTable_info">
-                        <table class="table my-0" id="sellingTable">
+                    <div class="scrollIt table-responsive table mt-2" id="sellingTable" role="grid" aria-describedby="dataTable_info">
+                        <table class="table table-striped my-0" id="sellingTable">
                             <thead>
                             <tr >
                                 <th>ID</th>
@@ -158,20 +155,29 @@
         </div>
     </div>
         <input class="d-none" type="text" id="sellingTableData">
+    <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
     <script>
         var id= "";
         var tempID = "";
         var maxAmount = 0;
         var purchasePrice = 0;
         var sellingPrice = 0;
-        $(document).ready(function () {
-            $('#tempTable').DataTable({
-                "scrollY": "200px",
-                "scrollCollapse": true,
+
+        $(document).ready(function (){
+            $.ajax({
+                url:"{{ path('selectAllClients') }}",
+                method: "post",
+                success: function (result){
+                    var defaultVal = $('<option>', {value:"", text:"Válassz ügyfelet!"});
+                    $("#clientName").append(defaultVal);
+                    $.each(result, function (key,value){
+                        var clientOption = $('<option>', {value:value.id, text:value.clientName});
+                        $("#clientName").append(clientOption);
+                    });
+                }
             });
-            $('.dataTables_length').addClass('bs-select');
-        });
-        function myFunction() {
+        })
+        function searchFilter() {
             input = document.getElementById("myInput");
             filter = input.value.toUpperCase();
             table = document.getElementById("tempTable");
@@ -197,16 +203,19 @@
         function makeOrder(rowId){
             rowId = rowId.replace("btn", "");
             id = rowId;
-            tempID = rowId;
+            //tempID = rowId;
+            //help = tempID;
             maxAmount = document.getElementById("amount"+rowId).innerHTML;
-            purchasePrice = document.getElementById("purchasePrice"+rowId).innerHTML;
+            sellingPrice = document.getElementById("sellingPrice"+rowId).innerHTML;
             document.getElementById("maxAmount").innerHTML = maxAmount;
-            document.getElementById("price").value = purchasePrice;
+            document.getElementById("price").value = parseInt(sellingPrice);
         }
         var counter = 0;
+        var tempPrice = 0;
         function addToList() {
             var amount = document.getElementById("numberofdevice").value;
             var salePrice = document.getElementById("price").value;
+            tempID = id;
             if (parseFloat(maxAmount) < parseFloat(amount)) {
                 alert("Ebből a készülékből összesen nincsen ennyi darab a raktáron!");
             }else if(maxAmount == 0 || maxAmount < 0){
@@ -260,25 +269,28 @@
                     cell8.id = "sellCapacity" + counter;
                     cell9.innerHTML = getTdById(id, "date");
                     cell9.id = "sellDate" + counter;
-                    cell10.innerHTML = '<button id="btn'+counter+'" class="btn btn-primary buttonDesign" type="button"  onclick="deleteRow(this.id, tempID)">x</button>';
+                    cell10.innerHTML = '<button id="btn'+counter+'" class="btn btn-primary buttonDesign" type="button"  onclick="deleteRow(this.id,tempID)">x</button>';
                     counter++;
                 }
-
                 inSell = false;
                 setTdById(id, "amount", getTdById(id, "amount") - amount);
                 document.getElementById("numberofdevice").value = "";
                 document.getElementById("price").value = "";
-                sellingPrice =  sellingPrice + (amount * salePrice);
-                document.getElementById("fullPrice").innerHTML = sellingPrice;
+                tempPrice =  tempPrice + parseInt(amount * salePrice);
+                console.log(tempPrice);
+                document.getElementById("fullPrice").innerHTML = tempPrice;
             }
         }
+        // Ha törli akkor rosszhoz adja vissza a darabszámot.
         function deleteRow(rowId, id){
             counter = 0;
-            var sellTable = document.getElementById("sellingTableBody");
             rowId = rowId.replace("btn", "");
-            var sellingAmount = getTdById(rowId,"sellAmount");
-            var originalAmount = document.getElementById("amount"+id).innerHTML;
-            document.getElementById("amount"+id).innerHTML = parseInt(sellingAmount) + parseInt(originalAmount);
+            console.log(id);
+            var recentlyPrice = document.getElementById("fullPrice").innerHTML;
+            var phonePrice = parseInt(getTdById(rowId,"sellPrice")) * parseInt(getTdById(rowId,"sellAmount"));
+            console.log(phonePrice);
+            document.getElementById("fullPrice").innerHTML = (parseInt(recentlyPrice) - phonePrice);
+            document.getElementById("amount"+id).innerHTML = parseInt(getTdById(rowId,"sellAmount")) + parseInt(getTdById(id,"amount"));
             document.getElementById("sellTable"+rowId).remove();
         }
         function finishSale(){
@@ -289,17 +301,18 @@
             for (var i = 1; i <= table.rows.length; i++) {
                 console.log(i-1);
                 data +=
-                    document.getElementById("sellId"+(i-1)).innerHTML + " " +
-                    document.getElementById("sellAmount"+(i-1)).innerHTML + " " +
-                    document.getElementById("sellPrice"+(i-1)).innerHTML + " " +
-                    document.getElementById("sellWhName"+(i-1)).innerHTML + " " +
-                    document.getElementById("sellBrand"+(i-1)).innerHTML + " " +
-                    document.getElementById("sellModel"+(i-1)).innerHTML + " " +
-                    document.getElementById("sellColor"+(i-1)).innerHTML + " " +
+                    //document.getElementById("sellId"+(i-1)).innerHTML + "|" +
+                    document.getElementById("sellAmount"+(i-1)).innerHTML + "|" +
+                    document.getElementById("sellPrice"+(i-1)).innerHTML + "|" +
+                    document.getElementById("sellWhName"+(i-1)).innerHTML + "|" +
+                    document.getElementById("sellBrand"+(i-1)).innerHTML + "|" +
+                    document.getElementById("sellModel"+(i-1)).innerHTML + "|" +
+                    document.getElementById("sellColor"+(i-1)).innerHTML + "|" +
                     document.getElementById("sellCapacity"+(i-1)).innerHTML.replace("GB","")+";";
+                document.getElementById("sellingTableData").value = data;
             }
             console.log(data);
-            document.getElementById("sellingTableData").value = data;
+            //document.getElementById("sellingTableData").value = data;
         }
     </script>
 {% endblock %}

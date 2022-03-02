@@ -6,44 +6,19 @@
         <div class="alert alert-{{ resultColor }}" role="alert">
             <span class="fw-bold">{{ resultMessage }}</span>
         </div>
-        <h3 class="text-dark mb-4">Megrendelt eszközök</h3>
         <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
             <div class="card-header py-3" style="background: rgb(0,50,71);color: rgb(255,255,255);">
-                <h5>Szűréshez kövesse a kért utasításokat!<br></h5>
-                <div class="row d-flex align-items-center text-center">
-                    <form action="{{ path('orderedStock') }}" method="post">
-                        <div class="row d-flex align-items-center text-center">
-                            <div class="col-3">
-                                <select name="brands" id="brands" class="w-100 showSelect" onchange="filterBrandChanged()">
-                                    <option value="">Válassz márkát!</option>
-                                </select>
-                            </div>
-                            <div class="col-3">
-                                <select name="models" id="models" class="showSelect" onchange="filterModellChanged()"></select>
-                            </div>
-                            <div class="col-2">
-                                <select name="colors" id="colors" class="showSelect" onchange="filterColorChanged()"></select>
-                            </div>
-                            <div class="col-2">
-                                <select name="capacities" id="capacities" class="showSelect" onchange="filterCapacityChanged()"></select>
-                            </div>
-                            <div class="col-2">
-                                <button id="szures" class="btn buttonDesign w-100">Szűrés</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                <h3 class=" mb-4">Megrendelt eszközök</h3>
             </div>
             <div class="card-body" style="background: rgba(255,255,255,0.5);">
                 <div class="row">
-                    <div class="col-md-6 text-nowrap">
-                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm showSelect">
-                                    <option value="5" selected="">5</option>
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>&nbsp;</label></div>
+                    <div class="text-nowrap col-md-6">
+                        <div class="input-group" >
+                            <div class="input-group-prepend">
+                                <button style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled><i class="fa fa-search"></i></button>
+                            </div>
+                            <input type="text" id="myInput" onkeyup="searchFilter()">
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="text-md-end dataTables_filter" id="dataTable_filter">
@@ -53,8 +28,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="table-responsive table mt-2" id="dataTableDiv" role="grid" >
-                    <table class="table my-0" id="dataTable">
+                <div class="scrollIt table-responsive table mt-2" id="dataTableDiv" role="grid" >
+                    <table class="table table-striped my-0" id="dataTable">
                         <thead>
                         <tr>
                             <th>ID</th>
@@ -109,20 +84,6 @@
                         <tr></tr>
                         </tfoot>
                     </table>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 align-self-center">
-                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
-                    </div>
-                    <div class="col-md-6">
-                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                            <ul class="pagination">
-                                {% for i in 1..allElement %}
-                                    <li class="page-item active"><a class="page-link" href="#" onclick="loadNextTable({{ i }})">{{ i }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </nav>
-                    </div>
                 </div>
             </div>
         </div>
@@ -327,6 +288,23 @@
             });
 
         });
+        function searchFilter() {
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("dataTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[3];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
         var rowId="";
         function updateItem(rowId){
             rowId = rowId.replace("btn","");
@@ -601,132 +579,5 @@
                 }
             });
         }
-        function filterBrandChanged(){
-            $("#models").show();
-            $("#colors").hide();
-            $("#capacities").hide();
-            $("#szures").hide();
-            $.ajax({
-                url: "{{ path('allOrderedModel') }}",
-                method: "post",
-                data:{
-                    "brandID":document.getElementById("brands").value
-                },
-                success: function (result){
-                    $("#models").find("option").remove();
-                    var defaultVal = $('<option>', {value:"", text:"Válassz modellt"});
-                    $("#models").append(defaultVal);
-                    $.each(result, function (key,value){
-                        var modelOption = $('<option>', {value:value.phoneID.modelID.id, text:value.phoneID.modelID.modelName});
-                        $("#models").append(modelOption);
-                    });
-                }
-
-            });
-        }
-        function filterModellChanged(){
-            $("#colors").show();
-            $("#capacities").hide();
-            $("#szures").hide();
-            $.ajax({
-                url: "{{ path('allOrderedColor') }}",
-                method: "post",
-                data:{
-                    "modelID":document.getElementById("models").value
-                },
-                success: function (result){
-                    console.log(result);
-                    $("#colors").find("option").remove();
-                    var defaultVal = $('<option>', {value:"", text:"Válassz színt"});
-                    $("#colors").append(defaultVal);
-                    $.each(result, function (key,value){
-                        var colorOption = $('<option>', {value:value.phoneID.colorID.id, text:value.phoneID.colorID.phoneColor});
-                        $("#colors").append(colorOption);
-                    });
-                }
-
-            });
-        }
-        function filterColorChanged(){
-            $("#capacities").show();
-            $("#szures").hide();
-            $.ajax({
-                url: "{{ path('allOrderedCapacity') }}",
-                method: "post",
-                data:{
-                    "colorID":document.getElementById("colors").value
-                },
-                success: function (result){
-                    $("#capacities").find("option").remove();
-                    var defaultVal = $('<option>', {value:"", text:"Válassz méretet!"});
-                    $("#capacities").append(defaultVal);
-                    $.each(result, function (key,value){
-                        var capacityOption = $('<option>', {value:value.phoneID.capacityID.id, text:value.phoneID.capacityID.capacity});
-                        $("#capacities").append(capacityOption);
-                    });
-                }
-
-            });
-        }
-        function filterCapacityChanged(){
-            $("#szures").show();
-        }
-        {#function loadNextTable(i){#}
-        {#    $.ajax({#}
-        {#        url: "{{ path('orderedStock') }}",#}
-        {#        method: "post",#}
-        {#        data:{#}
-        {#            "tableID":i,#}
-        {#            "limit": 10#}
-        {#        },#}
-        {#        success: function (result){#}
-        {#            console.log(result);#}
-        {#            $("#dataTable").remove();#}
-        {#            var nextTable = document.getElementById("dataTable");#}
-        {#            var counter = 0;#}
-        {#            $.each(result, function (key,value){#}
-
-        {#                //ide addOrder mintára.#}
-
-        {#                var row = nextTable.insertRow();#}
-        {#                var cell1 = row.insertCell(0);#}
-        {#                var cell2 = row.insertCell(1);#}
-        {#                var cell3 = row.insertCell(2);#}
-        {#                var cell4 = row.insertCell(3);#}
-        {#                var cell5 = row.insertCell(4);#}
-        {#                var cell6 = row.insertCell(5);#}
-        {#                var cell7 = row.insertCell(6);#}
-        {#                var cell8 = row.insertCell(7);#}
-        {#                var cell9 = row.insertCell(8);#}
-
-
-        {#                cell1.innerHTML = document.getElementById("id"+counter).innerHTML;#}
-        {#                cell1.id = "id"+counter;#}
-        {#                cell2.innerHTML = document.getElementById("amount"+counter).innerHTML;#}
-        {#                cell2.id = "amount"+counter;#}
-        {#                cell3.innerHTML = document.getElementById("purchasePrice"+counter).innerHTML;#}
-        {#                cell3.id = "purchasePrice"+counter;#}
-        {#                cell4.innerHTML = document.getElementById("brand"+counter).innerHTML + " "+document.getElementById("model"+counter).innerHTML + " "#}
-        {#                + document.getElementById("brand"+counter).innerHTML + " " + document.getElementById("color"+counter).innerHTML + " " +document.getElementById("phoneCapacity"+counter).innerHTML ;#}
-        {#                cell4.id = "phone"+counter;#}
-        {#                cell5.innerHTML = document.getElementById("warehouse"+counter).innerHTML;#}
-        {#                cell5.id = "warehouse"+counter;#}
-        {#                cell6.innerHTML = document.getElementById("date"+counter).innerHTML;#}
-        {#                cell6.id = "date"+counter;#}
-        {#                cell7.innerHTML = document.getElementById("client"+counter).innerHTML;#}
-        {#                cell7.id = "client"+counter;#}
-        {#                cell8.innerHTML = document.getElementById("user"+counter).innerHTML;#}
-        {#                cell8.id = "user"+counter;#}
-        {#                cell9.innerHTML = '<button id="btn'+counter+'" class="btn btn-primary buttonDesign" type="button" data-bs-target="#updateOrder" data-bs-toggle="modal" onclick="updateItem(this.id)"><i class="fas fa-edit operationIcon"></i></button>'#}
-
-
-        {#                counter++;#}
-        {#            });#}
-        {#            console.log(result);#}
-
-        {#        }#}
-
-        {#    });#}
-        {#}#}
     </script>
 {% endblock %}

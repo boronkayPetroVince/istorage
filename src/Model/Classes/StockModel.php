@@ -4,6 +4,7 @@
 namespace App\Model\Classes;
 
 
+use App\Entity\Order;
 use App\Entity\Phone;
 use App\Entity\Status;
 use App\Entity\Stock;
@@ -16,6 +17,7 @@ use App\Service\Interfaces\CapacityServiceInterface;
 use App\Service\Interfaces\ClientServiceInterface;
 use App\Service\Interfaces\ColorServiceInterface;
 use App\Service\Interfaces\ModelServiceInterface;
+use App\Service\Interfaces\OrderServiceInterface;
 use App\Service\Interfaces\PhoneServiceInterface;
 use App\Service\Interfaces\SecurityServiceInterface;
 use App\Service\Interfaces\StatusServiceInterface;
@@ -58,6 +60,9 @@ class StockModel implements StockModelInterface
     /** @var ClientServiceInterface */
     private $clientService;
 
+    /** @var OrderServiceInterface */
+    private $orderService;
+
     /**
      * StockModel constructor.
      * @param PhoneModelInterface $phoneModel
@@ -71,8 +76,9 @@ class StockModel implements StockModelInterface
      * @param BrandServiceInterface $brandService
      * @param PhoneServiceInterface $phoneService
      * @param ClientServiceInterface $clientService
+     * @param OrderServiceInterface $orderService
      */
-    public function __construct(PhoneModelInterface $phoneModel, WarehouseServiceInterface $warehouseService, StockServiceInterface $stockService, StatusServiceInterface $statusService, SecurityServiceInterface $securityService, CapacityServiceInterface $capacityService, ColorServiceInterface $colorService, ModelServiceInterface $modelService, BrandServiceInterface $brandService, PhoneServiceInterface $phoneService, ClientServiceInterface $clientService)
+    public function __construct(PhoneModelInterface $phoneModel, WarehouseServiceInterface $warehouseService, StockServiceInterface $stockService, StatusServiceInterface $statusService, SecurityServiceInterface $securityService, CapacityServiceInterface $capacityService, ColorServiceInterface $colorService, ModelServiceInterface $modelService, BrandServiceInterface $brandService, PhoneServiceInterface $phoneService, ClientServiceInterface $clientService, OrderServiceInterface $orderService)
     {
         $this->phoneModel = $phoneModel;
         $this->warehouseService = $warehouseService;
@@ -85,6 +91,7 @@ class StockModel implements StockModelInterface
         $this->brandService = $brandService;
         $this->phoneService = $phoneService;
         $this->clientService = $clientService;
+        $this->orderService = $orderService;
     }
 
 
@@ -117,6 +124,39 @@ class StockModel implements StockModelInterface
         return false;
     }
 
+    public function sellStock(Request $request, User $user): bool
+    {
+        if ($request) {
+            $allSellingData = $request->request->get("sellingTableData");
+            $oneData = explode(";", $allSellingData);
+            foreach ($oneData as $data) {
+                //Ide jön még a stock frissitése ( le kell vonni az adott amountot, ha 0 akkor státusz állítás)
+                $tempList = explode("|", $data);
+                $order = new Order();
+
+                $order->setAmount(intval(1));
+                $order->setPrice(11);
+                $order->setDate(new \DateTime());
+                $order->setClientID($this->clientService->getOneClientById($request->request->get("clientName")));
+                $order->setUserID($this->securityService->getOneUserById($user->getId()));
+
+                //$warehouse = $this->warehouseService->getOneWarehouseByName("Bp-MOBILE");
+                $order->setWarehouseID($this->warehouseService->getOneWarehouseById(1));
+
+                //$phone = $this->phoneModel->existPhone($tempList[3], $tempList[4], $tempList[5], $tempList[6]);
+                $order->setPhoneID($this->phoneService->getOnePhoneById(45));
+
+                $status = $this->statusService->getOneStatusByName("Eladva");
+                $order->setStatusID($this->statusService->getOneStatusById($status->getId()));
+                $this->orderService->addOrder($order);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
     public function filteredStock(Request $request):iterable{
         /** @var Stock[] $stocks */
         $stocks = $this->stockService->getAllStock();
@@ -137,7 +177,6 @@ class StockModel implements StockModelInterface
     }
 
     public function edit(Request $request, int $stockId): bool{
-
         if($request){
             $stock = $this->stockService->getOneStockById($stockId);
             $warehouse = $this->warehouseService->getOneWarehouseById($request->request->get("updateWarehouse"));

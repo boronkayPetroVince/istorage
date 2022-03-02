@@ -137,8 +137,13 @@ class StockController extends AbstractController
      * @Route(name="sellingStock", path="/sellingStock")
      */
     public function sellingStock(Request $request):Response{
+        $user = $this->getUser();
         if($request->isMethod("POST")){
-            return new Response("SIKERRR");
+            if($this->stockModel->sellStock($request,$this->getUser())){
+                return new Response("SIKERRR");
+            }else{
+                return new Response("NEM SIKERÜLT");
+            }
         }
         return $this->render("Stock/sellingStock.html.twig", ["stocks" => $this->stockModel->allArrivedStock(), "user" => $this->getUser(), "result" =>""]);
     }

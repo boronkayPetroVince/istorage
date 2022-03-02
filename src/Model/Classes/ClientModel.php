@@ -152,7 +152,7 @@ class ClientModel implements ClientModelInterface
         /** @var Client[] $arr */
         $arr = $this->clientService->getAllClient();
         foreach($arr as $client){
-            if ($client->getClientName() === $clientName) return false;
+            if (strtolower($client->getClientName()) === strtolower($clientName)) return false;
         }
         return true;
     }
