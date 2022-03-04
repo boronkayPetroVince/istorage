@@ -18,7 +18,7 @@
                             <div class="input-group-prepend">
                                 <button style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled><i class="fa fa-search"></i></button>
                             </div>
-                            <input type="text" id="myInput" onkeyup="searchFilter()">
+                            <input type="text" id="myInput" onkeyup="searchFilter()" title="Telefon keresése">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -50,7 +50,7 @@
                                 <td id="username{{ counter }}">{{ user.username }}</td>
                                 <td id="fullName{{ counter }}">{{ user.fullName }}</td>
                                 <td id="email{{ counter }}">{{ user.email }}</td>
-                                <td id="phoneNumber{{ counter }}">{{ user.phoneNumber }}</td>
+                                <td id="phoneNumber{{ counter }}">{{ user.phoneNumber|replace({'+36':''}) }}</td>
                                 {% if user.roles[0] == "ROLE_ADMIN" %}
                                     <td id="role{{ counter }}">{{ user.roles[0] }}</td>
                                 {% elseif user.roles[0] == "ROLE_USER" %}
@@ -105,9 +105,12 @@
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <div class="mb-3">
-                                                <label class="form-label" for="phoneNumber"><strong>Telefonszám</strong><br></label>
-                                                <input class="form-control" type="number" id="phoneNumber" name="phoneNumber" required>
+                                            <label class="form-label" for="phoneNumber"><strong>Telefonszám</strong><br></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-append">
+                                                    <button class="input-group-text" style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled>+36</button>
+                                                </div>
+                                                <input class="form-control" type="text" id="phoneNumber" name="phoneNumber" required>
                                             </div>
                                         </div>
                                         <div class="col">
@@ -171,9 +174,12 @@
                                             </div>
                                         </div>
                                         <div class="col">
-                                            <div class="mb-3">
-                                                <label class="form-label" for="newPhoneNumber"><strong>Telefonszám</strong><br></label>
-                                                <input class="form-control" type="number" id="newPhoneNumber" name="newPhoneNumber" required>
+                                            <label class="form-label" for="newPhoneNumber"><strong>Telefonszám</strong><br></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-append">
+                                                    <button class="input-group-text" style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled>+36</button>
+                                                </div>
+                                                <input class="form-control" type="text" id="newPhoneNumber" name="newPhoneNumber"  placeholder="304407954" required>
                                             </div>
                                         </div>
                                         <div class="col">

@@ -32,16 +32,13 @@ class UserModel implements UserModelInterface
         $this->encoder = $encoder;
     }
 
-
-
-
     public function addUser(Request $request): bool
     {
         if($this->checkUser($request->request->get("newUsername"))){
             $user = $request->request->get("newUsername");
             $fullName = $request->request->get("newFullname");
             $email = $request->request->get("newEmail");
-            $phoneNumber = $request->request->get("newPhoneNumber");
+            $phoneNumber = "+36".$request->request->get("newPhoneNumber");
             $role = $request->request->get("newRole");
             if ($request->request->get("newPassword") === $request->request->get("newPasswordAgain")){
                 $this->securityService->addUser($user,$request->request->get("newPasswordAgain"), $fullName, $email, $phoneNumber, $role);
@@ -66,7 +63,7 @@ class UserModel implements UserModelInterface
             }
             $user->setFullName($request->request->get("fullName"));
             $user->setEmail($request->request->get("email"));
-            $user->setPhoneNumber((int)$request->request->get("phoneNumber"));
+            $user->setPhoneNumber("+36".$request->request->get("phoneNumber"));
             $user->setRoles([$request->request->get("role")]);
             $this->securityService->updateUser($user->getId());
             return true;
@@ -78,7 +75,7 @@ class UserModel implements UserModelInterface
             $user->setFullName($request->request->get("fullName"));
             $user->setUsername($request->request->get("username"));
             $user->setEmail($request->request->get("email"));
-            $user->setPhoneNumber((int)$request->request->get("phoneNumber"));
+            $user->setPhoneNumber("+36".$request->request->get("phoneNumber"));
             $this->securityService->updateUser($user->getId());
             return true;
         }

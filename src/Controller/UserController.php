@@ -5,6 +5,8 @@ namespace App\Controller;
 
 
 use App\Entity\User;
+use App\Model\Classes\StockModel;
+use App\Model\Interfaces\StockModelInterface;
 use App\Model\Interfaces\UserModelInterface;
 use App\Service\Interfaces\SecurityServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,16 +28,22 @@ class UserController extends AbstractController
     /** @var SecurityServiceInterface */
     private $security;
 
+    /** @var StockModelInterface */
+    private $stockModel;
+
     /**
      * UserController constructor.
-     * @param SecurityServiceInterface $security
      * @param UserModelInterface $userModel
+     * @param SecurityServiceInterface $security
+     * @param StockModelInterface $stockModel
      */
-    public function __construct(SecurityServiceInterface $security, UserModelInterface $userModel)
+    public function __construct(UserModelInterface $userModel, SecurityServiceInterface $security, StockModelInterface $stockModel)
     {
-        $this->security = $security;
         $this->userModel = $userModel;
+        $this->security = $security;
+        $this->stockModel = $stockModel;
     }
+
 
     /**
      * @param Request $request
@@ -45,7 +53,16 @@ class UserController extends AbstractController
     public function mainMenu(Request $request):Response{
         /** @var User $user */
         $user = $this->getUser();
-        return $this->render("index.html.twig", ["user" => $user]);
+        if($user != null){
+            return $this->render("index.html.twig", [
+                "user" => $user,
+                "inStock" => $this->stockModel->stockCount(),
+                "wh" => $this->stockModel->warehouseById(),
+                "outgoingPrice" => $this->stockModel->monthOutgoing()
+            ]);
+        }
+        return $this->redirectToRoute('app_login');
+
     }
 
     /**
@@ -77,7 +94,9 @@ class UserController extends AbstractController
         $user = $this->getUser();
         if ($request->isMethod("POST")){
             if ($this->userModel->loginAction($request,$user) == true){
-                return $this->render("index.html.twig", ["user" => $this->getUser()]);
+                return $this->render("index.html.twig", ["user" => $this->getUser(), "inStock" => $this->stockModel->stockCount(),"inStock" => $this->stockModel->stockCount(),
+                    "wh" => $this->stockModel->warehouseById(),
+                    "outgoingPrice" => $this->stockModel->monthOutgoing()]);
             }else return $this->render("user/login.html.twig", ["username" => "Rossz felhasználónév, vagy jelszó!", "user" => $this->getUser()]);
         }else return $this->render("user/login.html.twig", ["username" => "", "user" => $this->getUser()]);
     }

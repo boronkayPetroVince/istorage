@@ -30,7 +30,7 @@ class WarehouseService extends CrudService implements WarehouseServiceInterface
 
     public function getOneWarehouseByName(string $name): Warehouse
     {
-        return $this->getRepo()->findOneBy(["wh_name" => $name]);
+        return $this->getRepo()->findOneBy(["whname" => $name]);
     }
 
     public function addWarehouse(Warehouse $warehouse):void{

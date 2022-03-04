@@ -78,7 +78,7 @@ class ClientModel implements ClientModelInterface
             $contact = new Contact();
             $contact->setFullName($request->request->get("newContact_Fullname"));
             $contact->setEmail($request->request->get("newContact_Email"));
-            $contact->setPhoneNumber($request->request->get("newContact_Phonenumber"));
+            $contact->setPhoneNumber("+36".$request->request->get("newContact_Phonenumber"));
             $this->contactService->addContact($contact);
             $client = new Client();
             if($this->checkClient($request->request->get("newClientName"))){
@@ -114,7 +114,7 @@ class ClientModel implements ClientModelInterface
 
             $contact = $this->contactService->getOneContactById($client->getContactID()->getId());
             $contact->setFullName($request->request->get("contact_FullName"));
-            $contact->setPhoneNumber($request->request->get("contact_PhoneNumber"));
+            $contact->setPhoneNumber("+36".$request->request->get("contact_PhoneNumber"));
             $contact->setEmail($request->request->get("contact_Email"));
             $this->contactService->updateContact($contact->getId());
             return true;

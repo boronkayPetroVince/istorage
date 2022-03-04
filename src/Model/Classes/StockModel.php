@@ -23,7 +23,9 @@ use App\Service\Interfaces\SecurityServiceInterface;
 use App\Service\Interfaces\StatusServiceInterface;
 use App\Service\Interfaces\StockServiceInterface;
 use App\Service\Interfaces\WarehouseServiceInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class StockModel implements StockModelInterface
 {
@@ -124,56 +126,43 @@ class StockModel implements StockModelInterface
         return false;
     }
 
-    public function sellStock(Request $request, User $user): bool
+    public function sellStock(Request $request, User $user): Response
     {
         if ($request) {
             $allSellingData = $request->request->get("sellingTableData");
-            $oneData = explode(";", $allSellingData);
+            $file = fopen("TESZEEE.txt", "w");
+            fwrite($file, $allSellingData);
+            $oneData = explode(";", "".$allSellingData);
             foreach ($oneData as $data) {
                 //Ide jön még a stock frissitése ( le kell vonni az adott amountot, ha 0 akkor státusz állítás)
                 $tempList = explode("|", $data);
                 $order = new Order();
 
-                $order->setAmount(intval(1));
-                $order->setPrice(11);
-                $order->setDate(new \DateTime());
+                $order->setAmount($tempList[1]);
+                $order->setPrice($tempList[2]);
+                $order->setDate(new \DateTime('now'));
                 $order->setClientID($this->clientService->getOneClientById($request->request->get("clientName")));
                 $order->setUserID($this->securityService->getOneUserById($user->getId()));
 
-                //$warehouse = $this->warehouseService->getOneWarehouseByName("Bp-MOBILE");
-                $order->setWarehouseID($this->warehouseService->getOneWarehouseById(1));
+                $warehouse = $this->warehouseService->getOneWarehouseByName($tempList[3]);
+                $order->setWarehouseID($this->warehouseService->getOneWarehouseById($warehouse->getId()));
 
-                //$phone = $this->phoneModel->existPhone($tempList[3], $tempList[4], $tempList[5], $tempList[6]);
-                $order->setPhoneID($this->phoneService->getOnePhoneById(45));
+                $phone = $this->phoneModel->existPhone(
+                    $this->brandService->getOneBrandByName($tempList[4]),
+                    $this->modelService->getOneModelByName($tempList[5]),
+                    $this->colorService->getOneColorByName($tempList[6]),
+                    $this->capacityService->getOneCapacityByMemory($tempList[7])
+                );
+                $order->setPhoneID($this->phoneService->getOnePhoneById($phone->getId()));
 
                 $status = $this->statusService->getOneStatusByName("Eladva");
                 $order->setStatusID($this->statusService->getOneStatusById($status->getId()));
                 $this->orderService->addOrder($order);
-                return true;
+                return new JsonResponse($order);
             }
+            return new JsonResponse(["Nem"]);
         }
-        return false;
-    }
-
-
-
-    public function filteredStock(Request $request):iterable{
-        /** @var Stock[] $stocks */
-        $stocks = $this->stockService->getAllStock();
-
-        /** @var Phone[] $phones */
-        $phones = $this->phoneModel->filteredPhones($request);
-
-        /** @var Stock[] $array */
-        $array = array();
-        foreach($stocks as $stock){
-            foreach($phones as $phone){
-                if($stock->getPhoneID()->getId() === $phone->getId()){
-                    array_push($array, $stock);
-                }
-            }
-        }
-        return $array;
+        return new JsonResponse(["asd"]);
     }
 
     public function edit(Request $request, int $stockId): bool{
@@ -201,6 +190,9 @@ class StockModel implements StockModelInterface
 
     public function allWarehouse():iterable{
         return $this->warehouseService->getAllWarehouse();
+    }
+    public function warehouseById():Warehouse{
+        return $this->warehouseService->getOneWarehouseById(1);
     }
 
     public function allArrivedStock():iterable{
@@ -231,6 +223,13 @@ class StockModel implements StockModelInterface
         }
         return false;
 
+    }
+
+    public function stockCount():int{
+        return $this->stockService->stockCount("Beérkezett");
+    }
+    public function monthOutgoing():int{
+        return $this->stockService->currentMonthOutgoings();
     }
 
 

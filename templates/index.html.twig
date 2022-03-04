@@ -1,4 +1,5 @@
 {# @var user \App\Entity\User #}
+{# @var wh \App\Entity\Warehouse #}
 {% block stylesheets %}
 
 {% endblock %}
@@ -95,10 +96,10 @@
                                     <div class="card-body">
                                         <div class="row align-items-center no-gutters">
                                             <div class="col me-2">
-                                                <div class="text-uppercase text-success fw-bold text-xs mb-1"><span class="staticsFont">Bevételek(éves)</span></div>
-                                                <div class="text-dark fw-bold h5 mb-0"><span>$215,000</span></div>
+                                                <div class="text-uppercase text-success fw-bold text-xs mb-1"><span class="staticsFont">Kiadások(havi)</span></div>
+                                                <div class="text-dark fw-bold h5 mb-0"><span>{{ outgoingPrice }} Ft</span></div>
                                             </div>
-                                            <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300" style="color: rgb(0,50,71) !important;"></i></div>
+                                            <div class="col-auto text-gray-300" style="color: rgb(0,50,71) !important; font-weight: bold;font-size:1.9rem;">Ft</div>
                                         </div>
                                     </div>
                                 </div>
@@ -109,7 +110,7 @@
                                         <div class="row align-items-center no-gutters">
                                             <div class="col me-2">
                                                 <div class="text-uppercase text-warning fw-bold text-xs mb-1"><span class="staticsFont">Összes telefon</span></div>
-                                                <div class="text-dark fw-bold h5 mb-0"><span>18</span></div>
+                                                <div class="text-dark fw-bold h5 mb-0"><span>{{ inStock }}</span></div>
                                             </div>
                                             <div class="col-auto"><i class="fas fa-warehouse fa-2x text-gray-300" style="color: rgb(0,50,71) !important;"></i></div>
                                         </div>
@@ -120,12 +121,18 @@
                         <div class="row">
                             <div class="col-lg-5 col-xl-4">
                                 <div class="card shadow mb-4" style="background: rgba(255,255,255,0.5);">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h6 class="text-primary fw-bold m-0">Raktárak áttekintése</h6>
+                                    <div class="card-header d-flex justify-content-between align-items-center" style="background: rgba(255,255,255,0.8);">
+                                        <h6 class="text-primary fw-bold m-0">Raktár áttekintése</h6>
                                     </div>
                                     <div class="card-body">
-                                        <div class="chart-area"><canvas data-bss-chart="{&quot;type&quot;:&quot;doughnut&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Direct&quot;,&quot;Social&quot;,&quot;Referral&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;&quot;,&quot;backgroundColor&quot;:[&quot;#4e73df&quot;,&quot;#1cc88a&quot;,&quot;#36b9cc&quot;],&quot;borderColor&quot;:[&quot;#ffffff&quot;,&quot;#ffffff&quot;,&quot;#ffffff&quot;],&quot;data&quot;:[&quot;50&quot;,&quot;30&quot;,&quot;15&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:false,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}}"></canvas></div>
-                                        <div class="text-center small mt-4"><span class="me-2"><i class="fas fa-circle text-primary"></i>&nbsp;Direct</span><span class="me-2"><i class="fas fa-circle text-success"></i>&nbsp;Social</span><span class="me-2"><i class="fas fa-circle text-info"></i>&nbsp;Refferal</span></div>
+                                        <div class="chart-area">
+                                            <canvas id="chart1"></canvas>
+                                        </div>
+                                        <div class="text-center small mt-4">
+                                            <span class="me-2"><i class="fas fa-circle text-info"></i>&nbsp;Teljes kapacitás</span>
+                                            <span class="me-2"><i class="fas fa-circle text-primary"></i> Bp-MOBILE kapacitása</span>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -135,7 +142,9 @@
                                         <h6 class="text-primary fw-bold m-0">Bevétel áttekintés</h6>
                                     </div>
                                     <div class="card-body">
-                                        <div class="chart-area"><canvas data-bss-chart="{&quot;type&quot;:&quot;line&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Jan&quot;,&quot;Feb&quot;,&quot;Mar&quot;,&quot;Apr&quot;,&quot;May&quot;,&quot;Jun&quot;,&quot;Jul&quot;,&quot;Aug&quot;,&quot;Sep&quot;,&quot;Oct&quot;,&quot;Nov&quot;,&quot;Dec&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;Earnings&quot;,&quot;fill&quot;:true,&quot;data&quot;:[&quot;0&quot;,&quot;10000&quot;,&quot;5000&quot;,&quot;15000&quot;,&quot;10000&quot;,&quot;20000&quot;,&quot;15000&quot;,&quot;25000&quot;],&quot;backgroundColor&quot;:&quot;rgba(78, 115, 223, 0.05)&quot;,&quot;borderColor&quot;:&quot;rgba(78, 115, 223, 1)&quot;}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:false,&quot;legend&quot;:{&quot;display&quot;:true,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;},&quot;position&quot;:&quot;top&quot;},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;},&quot;scales&quot;:{&quot;xAxes&quot;:[{&quot;gridLines&quot;:{&quot;color&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;zeroLineColor&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;drawBorder&quot;:false,&quot;drawTicks&quot;:false,&quot;borderDash&quot;:[&quot;2&quot;],&quot;zeroLineBorderDash&quot;:[&quot;2&quot;],&quot;drawOnChartArea&quot;:false},&quot;ticks&quot;:{&quot;fontColor&quot;:&quot;#858796&quot;,&quot;fontStyle&quot;:&quot;normal&quot;,&quot;beginAtZero&quot;:false,&quot;padding&quot;:20}}],&quot;yAxes&quot;:[{&quot;gridLines&quot;:{&quot;color&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;zeroLineColor&quot;:&quot;rgb(234, 236, 244)&quot;,&quot;drawBorder&quot;:false,&quot;drawTicks&quot;:false,&quot;borderDash&quot;:[&quot;2&quot;],&quot;zeroLineBorderDash&quot;:[&quot;2&quot;],&quot;drawOnChartArea&quot;:true},&quot;ticks&quot;:{&quot;fontColor&quot;:&quot;#858796&quot;,&quot;fontStyle&quot;:&quot;normal&quot;,&quot;beginAtZero&quot;:false,&quot;padding&quot;:20}}]}}}"></canvas></div>
+                                        <div class="chart-area">
+                                            <canvas id="chartDiagram"></canvas>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -157,8 +166,14 @@
                                         <h6 class="text-primary fw-bold m-0">Januári eladások</h6>
                                     </div>
                                     <div class="card-body">
-                                        <div class="chart-area"><canvas data-bss-chart="{&quot;type&quot;:&quot;pie&quot;,&quot;data&quot;:{&quot;labels&quot;:[&quot;Direct&quot;,&quot;Social&quot;,&quot;Referral&quot;],&quot;datasets&quot;:[{&quot;label&quot;:&quot;&quot;,&quot;backgroundColor&quot;:[&quot;#4e73df&quot;,&quot;#1cc88a&quot;,&quot;#36b9cc&quot;],&quot;borderColor&quot;:[&quot;#ffffff&quot;,&quot;#ffffff&quot;,&quot;#ffffff&quot;],&quot;data&quot;:[&quot;50&quot;,&quot;30&quot;,&quot;15&quot;]}]},&quot;options&quot;:{&quot;maintainAspectRatio&quot;:false,&quot;legend&quot;:{&quot;display&quot;:false,&quot;labels&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}},&quot;title&quot;:{&quot;fontStyle&quot;:&quot;normal&quot;}}}"></canvas></div>
-                                        <div class="text-center small mt-4"><span class="me-2"><i class="fas fa-circle text-primary"></i>&nbsp;Direct</span><span class="me-2"><i class="fas fa-circle text-success"></i>&nbsp;Social</span><span class="me-2"><i class="fas fa-circle text-info"></i>&nbsp;Refferal</span></div>
+                                        <div class="chart-area">
+                                            <canvas id="chart1"></canvas>
+                                        </div>
+                                        <div class="text-center small mt-4">
+                                            <span class="me-2"><i class="fas fa-circle text-primary"></i>&nbsp;Direct</span>
+                                            <span class="me-2"><i class="fas fa-circle text-success"></i>&nbsp;Social</span>
+                                            <span class="me-2"><i class="fas fa-circle text-info"></i>&nbsp;Refferal</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +184,9 @@
                                     <div class="card-header d-flex justify-content-between align-items-center" style="background: rgba(255,255,255,0.8);">
                                         <h6 class="text-primary fw-bold m-0">Beérkezett telefonok</h6>
                                     </div>
-                                    <div class="card-body"></div>
+                                    <div class="card-body">
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -194,6 +211,39 @@
     <script src="{{ asset('assets/js/bs-init.js') }}"></script>
     <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/js/theme.js') }}"></script>
+    <script>
+        {#var chartDiagramm = document.getElementById("chart1").getContext('2d');#}
+        {#var myChart = new Chart(chartDiagramm,{#}
+        {#    type: 'doughnut',#}
+        {#    data: {#}
+        {#        labels:["Bp-MOBILE", "Teljes kapacitás"],#}
+        {#        datasets:[{#}
+        {#            backgroundColor:[#}
+        {#                "#0275d8",#}
+        {#                "#5bc0de",#}
+        {#            ],#}
+        {#            data: [{{ wh.capacity }}, 5000],#}
+        {#            borderWidth: [0, 0, 0]#}
+        {#        }]#}
+        {#    },#}
+        {#    options: {#}
+        {#        maintainAspectRatio: false,#}
+        {#        cutoutPercentage: 60,#}
+        {#        legend: {#}
+        {#            position: "bottom",#}
+        {#            display: false,#}
+        {#            labels: {#}
+        {#                fontColor: '#ddd',#}
+        {#                boxWidth: 15#}
+        {#            }#}
+        {#        }#}
+        {#        ,#}
+        {#        tooltips: {#}
+        {#            displayColors: false#}
+        {#        }#}
+        {#    }#}
+        {#});#}
+    </script>
 {% endblock %}
 </body>
 

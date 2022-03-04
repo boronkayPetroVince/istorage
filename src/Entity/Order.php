@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Order
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="order")
+ * @ORM\Table(name="`order`")
  */
 class Order
 {

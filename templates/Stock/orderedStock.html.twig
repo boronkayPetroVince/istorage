@@ -45,7 +45,7 @@
                         </thead>
                         <tbody>
                         {% set counter = 0 %}
-                        {% for stock in stocks %}
+                        {% for stock in stocks|sort((a, b) => a.date <=> a.date) %}
                             {% if stock.statusID.status == "Megrendelve" %}
                                 <tr id="{{ counter }}">
                                     <td id="id{{ counter }}">{{ stock.id }}</td>
@@ -272,21 +272,6 @@
                     });
                 }
             });
-            $("#alertClientInf").hide();
-            $("#models").hide();
-            $("#colors").hide();
-            $("#capacities").hide();
-            $("#szures").hide();
-            $.ajax({
-                url: "{{ path('allOrderedBrand') }}",
-                success: function (result){
-                    $.each(result, function (key,value){
-                        var brandOption = $('<option>', {value:value.phoneID.brandID.id, text:value.phoneID.brandID.brandName});
-                        $("#brands").append(brandOption);
-                    });
-                }
-            });
-
         });
         function searchFilter() {
             input = document.getElementById("myInput");

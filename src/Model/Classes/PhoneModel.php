@@ -130,44 +130,6 @@ class PhoneModel implements PhoneModelInterface
         return $phone;
     }
 
-    public function allOrderedBrand(): iterable
-    {
-        return $this->stockService->getAllBrandByStatus(1); // dinamikussá tevés
-    }
-    public function allOrderedModel(Request $request): iterable
-    {
-        return $this->stockService->getAllModelByStatusAndBrand(1,$request->request->get("brandID"));
-    }
-
-    public function allOrderedColor(Request $request): iterable
-    {
-        return $this->stockService->getAllColorByStatusAndModel(1,$request->request->get("modelID"));
-    }
-
-    public function allOrderedCapacity(Request $request): iterable
-    {
-        return $this->stockService->getAllCapacityByStatusAndColor(1,$request->request->get("colorID"));
-    }
-
-    public function allArrivedBrand(): iterable
-    {
-        return $this->stockService->getAllBrandByStatus(3); // dinamikussá tevés
-    }
-    public function allArrivedModel(Request $request): iterable
-    {
-        return $this->stockService->getAllModelByStatusAndBrand(3,$request->request->get("brandID"));
-    }
-
-    public function allArrivedColor(Request $request): iterable
-    {
-        return $this->stockService->getAllColorByStatusAndModel(3,$request->request->get("modelID"));
-    }
-
-    public function allArrivedCapacity(Request $request): iterable
-    {
-        return $this->stockService->getAllCapacityByStatusAndColor(3,$request->request->get("colorID"));
-    }
-
     public function getAllBrand():iterable{
         return $this->brandService->getAllBrand();
     }
@@ -184,17 +146,6 @@ class PhoneModel implements PhoneModelInterface
 
     public function allCapacityByModell(Request $request): iterable{
         return $this->phoneService->getAllCapacityByModel($request->request->get("modelNameID",), $request->request->get("colorNameID"));
-    }
-
-    public function filteredPhones(Request $request): iterable
-    {
-        if($request){
-            $brand = $this->brandService->getOneBrandById($request->request->get("brands"));
-            $model = $this->modelService->getOneModelById($request->request->get("models"));
-            $color = $this->colorService->getOneColorById($request->request->get("colors"));
-            $capacity = $this->capacityService->getOneCapacityById($request->request->get("capacities"));
-            return $this->phoneService->getAllFilteredPhone($brand->getId(),$model->getId(),$color->getId(),$capacity->getId());
-        }
     }
 
     public function checkBrand(string $brandName):bool{

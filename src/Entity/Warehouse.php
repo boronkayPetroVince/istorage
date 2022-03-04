@@ -25,7 +25,7 @@ class Warehouse implements \JsonSerializable
      * @var string
      * @ORM\Column(type="string", length=50, nullable=false)
      */
-    private $whName;
+    private $whname;
 
     /**
      * @var string
@@ -48,11 +48,11 @@ class Warehouse implements \JsonSerializable
     }
 
     /**
-     * @return Warehouse
+     * @return string
      */
     public function getWhName(): string
     {
-        return $this->whName;
+        return $this->whname;
     }
 
     /**
@@ -60,7 +60,7 @@ class Warehouse implements \JsonSerializable
      */
     public function setWhName(string $whName): void
     {
-        $this->whName = $whName;
+        $this->whname = $whName;
     }
 
     /**
@@ -99,7 +99,7 @@ class Warehouse implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return ["id" => $this->id, "whName" => $this->whName, "location" => $this->location, "capacity" => $this->capacity];
+        return ["id" => $this->id, "whname" => $this->whname, "location" => $this->location, "capacity" => $this->capacity];
     }
 
 

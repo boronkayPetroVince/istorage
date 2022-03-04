@@ -4,7 +4,7 @@
 #}
 {# @var stocks \App\Entity\Stock[] #}
 {% block content %}
-   <form action="{{ path('sellingStock') }}" method="post">
+
         <div class="container-fluid">
             <h3 class="text-dark mb-4">Eladás<br></h3>
             <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
@@ -19,7 +19,10 @@
                         </div>
                     </div>
                 </div>
-
+                {{ result }}
+                {% for a in soldStock %}
+                    <h2>asd{{ a }}</h2>
+                {% endfor %}
                 <div class="card-body" style="background: #e6f8fe;">
                     <div class="row">
                         <div class="text-nowrap col-md-12">
@@ -27,7 +30,7 @@
                                 <div class="input-group-prepend">
                                     <button style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled><i class="fa fa-search"></i></button>
                                 </div>
-                                <input type="text" id="myInput" onkeyup="searchFilter()">
+                                <input type="text" id="myInput" onkeyup="searchFilter()" title="Telefon keresése">
                             </div>
                         </div>
 
@@ -55,13 +58,13 @@
                                     <td id="purchasePrice{{ counter }}">{{ stock.purchasePrice }}</td>
                                     <td id="sellingPrice{{ counter }}">{% set sell = stock.purchasePrice * 1.27 %} {{ sell|round }}</td>
                                     <td>
-                                        <span id="brand{{ counter }}">{{ stock.phoneID.brandID.brandName }} </span>
+                                        <span id="brand{{ counter }}">{{ stock.phoneID.brandID.brandName }}</span>
                                         <span class="d-none" id="brandID{{ counter }}">{{ stock.phoneID.brandID.id }}</span>
-                                        <span id="model{{ counter }}">{{ stock.phoneID.modelID.modelName }} </span>
+                                        <span id="model{{ counter }}">{{ stock.phoneID.modelID.modelName }}</span>
                                         <span class="d-none" id="modelID{{ counter }}">{{ stock.phoneID.modelID.id }}</span>
-                                        <span id="color{{ counter }}">{{ stock.phoneID.colorID.phoneColor }} </span>
+                                        <span id="color{{ counter }}">{{ stock.phoneID.colorID.phoneColor }}</span>
                                         <span class="d-none" id="colorID{{ counter }}">{{ stock.phoneID.colorID.id }}</span>
-                                        <span id="phoneCapacity{{ counter }}">{{ stock.phoneID.capacityID.capacity }} GB </span>
+                                        <span id="phoneCapacity{{ counter }}">{{ stock.phoneID.capacityID.capacity }}GB</span>
                                         <span class="d-none" id="phoneCapacityID{{ counter }}">{{ stock.phoneID.capacityID.id }}</span>
                                     </td>
                                     <td id="date{{ counter }}">{{ stock.date|date('Y-m-d H:i:s') }}</td>
@@ -118,8 +121,7 @@
                 </div>
             </div>
         </div>
-    </form>
-
+    <input class="d-none" type="text" id="sellingTableData" name="sellingTableData">
 </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     <div class="modal fade" role="dialog" id="orderingModal">
         <div class="modal-dialog modal-lg modal-fullscreen-lg-down" role="document">
@@ -154,7 +156,7 @@
                 </div>
         </div>
     </div>
-        <input class="d-none" type="text" id="sellingTableData">
+
     <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
     <script>
         var id= "";
@@ -164,12 +166,12 @@
         var sellingPrice = 0;
 
         $(document).ready(function (){
+            var defaultVal = $('<option>', {value:"", text:"Válassz ügyfelet!"});
+            $("#clientName").append(defaultVal);
             $.ajax({
                 url:"{{ path('selectAllClients') }}",
                 method: "post",
                 success: function (result){
-                    var defaultVal = $('<option>', {value:"", text:"Válassz ügyfelet!"});
-                    $("#clientName").append(defaultVal);
                     $.each(result, function (key,value){
                         var clientOption = $('<option>', {value:value.id, text:value.clientName});
                         $("#clientName").append(clientOption);
@@ -297,22 +299,31 @@
             //túl indexxel ezért i-1
             var data = "";
             var table = document.getElementById("sellingTableBody");
-            console.log("Össz sor: "+table.rows.length);
             for (var i = 1; i <= table.rows.length; i++) {
-                console.log(i-1);
                 data +=
-                    //document.getElementById("sellId"+(i-1)).innerHTML + "|" +
+                    document.getElementById("sellId"+(i-1)).innerHTML + "|" +
                     document.getElementById("sellAmount"+(i-1)).innerHTML + "|" +
                     document.getElementById("sellPrice"+(i-1)).innerHTML + "|" +
-                    document.getElementById("sellWhName"+(i-1)).innerHTML + "|" +
+                    document.getElementById("sellWhName"+(i-1)).innerHTML.trim() + "|" +
                     document.getElementById("sellBrand"+(i-1)).innerHTML + "|" +
                     document.getElementById("sellModel"+(i-1)).innerHTML + "|" +
                     document.getElementById("sellColor"+(i-1)).innerHTML + "|" +
                     document.getElementById("sellCapacity"+(i-1)).innerHTML.replace("GB","")+";";
-                document.getElementById("sellingTableData").value = data;
             }
-            console.log(data);
-            //document.getElementById("sellingTableData").value = data;
+
+            document.querySelector("#sellingTableData").value = data;
+            console.log(document.querySelector("#sellingTableData").value);
+            $.ajax({
+                url:"{{ path('teszt') }}",
+                method: "post",
+                data: {
+                    "sellingTableData" : document.getElementById("sellingTableData").value,
+                    "clientName": document.getElementById("clientName").value
+                },
+                success: function (result){
+                    alert(result);
+                }
+            })
         }
     </script>
 {% endblock %}

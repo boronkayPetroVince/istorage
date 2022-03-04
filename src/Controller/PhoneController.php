@@ -84,6 +84,7 @@ class PhoneController extends AbstractController
      * @return Response
      * @Route(name="updatePhone", path="/updatePhone/{phoneID}")
      */
+    //Egy készülékek menüpont, ahol a hozzáadott telefonokat kiirja a tipusokkal együtt, csak azokat amiknek nincsen foreign key semelyik táblájukhoz, csak törölni tudja!!!
     public function updatePhone(Request $request, int $phoneID): Response{
         if($this->phoneModel->updatePhone($request,$phoneID)){
             $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allStock(), "user" => $this->getUser(),
@@ -91,7 +92,6 @@ class PhoneController extends AbstractController
         }
 
     }
-
     /**
      * @return Response
      * @Route(name="allBrands", path="/allBrands")
@@ -126,76 +126,4 @@ class PhoneController extends AbstractController
     public function allCapacityByModel(Request $request): Response{
         return new JsonResponse($this->phoneModel->allCapacityByModell($request));
     }
-
-
-    /**
-     * @return Response
-     * @Route(name="allArrivedBrand", path="/allArrivedBrand")
-     */
-    public function ArrivedBrands(): Response{
-        return new JsonResponse($this->phoneModel->allArrivedBrand());
-    }
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="allArrivedModel", path="/allArrivedModel")
-     */
-    public function allArrivedPhoneModelByBrand(Request $request): Response{
-        return new JsonResponse($this->phoneModel->allArrivedModel($request));
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="allArrivedColor", path="/allArrivedColor")
-     */
-    public function allArrivedPhoneColorByModel(Request $request): Response{
-        return new JsonResponse($this->phoneModel->allArrivedColor($request));
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="allArrivedCapacityByColor", path="/allArrivedCapacity")
-     */
-    public function allArrivedPhoneCapacityByColor(Request $request): Response{
-        return new JsonResponse($this->phoneModel->allArrivedCapacity($request));
-    }
-
-    /**
-     * @return Response
-     * @Route(name="allOrderedBrand", path="/allOrderedBrand")
-     */
-    public function OrderedBrands(): Response{
-        return new JsonResponse($this->phoneModel->allOrderedBrand());
-    }
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="allOrderedModel", path="/allOrderedModel")
-     */
-    public function allOrderedPhoneModelByBrand(Request $request): Response{
-        return new JsonResponse($this->phoneModel->allOrderedModel($request));
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="allOrderedColor", path="/allOrderedColor")
-     */
-    public function allOrderedPhoneColorByModel(Request $request): Response{
-        return new JsonResponse($this->phoneModel->allOrderedColor($request));
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     * @Route(name="allOrderedCapacity", path="/allOrderedCapacity")
-     */
-    public function allAOrderedPhoneCapacityByColor(Request $request): Response{
-        return new JsonResponse($this->phoneModel->allOrderedCapacity($request));
-    }
-
-
-
 }

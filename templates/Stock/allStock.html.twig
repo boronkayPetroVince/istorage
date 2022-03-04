@@ -19,7 +19,7 @@
                             <div class="input-group-prepend">
                                 <button style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled><i class="fa fa-search"></i></button>
                             </div>
-                            <input type="text" id="myInput" onkeyup="searchFilter()">
+                            <input type="text" id="myInput" onkeyup="searchFilter()" title="Telefon keresése">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -51,7 +51,7 @@
                                 <tr>
                                     <td>{{ stock.amount }}</td>
                                     <td>{{ stock.purchasePrice }}</td>
-                                    <td>{% set sell = stock.purchasePrice * 1.27 %} {{ sell }}</td>
+                                    <td>{% set sell = stock.purchasePrice * 1.27 %} {{ sell|round }}</td>
                                     <td>
                                         <span>{{ stock.phoneID.brandID.brandName }} </span>
                                         <span>{{ stock.phoneID.modelID.modelName }} </span>
@@ -166,20 +166,6 @@
                     $.each(eredmeny, function (key,value){
                         var warehouseOption = $('<option>', {value:value.id, text:value.whName});
                         $('#warehouse').append(warehouseOption);
-                    });
-                }
-            });
-            $("#models").hide();
-            $("#colors").hide();
-            $("#capacities").hide();
-            $("#szures").hide();
-            $.ajax({
-                url: "{{ path('allArrivedBrand') }}",
-                method: "post",
-                success: function (result){
-                    $.each(result, function (key,value){
-                        var brandOption = $('<option>', {value:value.phoneID.brandID.id, text:value.phoneID.brandID.brandName});
-                        $("#brands").append(brandOption);
                     });
                 }
             });

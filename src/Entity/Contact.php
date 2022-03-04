@@ -28,8 +28,8 @@ class Contact
     private $fullName;
 
     /**
-     * @var int
-     * @ORM\Column(type="integer", nullable=false)
+     * @var string
+     * @ORM\Column(type="string",length=30, nullable=false)
      */
     private $phoneNumber;
 
@@ -64,17 +64,17 @@ class Contact
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getPhoneNumber(): int
+    public function getPhoneNumber(): string
     {
         return $this->phoneNumber;
     }
 
     /**
-     * @param int $phoneNumber
+     * @param string $phoneNumber
      */
-    public function setPhoneNumber(int $phoneNumber): void
+    public function setPhoneNumber(string $phoneNumber): void
     {
         $this->phoneNumber = $phoneNumber;
     }

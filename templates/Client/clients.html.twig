@@ -19,7 +19,7 @@
                                     <div class="input-group-prepend">
                                         <button style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled><i class="fa fa-search"></i></button>
                                     </div>
-                                    <input type="text" id="myInput" onkeyup="searchFilter()">
+                                    <input type="text" id="myInput" onkeyup="searchFilter()" title="Telefon keresése">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -51,7 +51,7 @@
                                         <td id="clientName{{ counter }}">{{ client.clientName }}</td>
                                         <td id="vatNumber{{ counter }}">{{ client.vatNumber }}</td>
                                         <td id="contactName{{ counter }}">{{ client.contactID.fullName }}</td>
-                                        <td id="contactPhone{{ counter }}">{{ client.contactID.phoneNumber }}</td>
+                                        <td id="contactPhone{{ counter }}">{{ client.contactID.phoneNumber|replace({'+36':''}) }}</td>
                                         <td id="contactEmail{{ counter }}">{{ client.contactID.email }}</td>
                                         <td>
                                             <span class="d-none" id="region{{ counter }}">{{ client.deliveryID.settlementID.regionID.regionName }}</span>
@@ -130,14 +130,17 @@
                                             </div>
                                         </div>
                                         <div class="col col-12">
-                                            <div class="mb-3">
-                                                <label class="form-label" for="contact_PhoneNumber"><strong>Kontakt telefonszáma</strong><br></label>
-                                                <input class="form-control" type="number" id="contact_PhoneNumber" name="contact_PhoneNumber" required>
+                                            <label class="form-label" for="contact_PhoneNumber"><strong>Kontakt telefonszáma</strong><br></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-append">
+                                                    <button class="input-group-text" style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled>+36</button>
+                                                </div>
+                                                <input class="form-control" type="text" id="contact_PhoneNumber" name="contact_PhoneNumber" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
-                                                <label class="form-label" for="contact_Email"><strong>Kontaktqwe email</strong><br></label>
+                                                <label class="form-label" for="contact_Email"><strong>Kontakt email</strong><br></label>
                                                 <input class="form-control" type="email" id="contact_Email" name="contact_Email" required>
                                             </div>
                                         </div>
@@ -210,9 +213,12 @@
                                             </div>
                                         </div>
                                         <div class="col col-12">
-                                            <div class="mb-3">
-                                                <label class="form-label" for="newContact_Phonenumber"><strong>Kontakt telefonszáma</strong><br></label>
-                                                <input class="form-control" type="number" id="newContact_Phonenumber" name="newContact_Phonenumber" required>
+                                            <label class="form-label" for="newContact_Phonenumber"><strong>Kontakt telefonszáma</strong><br></label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-append">
+                                                    <button class="input-group-text" style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled>+36</button>
+                                                </div>
+                                                <input class="form-control" type="text" id="newContact_Phonenumber" name="newContact_Phonenumber" placeholder="304407954" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">

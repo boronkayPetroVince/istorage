@@ -9,14 +9,13 @@ use App\Entity\Stock;
 use App\Entity\User;
 use App\Entity\Warehouse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 interface StockModelInterface
 {
     public function addStock(Request $request, User $user): bool;
 
-    public function sellStock(Request $request, User $user):bool;
-
-    public function filteredStock(Request $request):iterable;
+    public function sellStock(Request $request, User $user):Response;
 
     public function edit(Request $request, int $stockId): bool;
 
@@ -31,6 +30,12 @@ interface StockModelInterface
     public function oneStockById(int $id):Stock;
 
     public function checkCapacity(Warehouse $warehouse, int $amount):bool;
+
+    public function stockCount():int;
+
+    public function warehouseById():Warehouse;
+
+    public function monthOutgoing():int;
 
 
 }

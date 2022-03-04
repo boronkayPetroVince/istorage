@@ -28,8 +28,6 @@ interface PhoneModelInterface
 
     public function allCapacityByModell(Request $request): iterable;
 
-    public function filteredPhones(Request $request): iterable;
-
     public function checkBrand(string $brandName):bool;
 
     public function checkModel(string $modelName):bool;
