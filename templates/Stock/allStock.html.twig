@@ -159,22 +159,23 @@
     </div>
     <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
     <script>
-        $(document).ready(function (){
-            $.ajax({
-                url: "{{ path('allWarehouse') }}",
-                success: function (eredmeny){
-                    $.each(eredmeny, function (key,value){
-                        var warehouseOption = $('<option>', {value:value.id, text:value.whName});
-                        $('#warehouse').append(warehouseOption);
-                    });
-                }
-            });
-        })
+
         function addingStock(){
             $("#brandName").html("");
             $("#modelName").prop('disabled', 'disabled');
             $("#colorName").prop('disabled', 'disabled');
             $("#capacity").prop('disabled', 'disabled');
+            $(document).ready(function (){
+                $.ajax({
+                    url: "{{ path('allWarehouse') }}",
+                    success: function (result){
+                        $.each(result, function (key,value){
+                            var warehouseOption = $('<option>', {value:value.id, text:value.whname});
+                            $('#warehouse').append(warehouseOption);
+                        });
+                    }
+                });
+            })
             $.ajax({
                 url:"{{ path('allBrands') }}",
                 method: "post",

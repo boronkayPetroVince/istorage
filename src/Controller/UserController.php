@@ -205,6 +205,7 @@ class UserController extends AbstractController
         $sheet->setCellValue('D1', 'Email');
         $sheet->setCellValue('E1', 'Telefonszám');
         $sheet->setCellValue('F1', 'Jogosultság');
+        $spreadsheet->getActiveSheet()->getStyle('A1:F1')->getFont()->setBold(true);
         $counter = 2;
         foreach ($users as $user){
             $sheet->setCellValue('A'.$counter, $user->getId());

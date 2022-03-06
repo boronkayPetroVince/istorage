@@ -165,7 +165,7 @@ class StockModel implements StockModelInterface
         return new JsonResponse(["asd"]);
     }
 
-    public function edit(Request $request, int $stockId): bool{
+    public function edit(Request $request, int $stockId, User $user): bool{
         if($request){
             $stock = $this->stockService->getOneStockById($stockId);
             $warehouse = $this->warehouseService->getOneWarehouseById($request->request->get("updateWarehouse"));
@@ -179,6 +179,7 @@ class StockModel implements StockModelInterface
                 $stock->setPurchasePrice($request->request->get("updatePrice"));
                 $stock->setStatusID($this->statusService->getOneStatusById($request->request->get("updateStatus")));
                 $stock->setDate(new \DateTime());
+                $stock->setUserID($this->securityService->getOneUserById($user->getId()));
                 $this->stockService->updateStock($stockId);
                 $warehouse->setCapacity($warehouse->getCapacity() + $amount);
                 $this->warehouseService->updateWarehouse($warehouse->getId());

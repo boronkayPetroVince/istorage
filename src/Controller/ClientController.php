@@ -97,6 +97,7 @@ class ClientController extends AbstractController
         $sheet->setCellValue('E1', 'Kapcsolattartó telefon');
         $sheet->setCellValue('F1', 'Kapcsolattartó email');
         $sheet->setCellValue('G1', 'Cím');
+        $spreadsheet->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
         $counter = 2;
         foreach ($clients as $client){
             $sheet->setCellValue('A'.$counter, $client->getId());

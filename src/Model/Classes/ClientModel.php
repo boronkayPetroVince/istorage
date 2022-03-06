@@ -70,20 +70,23 @@ class ClientModel implements ClientModelInterface
     {
         $vatNumber = $request->request->get("newVatNumber");
         if($request && $this->checkVat($vatNumber)){
+            $client = new Client();
+            if($this->checkClient($request->request->get("newClientName"))){
+                $client->setClientName($request->request->get("newClientName"));
+            }else return false;
             $postalCode = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postCode"));
+
             $delivery = new Delivery_address();
             $delivery->setSettlementID($this->settlementService->getOneSettlementById($postalCode->getId()));
             $delivery->setaddress($request->request->get("newAddress"));
             $this->deliveryService->addAddress($delivery);
+
             $contact = new Contact();
             $contact->setFullName($request->request->get("newContact_Fullname"));
             $contact->setEmail($request->request->get("newContact_Email"));
             $contact->setPhoneNumber("+36".$request->request->get("newContact_Phonenumber"));
             $this->contactService->addContact($contact);
-            $client = new Client();
-            if($this->checkClient($request->request->get("newClientName"))){
-                $client->setClientName($request->request->get("newClientName"));
-            }else return false;
+
             $client->setVatNumber($vatNumber);
             $client->setDeliveryID($this->deliveryService->getOneAddressById($delivery->getId()));
             $client->setContactID($this->contactService->getOneContactById($contact->getId()));

@@ -94,7 +94,7 @@ class StockController extends AbstractController
     public function updateOrdered(Request $request, int $stockId): Response{
 
         if($request->isMethod("POST")){
-            if($this->stockModel->edit($request, $stockId) === true){
+            if($this->stockModel->edit($request, $stockId,$this->getUser()) === true){
                 return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
                     "resultMessage"=> "Sikeres módosítás", "resultColor" => "success", "allElement" => ""]);
             }else return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),

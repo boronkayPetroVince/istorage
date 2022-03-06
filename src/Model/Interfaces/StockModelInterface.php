@@ -17,7 +17,7 @@ interface StockModelInterface
 
     public function sellStock(Request $request, User $user):Response;
 
-    public function edit(Request $request, int $stockId): bool;
+    public function edit(Request $request, int $stockId, User $user): bool;
 
     public function allWarehouse():iterable;
 

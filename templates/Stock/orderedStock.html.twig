@@ -17,7 +17,7 @@
                             <div class="input-group-prepend">
                                 <button style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled><i class="fa fa-search"></i></button>
                             </div>
-                            <input type="text" id="myInput" onkeyup="searchFilter()">
+                            <input type="text" id="myInput" onkeyup="searchFilter()" title="Telefon keresése">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -261,18 +261,6 @@
     </div>
     <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
     <script>
-
-        $(document).ready(function (){
-            $.ajax({
-                url: "{{ path('allWarehouse') }}",
-                success: function (eredmeny){
-                    $.each(eredmeny, function (key,value){
-                        var warehouseOption = $('<option>', {value:value.id, text:value.whName});
-                        $('#warehouse').append(warehouseOption);
-                    });
-                }
-            });
-        });
         function searchFilter() {
             input = document.getElementById("myInput");
             filter = input.value.toUpperCase();
@@ -315,9 +303,8 @@
                 url: "{{ path('allWarehouse') }}",
                 success: function (result){
                     $.each(result, function (key,value){
-                        var warehouseOption = $('<option>', {value:value.id, text:value.whName});
+                        var warehouseOption = $('<option>', {value:value.id, text:value.whname});
                         $('#warehouse').append(warehouseOption);
-                        $('#updateWarehouse').append(warehouseOption);
                     });
                     document.getElementById("updateWarehouse").value = document.getElementById("whID"+rowId).innerHTML;
                 }
@@ -476,6 +463,16 @@
             $("#modelName").prop('disabled', 'disabled');
             $("#colorName").prop('disabled', 'disabled');
             $("#capacity").prop('disabled', 'disabled');
+            $.ajax({
+                url: "{{ path('allWarehouse') }}",
+                success: function (result){
+                    $.each(result, function (key,value){
+                        var warehouseOption = $('<option>', {value:value.id, text:value.whmame});
+                        $('#warehouse').append(warehouseOption);
+                    });
+                }
+            });
+
             $.ajax({
                 url:"{{ path('allBrands') }}",
                 method: "post",
