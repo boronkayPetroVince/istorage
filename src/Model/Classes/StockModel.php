@@ -160,9 +160,9 @@ class StockModel implements StockModelInterface
                 $this->orderService->addOrder($order);
                 return new JsonResponse($order);
             }
-            return new JsonResponse(["Nem"]);
+
         }
-        return new JsonResponse(["asd"]);
+        return new JsonResponse([]);
     }
 
     public function edit(Request $request, int $stockId, User $user): bool{

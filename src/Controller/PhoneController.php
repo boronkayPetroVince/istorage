@@ -65,17 +65,10 @@ class PhoneController extends AbstractController
     /**
      * @param Request $request
      * @return Response
-     * @Route(name="addPhone", path="/addPhone")
+     * @Route(name="addPhone", path="/addPhone", methods={"post"})
      */
     public function addPhone(Request $request): Response{
-        if($request->isMethod("POST")){
-            if($this->phoneModel->addPhone($request)){
-                return $this->render("Phone/addPhone.html.twig", ["resultMessage"=> "Sikeresen hozzáadtál egy új eszközt! 
-            Innentől kezdve mikor rendelnél, hozzáadnál, illetve módosítanál, akkor ez a tipusú telefon is megfog jelenni a választási lehetőségekben! ",
-                    "resultColor" => "success", "user" =>$this->getUser()]);
-            }
-        }
-        return $this->render("Phone/addPhone.html.twig", ["resultMessage"=> "", "resultColor" => "", "user" =>$this->getUser()]);
+        return new JsonResponse($this->phoneModel->addPhone($request));
     }
 
     /**
@@ -124,6 +117,6 @@ class PhoneController extends AbstractController
      * @Route(name="allCapacityByModel", path="/allCapacityByModel")
      */
     public function allCapacityByModel(Request $request): Response{
-        return new JsonResponse($this->phoneModel->allCapacityByModell($request));
+        return new JsonResponse($this->phoneModel->allCapacityByModel($request));
     }
 }

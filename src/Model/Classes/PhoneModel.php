@@ -17,7 +17,9 @@ use App\Service\Interfaces\ColorServiceInterface;
 use App\Service\Interfaces\ModelServiceInterface;
 use App\Service\Interfaces\PhoneServiceInterface;
 use App\Service\Interfaces\StockServiceInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class PhoneModel implements PhoneModelInterface
 {
@@ -59,7 +61,7 @@ class PhoneModel implements PhoneModelInterface
     }
 
 
-    public function addPhone(Request $request): bool
+    public function addPhone(Request $request): Phone
     {
         $phone = new Phone();
         if($request){
@@ -87,21 +89,21 @@ class PhoneModel implements PhoneModelInterface
                 $color = $this->colorService->getOneColorByName(strtolower($request->request->get("colorName")));
             }
 
-            if($this->checkCapacity($request->request->get("capacity")) === false){
+            if($this->checkCapacity((int)$request->request->get("capacity")) === false){
                 $capacity = new Capacity();
-                $capacity->setCapacity($request->request->get("capacity"));
+                $capacity->setCapacity((int)$request->request->get("capacity"));
                 $this->capacityService->addCapacity($capacity);
             }else{
-                $capacity = $this->capacityService->getOneCapacityByMemory($request->request->get("capacity"));
+                $capacity = $this->capacityService->getOneCapacityByMemory((int)$request->request->get("capacity"));
             }
             $phone->setBrandID($this->brandService->getOneBrandById($brand->getId()));
             $phone->setModelID($this->modelService->getOneModelById($model->getId()));
             $phone->setColorID($this->colorService->getOneColorById($color->getId()));
             $phone->setCapacityID($this->capacityService->getOneCapacityById($capacity->getId()));
             $this->phoneService->addPhone($phone);
-            return true;
+            return $phone;
         }
-        return false;
+        return $phone;
     }
 
     public function existPhone(Brand $brand, Model $model, Color $color, Capacity $capacity):Phone{
@@ -144,8 +146,8 @@ class PhoneModel implements PhoneModelInterface
         return $this->phoneService->getAllPhoneByModel($request->request->get("modelNameID"));
     }
 
-    public function allCapacityByModell(Request $request): iterable{
-        return $this->phoneService->getAllCapacityByModel($request->request->get("modelNameID",), $request->request->get("colorNameID"));
+    public function allCapacityByModel(Request $request): iterable{
+        return $this->phoneService->getAllCapacityByModel($request->request->get("modelNameID"), $request->request->get("colorNameID"));
     }
 
     public function checkBrand(string $brandName):bool{

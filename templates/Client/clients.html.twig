@@ -266,7 +266,6 @@
                     "postCode": document.getElementById("postCode").value
                 },
                 success:function(result){
-                    console.log(result);
                     $("#newSettlement").val(result.settlementName);
                     $("#newRegion").val(result.region_ID.region_name);
                 }
@@ -280,7 +279,6 @@
                     "postalCode": document.getElementById("postalCode").value
                 },
                 success:function(result){
-                    console.log(result);
                     $("#settlement").val(result.settlementName);
                     $("#region").val(result.region_ID.region_name);
                 }

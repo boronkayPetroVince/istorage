@@ -76,7 +76,6 @@
         </div>
     </div>
     </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
-    </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="addOrder">
         <div class="modal-dialog modal-lg modal-fullscreen-lg-down" role="document">
             <div class="modal-content">
@@ -93,7 +92,7 @@
                                             <div class="input-group mb-3">
                                                 <select name="clientName" id="clientName" class="form-select orderSelect" required></select>
                                                 <div class="input-group-append">
-                                                    <a style="border-radius: 0 !important;" href="{{ path('allClients') }}"  class="btn buttonDesign">+</a>
+                                                    <button style="border-radius: 0 !important;"  class="btn buttonDesign" data-bs-target="#addClient" data-bs-toggle="modal">+</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -103,7 +102,7 @@
                                                 <select name="brandName" id="brandName" class="form-select orderSelect" onchange="addBrandChange()" required>
                                                 </select>
                                                 <div class="input-group-append">
-                                                    <a style="border-radius: 0 !important;" href="{{ path('addPhone') }}"  class="btn buttonDesign">+</a>
+                                                    <button style="border-radius: 0 !important;" class="btn buttonDesign" data-bs-target="#addPhone" data-bs-toggle="modal">+</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -153,15 +152,146 @@
                             <button class="btn btn-primary modalSaveButton" type="submit">Hozzáadás</button>
                         </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="addClient">
+        <div class="modal-dialog modal-lg modal-fullscreen-lg-down" role="document">
+            <div class="modal-content">
+                <div class="modal-header modalHeaderFooter">
+                    <h5 class="w-100 text-center"><strong>Ügyfél hozzáadása</strong><br></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ path('addClient') }}" method="post">
+                    <div class="modal-body modalBody">
+                        <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
+                            <div class="card-body" style="background: rgba(255,255,255,0.5);">
+                                <div class="row">
+                                    <div class="col col-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="newClientName"><strong>Ügyfél név</strong></label>
+                                            <input class="form-control" type="text" id="newClientName" name="newClientName" required>
+                                        </div>
+                                    </div>
+                                    <div class="col col-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="newVatNumber"><strong>Adószám</strong><br></label>
+                                            <input class="form-control" type="text" id="newVatNumber" name="newVatNumber" required>
+                                        </div>
+                                    </div>
+                                    <div class="col col-12 col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="postCode"><strong>Irányítószám</strong><br></label>
+                                            <input class="form-control" type="number" id="postCode" name="postCode" onchange="loadAddData()" required>
+                                        </div>
+                                    </div>
+                                    <div class="col col-12 col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="newRegion"><strong>Megye</strong><br></label>
+                                            <input class="form-control" type="text" id="newRegion" name="newRegion" required>
+                                        </div>
+                                    </div>
+                                    <div class="col col-sm-12 col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="newSettlement"><strong>Város</strong><br></label>
+                                            <input class="form-control" type="text" id="newSettlement" name="newSettlement" required>
+                                        </div>
+                                    </div>
+                                    <div class="col col-sm-12 col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="newAddress"><strong>Utca, házszám</strong><br></label>
+                                            <input class="form-control" type="text" id="newAddress" name="newAddress" required>
+                                        </div>
+                                    </div>
+                                    <div class="col col-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="newContact_Fullname"><strong>Kontakt neve</strong><br></label>
+                                            <input class="form-control" type="text" id="newContact_Fullname" name="newContact_Fullname" required>
+                                        </div>
+                                    </div>
+                                    <div class="col col-12">
+                                        <label class="form-label" for="newContact_Phonenumber"><strong>Kontakt telefonszáma</strong><br></label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-append">
+                                                <button class="input-group-text" style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled>+36</button>
+                                            </div>
+                                            <input class="form-control" type="text" id="newContact_Phonenumber" name="newContact_Phonenumber" placeholder="304407954" required>
+                                        </div>
+                                    </div>
+                                    <div class="col col-12">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="newContact_Email"><strong>Kontakt email</strong><br></label>
+                                            <input class="form-control" type="email" id="newContact_Email" name="newContact_Email" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer modalHeaderFooter">
+                        <button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button>
+                        <button class="btn btn-primary modalSaveButton" type="submit">Hozzáadás</button>
+                    </div>
+                </form>
 
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="addPhone">
+        <div class="modal-dialog modal-lg modal-fullscreen-lg-down" role="document">
+            <div class="modal-content">
+                <div class="modal-header modalHeaderFooter">
+                    <h5 class="w-100 text-center"><strong>Új telefon hozzáadása</strong><br></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                    <form method="post">
+                        <div class="modal-body modalBody">
+                            <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
+                                    <div class="card-body" style="background: rgba(255,255,255,0.5);">
+                                        <div class="row">
+                                            <div class="col col-sm-6 col-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="brandName"><strong>Márka</strong></label>
+                                                    <input class="form-control" type="text" id="newBrandName" name="brandName" required>
+                                                </div>
+                                            </div>
+                                            <div class="col col-sm-6 col-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="modelName"><strong>Model</strong><br></label>
+                                                    <input class="form-control" type="text" id="newModelName" name="modelName" required>
+                                                </div>
+                                            </div>
+                                            <div class="col col-sm-6 col-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="colorName"><strong>Szín</strong><br></label>
+                                                    <input class="form-control" type="text" id="newColorName" name="colorName" required>
+                                                </div>
+                                            </div>
+                                            <div class="col col-sm-6 col-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="capacity"><strong>Kapacitás</strong><br></label>
+                                                    <input class="form-control" type="number" id="newCapacity" name="capacity" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer modalHeaderFooter">
+                            <button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button>
+                            <button class="btn btn-primary modalSaveButton" onclick="addPhone()" type="submit">Hozzáadás</button>
+                        </div>
+                    </form>
             </div>
         </div>
     </div>
     <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
     <script>
-
         function addingStock(){
+            $("#clientName").html("");
             $("#brandName").html("");
+            $("#warehouse").html("");
             $("#modelName").prop('disabled', 'disabled');
             $("#colorName").prop('disabled', 'disabled');
             $("#capacity").prop('disabled', 'disabled');
@@ -281,6 +411,34 @@
                     }
                 }
             }
+        }
+        function loadAddData(){
+            $.ajax({
+                url:"{{ path('getOneSettlementForAdding') }}",
+                method: "post",
+                data:{
+                    "postCode": document.getElementById("postCode").value
+                },
+                success:function(result){
+                    $("#newSettlement").val(result.settlementName);
+                    $("#newRegion").val(result.region_ID.region_name);
+                }
+            });
+        }
+        function addPhone(){
+            $.ajax({
+                url:"{{ path('addPhone') }}",
+                method: "post",
+                data:{
+                    "brandName": document.getElementById("newBrandName").value,
+                    "modelName": document.getElementById("newModelName").value,
+                    "colorName": document.getElementById("newColorName").value,
+                    "capacity": document.getElementById("newCapacity").value
+                },
+                success:function (result){
+                    alert("Sikeres hozzáadás!");
+                }
+            })
         }
     </script>
 {% endblock %}

@@ -11,10 +11,11 @@ use App\Entity\Model;
 use App\Entity\Phone;
 use App\Entity\Stock;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 interface PhoneModelInterface
 {
-    public function addPhone(Request $request): bool;
+    public function addPhone(Request $request): Phone;
 
     public function existPhone(Brand $brand, Model $model, Color $color, Capacity $capacity):Phone;
 
@@ -26,7 +27,7 @@ interface PhoneModelInterface
 
     public function allColorByModel(Request $request): iterable;
 
-    public function allCapacityByModell(Request $request): iterable;
+    public function allCapacityByModel(Request $request): iterable;
 
     public function checkBrand(string $brandName):bool;
 
