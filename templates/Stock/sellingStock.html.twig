@@ -5,6 +5,7 @@
 {# @var stocks \App\Entity\Stock[] #}
 {% block content %}
 
+    <form action="{{ path('sellingStock') }}" method="post">
         <div class="container-fluid">
             <h3 class="text-dark mb-4">Eladás<br></h3>
             <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
@@ -20,9 +21,6 @@
                     </div>
                 </div>
                 {{ result }}
-                {% for a in soldStock %}
-                    <h2>asd{{ a }}</h2>
-                {% endfor %}
                 <div class="card-body" style="background: #e6f8fe;">
                     <div class="row">
                         <div class="text-nowrap col-md-12">
@@ -121,16 +119,18 @@
                 </div>
             </div>
         </div>
-    <input class="d-none" type="text" id="sellingTableData" name="sellingTableData">
-</div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
-    <div class="modal fade" role="dialog" id="orderingModal">
-        <div class="modal-dialog modal-lg modal-fullscreen-lg-down" role="document">
-            <div class="modal-content">
-                <div class="modal-header modalHeaderFooter">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
-                <div class="modal-body modalBody">
-                    <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
-                        <div class="card-body" style="background: #e6f8fe;">
+        <input class="d-none" type="text" id="sellingTableData" name="sellingTableData">
+    </form>
+
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+        <div class="modal fade" role="dialog" id="orderingModal">
+            <div class="modal-dialog modal-lg modal-fullscreen-lg-down" role="document">
+                <div class="modal-content">
+                    <div class="modal-header modalHeaderFooter">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                    <div class="modal-body modalBody">
+                        <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
+                            <div class="card-body" style="background: #e6f8fe;">
                                 <div class="row">
                                     <div class="col col-12">
                                         <div class="mb-3">
@@ -146,21 +146,21 @@
                                     </div>
                                 </div>
 
-                        </div>
+                            </div>
 
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button>
+                        <button type="button" onclick="addToList()" class="modalSaveButton btn btn-primary">Eszköz hozzáadása</button>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button>
-                    <button type="button" onclick="addToList()" class="modalSaveButton btn btn-primary">Add Device</button>
-                </div>
-        </div>
-    </div>
+            </div>
+
 
     <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
     <script>
         var id= "";
-        var tempID = "";
         var maxAmount = 0;
         var purchasePrice = 0;
         var sellingPrice = 0;
@@ -205,8 +205,6 @@
         function makeOrder(rowId){
             rowId = rowId.replace("btn", "");
             id = rowId;
-            //tempID = rowId;
-            //help = tempID;
             maxAmount = document.getElementById("amount"+rowId).innerHTML;
             sellingPrice = document.getElementById("sellingPrice"+rowId).innerHTML;
             document.getElementById("maxAmount").innerHTML = maxAmount;
@@ -219,7 +217,6 @@
         function addToList() {
             var amount = document.getElementById("numberofdevice").value;
             var salePrice = document.getElementById("price").value;
-            tempID = id;
             if (parseFloat(maxAmount) < parseFloat(amount)) {
                 alert("Ebből a készülékből összesen nincsen ennyi darab a raktáron!");
             }else if(maxAmount == 0 || maxAmount < 0){
@@ -232,7 +229,7 @@
                     let row = sellTable.rows[i];
                     if (row.id != null && row.id !== "") {
                         var ID = row.id;
-                        temp = ID.replace("sellTable", "");;
+                        temp = ID.replace("sellTable", "");
                         if (temp === id) {
                             tID = temp;
                             console.log("tid:" +tID);
@@ -247,8 +244,7 @@
                     setTdById(tID, "sellAmount", tempAmount);
                 } else {
                     var row = sellTable.insertRow();
-                    row.id = "sellTable"+id;
-
+                    row.id = "sellTable" + id;
                     var cell1 = row.insertCell(0);
                     var cell2 = row.insertCell(1);
                     var cell3 = row.insertCell(2);
@@ -278,13 +274,9 @@
                     cell8.id = "sellCapacity" + id;
                     cell9.innerHTML = getTdById(id, "date");
                     cell9.id = "sellDate" + id;
-                    cell10.innerHTML = '<button id="btn'+id+'" class="btn btn-primary buttonDesign" type="button"  onclick="deleteRow(this.id,tempID)">x</button>';
-                    console.log("sorID: "+id);
-                    counter++;
-
+                    cell10.innerHTML = '<button id="btn' + id + '" class="btn btn-primary buttonDesign" type="button"  onclick="deleteRow(this.id)">x</button>';
                 }
                 inSell = false;
-                console.log("Sor beszurása után: "+inSell);
                 setTdById(id, "amount", getTdById(id, "amount") - amount);
                 document.getElementById("numberofdevice").value = "";
                 document.getElementById("price").value = "";
@@ -298,39 +290,41 @@
             var recentlyPrice = tempPrice;
             var phonePrice = parseInt(getTdById(rowId,"sellPrice")) * parseInt(getTdById(rowId,"sellAmount"));
             tempPrice = recentlyPrice - phonePrice;
-            console.log("Össz ár: "+phonePrice);
-            console.log("Jelenlegi összeg: "+recentlyPrice);
             document.getElementById("fullPrice").innerHTML = tempPrice;
-            console.log("Törlés után:" +document.getElementById("fullPrice").innerHTML);
             document.getElementById("amount"+rowId).innerHTML = parseInt(getTdById(rowId,"sellAmount")) + parseInt(getTdById(rowId,"amount"));
             document.getElementById("sellTable"+rowId).remove();
         }
         function finishSale(){
             var data = "";
+            var tempRowId = "";
             var table = document.getElementById("sellingTableBody");
-            for (var i = 1; i <= table.rows.length; i++) {
+            for (var i = 0; i < table.rows.length; i++) {
+                tempRowId = table.rows[i].id;
+                console.log(tempRowId);
+                var tempId = tempRowId.replace("sellTable","");
+                console.log(tempId);
                 data +=
-                    document.getElementById("sellId"+(i-1)).innerHTML + "|" +
-                    document.getElementById("sellAmount"+(i-1)).innerHTML + "|" +
-                    document.getElementById("sellPrice"+(i-1)).innerHTML + "|" +
-                    document.getElementById("sellWhName"+(i-1)).innerHTML.trim() + "|" +
-                    document.getElementById("sellBrand"+(i-1)).innerHTML + "|" +
-                    document.getElementById("sellModel"+(i-1)).innerHTML + "|" +
-                    document.getElementById("sellColor"+(i-1)).innerHTML + "|" +
-                    document.getElementById("sellCapacity"+(i-1)).innerHTML.replace("GB","")+";";
+                    document.getElementById("sellId"+tempId).innerHTML + "|" +
+                    document.getElementById("sellAmount"+tempId).innerHTML + "|" +
+                    document.getElementById("sellPrice"+tempId).innerHTML + "|" +
+                    document.getElementById("sellWhName"+tempId).innerHTML.trim() + "|" +
+                    document.getElementById("sellBrand"+tempId).innerHTML + "|" +
+                    document.getElementById("sellModel"+tempId).innerHTML + "|" +
+                    document.getElementById("sellColor"+tempId).innerHTML + "|" +
+                    document.getElementById("sellCapacity"+tempId).innerHTML.replace("GB","")+";";
             }
             document.querySelector("#sellingTableData").value = data;
-            $.ajax({
-                url:"{{ path('teszt') }}",
-                method: "post",
-                data: {
-                    "sellingTableData" : document.getElementById("sellingTableData").value,
-                    "clientName": document.getElementById("clientName").value
-                },
-                success: function (result){
-                    alert(result);
-                }
-            })
+            {#$.ajax({#}
+            {#    url:"{{ path('sellingStock') }}",#}
+            {#    method: "post",#}
+            {#    data: {#}
+            {#        "sellingTableData" : document.getElementById("sellingTableData").value,#}
+            {#        "clientName": document.getElementById("clientName").value#}
+            {#    },#}
+            {#    success: function (result){#}
+            {#        alert(result);#}
+            {#    }#}
+            {#})#}
         }
     </script>
 {% endblock %}

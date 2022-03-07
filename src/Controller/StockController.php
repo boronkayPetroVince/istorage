@@ -110,17 +110,25 @@ class StockController extends AbstractController
      * @Route(name="sellingStock", path="/sellingStock")
      */
     public function sellingStock(Request $request):Response{
-//        /** @var User $user */
-//        $user = $this->getUser();
-//        if($request->isMethod("POST")){
-//            return new JsonResponse($this->stockModel->sellStock($request,$user));
-//        }
+        /** @var User $user */
+        $user = $this->getUser();
+        if($request->isMethod("POST")){
+            if($this->stockModel->sellStock($request,$user)){
+                return $this->render("Stock/sellingStock.html.twig", [
+                    "stocks" => $this->stockModel->allArrivedStock(),
+                    "user" => $this->getUser(), "result" =>"Sikeres rendelés",
+                    "wh" => $this->stockModel->warehouseById()
+                ]);
+            }else return $this->render("Stock/sellingStock.html.twig", [
+                "stocks" => $this->stockModel->allArrivedStock(),
+                "user" => $this->getUser(), "result" =>"Sikertelen rendelés",
+                "wh" => $this->stockModel->warehouseById()
+            ]);
+        }
         return $this->render("Stock/sellingStock.html.twig", [
             "stocks" => $this->stockModel->allArrivedStock(),
             "user" => $this->getUser(), "result" =>"",
-            "wh" => $this->stockModel->warehouseById(),
-            "soldStock" => ""
-
+            "wh" => $this->stockModel->warehouseById()
         ]);
     }
 
@@ -130,7 +138,6 @@ class StockController extends AbstractController
      * @Route(name="teszt", path="/teszt", methods={"post"})
      */
     public function tezst(Request $request):Response{
-
         return new JsonResponse($this->stockModel->sellStock($request,$this->getUser()));
     }
 

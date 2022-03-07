@@ -15,7 +15,7 @@ interface StockModelInterface
 {
     public function addStock(Request $request, User $user): bool;
 
-    public function sellStock(Request $request, User $user):Response;
+    public function sellStock(Request $request, User $user):bool;
 
     public function edit(Request $request, int $stockId, User $user): bool;
 
@@ -31,11 +31,15 @@ interface StockModelInterface
 
     public function checkCapacity(Warehouse $warehouse, int $amount):bool;
 
+    public function checkStockAmount(Stock $stock, int $amount):bool;
+
     public function stockCount():int;
 
     public function warehouseById():Warehouse;
 
     public function monthOutgoing():int;
+
+    public function monthIncoming():int;
 
 
 }

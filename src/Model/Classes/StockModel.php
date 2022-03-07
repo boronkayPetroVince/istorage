@@ -126,43 +126,42 @@ class StockModel implements StockModelInterface
         return false;
     }
 
-    public function sellStock(Request $request, User $user): Response
+    public function sellStock(Request $request, User $user): bool
     {
         if ($request) {
             $allSellingData = $request->request->get("sellingTableData");
-            $file = fopen("TESZEEE.txt", "w");
-            fwrite($file, $allSellingData);
             $oneData = explode(";", "".$allSellingData);
             foreach ($oneData as $data) {
-                //Ide jön még a stock frissitése ( le kell vonni az adott amountot, ha 0 akkor státusz állítás)
                 $tempList = explode("|", $data);
-                $order = new Order();
+                $stock = $this->stockService->getOneStockById($tempList[0]);
+                if($this->checkStockAmount($stock, $tempList[1])){
+                    $order = new Order();
 
-                $order->setAmount($tempList[1]);
-                $order->setPrice($tempList[2]);
-                $order->setDate(new \DateTime('now'));
-                $order->setClientID($this->clientService->getOneClientById($request->request->get("clientName")));
-                $order->setUserID($this->securityService->getOneUserById($user->getId()));
+                    $order->setAmount($tempList[1]);
+                    $order->setPrice($tempList[2]);
+                    $order->setDate(new \DateTime('now'));
+                    $order->setClientID($this->clientService->getOneClientById($request->request->get("clientName")));
+                    $order->setUserID($this->securityService->getOneUserById($user->getId()));
 
-                $warehouse = $this->warehouseService->getOneWarehouseByName($tempList[3]);
-                $order->setWarehouseID($this->warehouseService->getOneWarehouseById($warehouse->getId()));
+                    $warehouse = $this->warehouseService->getOneWarehouseByName($tempList[3]);
+                    $order->setWarehouseID($this->warehouseService->getOneWarehouseById($warehouse->getId()));
 
-                $phone = $this->phoneModel->existPhone(
-                    $this->brandService->getOneBrandByName($tempList[4]),
-                    $this->modelService->getOneModelByName($tempList[5]),
-                    $this->colorService->getOneColorByName($tempList[6]),
-                    $this->capacityService->getOneCapacityByMemory($tempList[7])
-                );
-                $order->setPhoneID($this->phoneService->getOnePhoneById($phone->getId()));
+                    $phone = $this->phoneModel->existPhone(
+                        $this->brandService->getOneBrandByName($tempList[4]),
+                        $this->modelService->getOneModelByName($tempList[5]),
+                        $this->colorService->getOneColorByName($tempList[6]),
+                        $this->capacityService->getOneCapacityByMemory($tempList[7])
+                    );
+                    $order->setPhoneID($this->phoneService->getOnePhoneById($phone->getId()));
 
-                $status = $this->statusService->getOneStatusByName("Eladva");
-                $order->setStatusID($this->statusService->getOneStatusById($status->getId()));
-                $this->orderService->addOrder($order);
-                return new JsonResponse($order);
+                    $status = $this->statusService->getOneStatusByName("Eladva");
+                    $order->setStatusID($this->statusService->getOneStatusById($status->getId()));
+                    $this->orderService->addOrder($order);
+                    return true;
+                }
             }
-
         }
-        return new JsonResponse([]);
+        return false;
     }
 
     public function edit(Request $request, int $stockId, User $user): bool{
@@ -212,6 +211,7 @@ class StockModel implements StockModelInterface
     public function oneStockById(int $id):Stock{
         return $this->stockService->getOneStockById($id);
     }
+
     public function checkCapacity(Warehouse $warehouse, int $amount):bool{
         $capacity = $warehouse->getCapacity();
         if($capacity > 0){
@@ -223,7 +223,19 @@ class StockModel implements StockModelInterface
             }
         }
         return false;
+    }
 
+    public function checkStockAmount(Stock $stock, int $amount):bool{
+        $recentlyAmount = $stock->getAmount();
+        if($recentlyAmount > 0){
+            if($amount <= $recentlyAmount){
+                $diff = $recentlyAmount - $amount;
+                $stock->setAmount($diff);
+                $this->stockService->updateStock($stock->getId());
+                return true;
+            }
+        }
+        return false;
     }
 
     public function stockCount():int{
@@ -231,6 +243,9 @@ class StockModel implements StockModelInterface
     }
     public function monthOutgoing():int{
         return $this->stockService->currentMonthOutgoings();
+    }
+    public function monthIncoming():int{
+        return $this->stockService->currentMonthIncomings();
     }
 
 

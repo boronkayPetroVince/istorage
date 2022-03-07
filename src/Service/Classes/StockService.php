@@ -6,6 +6,7 @@ namespace App\Service\Classes;
 
 use App\Entity\Phone;
 use App\Entity\Stock;
+use App\Entity\Warehouse;
 use App\Service\Interfaces\StockServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -62,11 +63,13 @@ class StockService extends CrudService implements StockServiceInterface
         $list = $this->getAllStock();
         $sum = 0;
         foreach($list as $data){
-            $sum += $data->getAmount();
+            if($data->getStatusID()->getStatus() == $statusName){
+                $sum += $data->getAmount();
+            }
         }
         return $sum;
     }
-    ///HONAPR A ÁLLITANI
+
     public function currentMonthOutgoings():int{
         /** @var Stock[] $list */
         $list = $this->getAllStock();
@@ -74,9 +77,36 @@ class StockService extends CrudService implements StockServiceInterface
         $sum = 0;
         foreach($list as $data){
             if($data->getDate()->format('m') == $month->format('m')){
-                $sum += $data->getPurchasePrice();
+                if($data->getStatusID()->getStatus() != "Eladva"){
+                    $sum += $data->getPurchasePrice();
+                }
             }
         }
+        return $sum;
+    }
+    public function currentMonthIncomings():int{
+        /** @var Stock[] $list */
+        $list = $this->getAllStock();
+        $month = new \DateTime('now');
+        $sum = 0;
+        foreach($list as $data){
+            if($data->getDate()->format('m') == $month->format('m')){
+                if($data->getStatusID()->getStatus() == "Eladva"){
+                    $sum += $data->getPurchasePrice();
+                }
+            }
+        }
+        return $sum;
+    }
+
+    public function originalWhCapacity(Warehouse $warehouse):int{
+        /** @var Stock[] $list */
+        $list = $this->getAllStock();
+        $sum = 0;
+        foreach($list as $data){
+            $sum += $data->getAmount();
+        }
+        $sum += $warehouse->getCapacity();
         return $sum;
     }
 

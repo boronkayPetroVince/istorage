@@ -58,7 +58,9 @@ class UserController extends AbstractController
                 "user" => $user,
                 "inStock" => $this->stockModel->stockCount(),
                 "wh" => $this->stockModel->warehouseById(),
-                "outgoingPrice" => $this->stockModel->monthOutgoing()
+                "outgoingPrice" => $this->stockModel->monthOutgoing(),
+                "incomingPrice" => $this->stockModel->monthIncoming(),
+                "arrivedCount" => $this->stockModel->stockCount()
             ]);
         }
         return $this->redirectToRoute('app_login');

@@ -5,6 +5,7 @@ namespace App\Service\Interfaces;
 
 
 use App\Entity\Stock;
+use App\Entity\Warehouse;
 
 interface StockServiceInterface
 {
@@ -23,4 +24,8 @@ interface StockServiceInterface
     public function stockCount(string $statusName):int;
 
     public function currentMonthOutgoings():int;
+
+    public function currentMonthIncomings():int;
+
+    public function originalWhCapacity(Warehouse $warehouse):int;
 }
