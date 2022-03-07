@@ -214,6 +214,8 @@
         }
         var counter = 0;
         var tempPrice = 0;
+        var tempCounter = 0;
+        var inSell = false;
         function addToList() {
             var amount = document.getElementById("numberofdevice").value;
             var salePrice = document.getElementById("price").value;
@@ -224,23 +226,28 @@
                 alert("Ebből a készülékből nincsen több a raktáron!");
             }else {
                 var sellTable = document.getElementById("sellingTableBody");
-                var ID = 0;
-                var inSell = false;
+                inSell = false;
+                var tID = 0;
                 for (let i in sellTable.rows) {
                     let row = sellTable.rows[i];
                     if (row.id != null && row.id !== "") {
-                        ID = row.id;
-                        if (ID === id) {
+                        var ID = row.id;
+                        temp = ID.replace("sellTable", "");;
+                        if (temp === id) {
+                            tID = temp;
+                            console.log("tid:" +tID);
                             inSell = true;
+                            console.log(inSell);
                         }
                     }
+
                 }
                 if (inSell) {
-                    var tempAmount = parseFloat(getTdById(ID, "sellAmount")) + parseFloat(amount);
-                    setTdById(ID, "amount", tempAmount);
+                    var tempAmount = parseFloat(getTdById(tID, "sellAmount")) + parseFloat(amount);
+                    setTdById(tID, "sellAmount", tempAmount);
                 } else {
                     var row = sellTable.insertRow();
-                    row.id = "sellTable"+counter;
+                    row.id = "sellTable"+id;
 
                     var cell1 = row.insertCell(0);
                     var cell2 = row.insertCell(1);
@@ -252,51 +259,53 @@
                     var cell8 = row.insertCell(7);
                     var cell9 = row.insertCell(8);
                     var cell10 = row.insertCell(9);
-
+                    tempCounter = counter;
                     cell1.innerHTML = getTdById(id, "id");
-                    cell1.id = "sellId" + counter;
+                    cell1.id = "sellId" + id;
                     cell2.innerHTML = amount;
-                    cell2.id = "sellAmount" + counter;
+                    cell2.id = "sellAmount" + id;
                     cell3.innerHTML = salePrice;
-                    cell3.id = "sellPrice" + counter;
+                    cell3.id = "sellPrice" + id;
                     cell4.innerHTML = getTdById(id, "warehouse");
-                    cell4.id = "sellWhName" + counter;
+                    cell4.id = "sellWhName" + id;
                     cell5.innerHTML = getTdById(id, "brand");
-                    cell5.id = "sellBrand" + counter;
+                    cell5.id = "sellBrand" + id;
                     cell6.innerHTML = getTdById(id, "model");
-                    cell6.id = "sellModel" + counter;
+                    cell6.id = "sellModel" + id;
                     cell7.innerHTML = getTdById(id, "color");
-                    cell7.id = "sellColor" + counter;
+                    cell7.id = "sellColor" + id;
                     cell8.innerHTML = getTdById(id, "phoneCapacity");
-                    cell8.id = "sellCapacity" + counter;
+                    cell8.id = "sellCapacity" + id;
                     cell9.innerHTML = getTdById(id, "date");
-                    cell9.id = "sellDate" + counter;
-                    cell10.innerHTML = '<button id="btn'+counter+'" class="btn btn-primary buttonDesign" type="button"  onclick="deleteRow(this.id,tempID)">x</button>';
+                    cell9.id = "sellDate" + id;
+                    cell10.innerHTML = '<button id="btn'+id+'" class="btn btn-primary buttonDesign" type="button"  onclick="deleteRow(this.id,tempID)">x</button>';
+                    console.log("sorID: "+id);
                     counter++;
+
                 }
                 inSell = false;
+                console.log("Sor beszurása után: "+inSell);
                 setTdById(id, "amount", getTdById(id, "amount") - amount);
                 document.getElementById("numberofdevice").value = "";
                 document.getElementById("price").value = "";
                 tempPrice =  tempPrice + parseInt(amount * salePrice);
-                console.log(tempPrice);
                 document.getElementById("fullPrice").innerHTML = tempPrice;
             }
         }
-        // Ha törli akkor rosszhoz adja vissza a darabszámot.
-        function deleteRow(rowId, id){
-            counter = 0;
-            rowId = rowId.replace("btn", "");
-            console.log(id);
-            var recentlyPrice = document.getElementById("fullPrice").innerHTML;
+        function deleteRow(rowId){
+            console.log(rowId);
+            rowId = rowId.replace("btn","");
+            var recentlyPrice = tempPrice;
             var phonePrice = parseInt(getTdById(rowId,"sellPrice")) * parseInt(getTdById(rowId,"sellAmount"));
-            console.log(phonePrice);
-            document.getElementById("fullPrice").innerHTML = (parseInt(recentlyPrice) - phonePrice);
-            document.getElementById("amount"+id).innerHTML = parseInt(getTdById(rowId,"sellAmount")) + parseInt(getTdById(id,"amount"));
+            tempPrice = recentlyPrice - phonePrice;
+            console.log("Össz ár: "+phonePrice);
+            console.log("Jelenlegi összeg: "+recentlyPrice);
+            document.getElementById("fullPrice").innerHTML = tempPrice;
+            console.log("Törlés után:" +document.getElementById("fullPrice").innerHTML);
+            document.getElementById("amount"+rowId).innerHTML = parseInt(getTdById(rowId,"sellAmount")) + parseInt(getTdById(rowId,"amount"));
             document.getElementById("sellTable"+rowId).remove();
         }
         function finishSale(){
-            //túl indexxel ezért i-1
             var data = "";
             var table = document.getElementById("sellingTableBody");
             for (var i = 1; i <= table.rows.length; i++) {
@@ -310,9 +319,7 @@
                     document.getElementById("sellColor"+(i-1)).innerHTML + "|" +
                     document.getElementById("sellCapacity"+(i-1)).innerHTML.replace("GB","")+";";
             }
-
             document.querySelector("#sellingTableData").value = data;
-            console.log(document.querySelector("#sellingTableData").value);
             $.ajax({
                 url:"{{ path('teszt') }}",
                 method: "post",
