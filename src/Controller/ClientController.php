@@ -130,8 +130,11 @@ class ClientController extends AbstractController
         $user = $this->getUser();
         if ($request->isMethod("POST")){
             if($this->clientModel->addClient($request, $user)){
-                return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
-                    "resultMessage"=> "Sikeres hozzáadás!", "resultColor" => "success"]);
+                return $this->render("Client/clients.html.twig", [
+                    "clients" => $this->clientService->getAllClient(),
+                    "user" => $this->getUser(),
+                    "resultMessage"=> "Sikeres hozzáadás!",
+                    "resultColor" => "success"]);
             }else{
                 return $this->render("Client/clients.html.twig", ["clients" => $this->clientService->getAllClient(),"user" => $this->getUser(),
                     "resultMessage"=> "Sikertelen hozzáadás! Az ügyfél neve már létezik, vagy érvénytelen adószámot adott meg!", "resultColor" => "danger"]);

@@ -203,6 +203,10 @@ class StockModel implements StockModelInterface
         return $this->stockService->getAllStockByStatus("Megrendelve");
     }
 
+    public function allSoldStock():iterable{
+        return $this->orderService->getAllOrder();
+    }
+
     public function allStatus(): iterable
     {
         return $this->statusService->getAllStatus();
@@ -245,7 +249,10 @@ class StockModel implements StockModelInterface
         return $this->stockService->currentMonthOutgoings();
     }
     public function monthIncoming():int{
-        return $this->stockService->currentMonthIncomings();
+        return $this->orderService->currentMonthIncomings();
+    }
+    public function allIncomingsPerMonths(string $month):int{
+        return $this->orderService->allIncomingsPerMonth($month);
     }
 
 

@@ -107,5 +107,28 @@ class OrderService extends CrudService implements OrderServiceInterface
         $this->em->remove($this->getOneOrderById($id));
         $this->em->flush();
     }
+    public function currentMonthIncomings():int{
+        /** @var Order[] $list */
+        $list = $this->getAllOrder();
+        $date = new \DateTime('now');
+        $sum = 0;
+        foreach($list as $data){
+            if($data->getDate()->format('m') == $date->format('m')){
+                $sum += $data->getPrice() * $data->getAmount();
+            }
+        }
+        return $sum;
+    }
+    public function allIncomingsPerMonth(string $month):int{
+        /** @var Order[] $list */
+        $list = $this->getAllOrder();
+        $sum = 0;
+        foreach($list as $data){
+            if($data->getDate()->format("F") == $month){
+                $sum += $data->getPrice() * $data->getAmount();
+            }
+        }
+        return $sum;
+    }
 
 }

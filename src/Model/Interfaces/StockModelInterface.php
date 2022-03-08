@@ -25,6 +25,8 @@ interface StockModelInterface
 
     public function allOrderedStock():iterable;
 
+    public function allSoldStock():iterable;
+
     public function allStatus():iterable;
 
     public function oneStockById(int $id):Stock;
@@ -40,6 +42,8 @@ interface StockModelInterface
     public function monthOutgoing():int;
 
     public function monthIncoming():int;
+
+    public function allIncomingsPerMonths(string $month):int;
 
 
 }

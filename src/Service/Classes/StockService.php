@@ -84,20 +84,6 @@ class StockService extends CrudService implements StockServiceInterface
         }
         return $sum;
     }
-    public function currentMonthIncomings():int{
-        /** @var Stock[] $list */
-        $list = $this->getAllStock();
-        $month = new \DateTime('now');
-        $sum = 0;
-        foreach($list as $data){
-            if($data->getDate()->format('m') == $month->format('m')){
-                if($data->getStatusID()->getStatus() == "Eladva"){
-                    $sum += $data->getPurchasePrice();
-                }
-            }
-        }
-        return $sum;
-    }
 
     public function originalWhCapacity(Warehouse $warehouse):int{
         /** @var Stock[] $list */
@@ -109,6 +95,8 @@ class StockService extends CrudService implements StockServiceInterface
         $sum += $warehouse->getCapacity();
         return $sum;
     }
+
+
 
 
 }

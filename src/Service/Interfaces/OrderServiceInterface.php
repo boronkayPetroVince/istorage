@@ -31,4 +31,8 @@ interface OrderServiceInterface
     public function addOrder(Order $order):void;
 
     public function removeOrder(int $id):void;
+
+    public function currentMonthIncomings():int;
+
+    public function allIncomingsPerMonth(string $month):int;
 }
