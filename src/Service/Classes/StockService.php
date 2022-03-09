@@ -4,6 +4,7 @@
 namespace App\Service\Classes;
 
 
+use App\Entity\Order;
 use App\Entity\Phone;
 use App\Entity\Stock;
 use App\Entity\Warehouse;
@@ -95,6 +96,8 @@ class StockService extends CrudService implements StockServiceInterface
         $sum += $warehouse->getCapacity();
         return $sum;
     }
+
+
 
 
 

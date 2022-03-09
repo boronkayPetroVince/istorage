@@ -113,16 +113,10 @@ class StockController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if($request->isMethod("POST")){
-            if($this->stockModel->sellStock($request,$user)){
-                return $this->render("Stock/sellingStock.html.twig", [
-                    "stocks" => $this->stockModel->allArrivedStock(),
-                    "user" => $this->getUser(), "result" =>"Sikeres rendelés",
-                    "wh" => $this->stockModel->warehouseById()
-                ]);
-            }else return $this->render("Stock/sellingStock.html.twig", [
-                "stocks" => $this->stockModel->allArrivedStock(),
-                "user" => $this->getUser(), "result" =>"Sikertelen rendelés",
-                "wh" => $this->stockModel->warehouseById()
+            return $this->render("Stock/sellBill.html.twig", [
+                "lastOrder" => $this->stockModel->lastSell(),
+                "orderedPhones" => $this->stockModel->sellStock($request, $user),
+                "user" =>$this->getUser()
             ]);
         }
         return $this->render("Stock/sellingStock.html.twig", [

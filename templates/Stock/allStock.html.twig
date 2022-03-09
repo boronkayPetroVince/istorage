@@ -47,7 +47,7 @@
                         <tbody>
                         {% set counter = 0 %}
                         {% for stock in stocks %}
-                            {% if stock.statusID.status != "Megrendelve" %}
+                            {% if stock.amount > 0 %}
                                 <tr>
                                     <td>{{ stock.amount }}</td>
                                     <td>{{ stock.purchasePrice }}</td>

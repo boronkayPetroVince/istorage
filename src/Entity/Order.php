@@ -50,6 +50,13 @@ class Order
     private $warehouse_ID;
 
     /**
+     * @var Status
+     * @ORM\JoinColumn(name="statusID", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Status")
+     */
+    private $statusID;
+
+    /**
      * @var int
      * @ORM\Column(type="integer", nullable=false)
      */
@@ -68,11 +75,11 @@ class Order
     private $date;
 
     /**
-     * @var Status
-     * @ORM\JoinColumn(name="statusID", referencedColumnName="id")
-     * @ORM\ManyToOne(targetEntity="Status")
+     * @var string
+     * @ORM\Column(type="string", length=30, nullable=false)
      */
-    private $statusID;
+    private $orderNumber;
+
 
     /**
      * @return int
@@ -147,6 +154,22 @@ class Order
     }
 
     /**
+     * @return Status
+     */
+    public function getStatusID(): Status
+    {
+        return $this->statusID;
+    }
+
+    /**
+     * @param Status $statusID
+     */
+    public function setStatusID(Status $statusID): void
+    {
+        $this->statusID = $statusID;
+    }
+
+    /**
      * @return int
      */
     public function getAmount(): int
@@ -195,21 +218,20 @@ class Order
     }
 
     /**
-     * @return Status
+     * @return string
      */
-    public function getStatusID(): Status
+    public function getOrderNumber(): string
     {
-        return $this->statusID;
+        return $this->orderNumber;
     }
 
     /**
-     * @param Status $statusID
+     * @param string $orderNumber
      */
-    public function setStatusID(Status $statusID): void
+    public function setOrderNumber(string $orderNumber): void
     {
-        $this->statusID = $statusID;
+        $this->orderNumber = $orderNumber;
     }
-
 
 
 

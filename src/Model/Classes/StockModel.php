@@ -126,17 +126,24 @@ class StockModel implements StockModelInterface
         return false;
     }
 
-    public function sellStock(Request $request, User $user): bool
+    public function sellStock(Request $request, User $user): iterable
     {
+        //itt json visszatérés, és akkor átadom a számlának az adatokat(igy tudom kinyerni a rendelésnek az adatait)
+        $orderNumber = "";
+        for ($i = 0; $i < 10;$i++){
+            $orderNumber .= "".rand(0,9);
+        }
+        $list = [];
         if ($request) {
             $allSellingData = $request->request->get("sellingTableData");
             $oneData = explode(";", "".$allSellingData);
             foreach ($oneData as $data) {
                 $tempList = explode("|", $data);
-                $stock = $this->stockService->getOneStockById($tempList[0]);
+
+                $stock = $this->stockService->getOneStockById((int)$tempList[0]);
                 if($this->checkStockAmount($stock, $tempList[1])){
                     $order = new Order();
-
+                    $order->setOrderNumber($orderNumber);
                     $order->setAmount($tempList[1]);
                     $order->setPrice($tempList[2]);
                     $order->setDate(new \DateTime('now'));
@@ -153,15 +160,20 @@ class StockModel implements StockModelInterface
                         $this->capacityService->getOneCapacityByMemory($tempList[7])
                     );
                     $order->setPhoneID($this->phoneService->getOnePhoneById($phone->getId()));
-
                     $status = $this->statusService->getOneStatusByName("Eladva");
                     $order->setStatusID($this->statusService->getOneStatusById($status->getId()));
                     $this->orderService->addOrder($order);
-                    return true;
+                    array_push($list,$order);
                 }
-            }
+            }//szarul tér vissza
+            return $list;
         }
-        return false;
+        return $list;
+    }
+
+    public function lastSoldStockData(Order $order, array $list):Response{
+        array_push($list,$order);
+        return new JsonResponse($list);
     }
 
     public function edit(Request $request, int $stockId, User $user): bool{
@@ -253,6 +265,13 @@ class StockModel implements StockModelInterface
     }
     public function allIncomingsPerMonths(string $month):int{
         return $this->orderService->allIncomingsPerMonth($month);
+    }
+    public function allOrderPerWeek():iterable{
+        return $this->orderService->allOrderPerWeek();
+    }
+    public function lastSell():iterable{
+        $file = fopen("tesztt.txt", "w");
+        return $this->orderService->lastSell();
     }
 
 

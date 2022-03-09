@@ -63,7 +63,7 @@ class UserController extends AbstractController
                 "arrivedCount" => $this->stockModel->stockCount(),
                 "month" =>$this->stockModel->allIncomingsPerMonths("February"),
                 "stocks" =>$this->stockModel->allArrivedStock(),
-                "orders" => $this->stockModel->allSoldStock()
+                "orders" => $this->stockModel->allOrderPerWeek()
             ]);
         }
         return $this->redirectToRoute('app_login');

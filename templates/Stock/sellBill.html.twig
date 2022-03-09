@@ -1,44 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'index.html.twig' %}
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>IStorageSzamla</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
-</head>
+{# @var lastOrder \App\Entity\Order #}
+{# @var orderedPhones \App\Entity\Order[] #}
 
-<body style="border-width: 1px;">
+{% block content %}
     <div class="container">
         <h2 class="text-center">Számla</h2>
         <div>
             <div class="row">
                 <div class="col" style="border-width: 1px;border-style: solid;">
-                    <p>A számlakibocsátó neve, címe:</p>
-                    <p>Közösségi adószám:&nbsp;</p>
+                    <p>A számlakibocsátó neve, címe:
+                    </p>
+                    {% set count = 0 %}
+                    {% for o in orderedPhones %}
+                       <p>{{ o.warehouseID.whName }}</p>
+                    {% endfor %}
+                    {{ count }}
+                    qwwqeew<p>Közösségi adószám: </p>
                 </div>
                 <div class="col" style="border-width: 1px;border-style: solid;">
-                    <p>A vevő neve, címe:</p>
-                    <p>Közösségi adószám:&nbsp;</p>
+                    <p>A vevő neve, címe: </p>
+                    <p>Közösségi adószám: </p>
                 </div>
             </div>
             <div class="row">
+                {% set datetime = date('') %}
                 <div class="col" style="border-width: 1px;border-style: solid;">
                     <p>A fizetés módja:&nbsp;</p>
                     <p class="text-center">Átutalás</p>
                 </div>
                 <div class="col" style="border-width: 1px;border-style: solid;">
                     <p>A teljesítés időpontja:</p>
-                    <p>2022.01.01</p>
+                    <p>{{ datetime|date("Y/m/d") }}</p>
                 </div>
                 <div class="col" style="border-width: 1px;border-style: solid;">
                     <p>A számla kelte:</p>
-                    <p>2022.01.01</p>
+                    <p>{{ datetime|date("Y/m/d") }}</p>
                 </div>
                 <div class="col" style="border-width: 1px;border-style: solid;">
                     <p>A fizetés határideje:</p>
-                    <p>2022.01.17</p>
+                    <p>{{ datetime|date_modify("+4 day")|date("Y/m/d") }}</p>
                 </div>
             </div>
             <div class="row">
@@ -51,18 +52,18 @@
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
-                                <tr>
-                                    <th>Telefon</th>
-                                    <th>Mennyiség</th>
-                                    <th>Egység ára(ÁFA nékül</th>
-                                    <th>Értéke (ÁFA nélkül)</th>
-                                    <th>ÁFA kulcsa</th>
-                                    <th>ÁFA összege</th>
-                                    <th>Végösszeg (ÁFÁVAL)</th>
-                                </tr>
+                            <tr>
+                                <th>Telefon</th>
+                                <th>Mennyiség</th>
+                                <th>Egység ára(ÁFA nékül</th>
+                                <th>Értéke (ÁFA nélkül)</th>
+                                <th>ÁFA kulcsa</th>
+                                <th>ÁFA összege</th>
+                                <th>Végösszeg (ÁFÁVAL)</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr></tr>
+                            <tr></tr>
                             </tbody>
                         </table>
                     </div>
@@ -125,7 +126,7 @@
             </div>
         </div>
     </div>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-</body>
+{% endblock %}
 
-</html>
+
+

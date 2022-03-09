@@ -26,4 +26,5 @@ interface StockServiceInterface
     public function currentMonthOutgoings():int;
 
     public function originalWhCapacity(Warehouse $warehouse):int;
+
 }

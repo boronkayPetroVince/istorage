@@ -251,6 +251,7 @@
                             </div>
                         </div>
                     </div>
+
                 {% endblock %}
             </div>
 
@@ -301,7 +302,7 @@
         var barChart = new Chart(barDiagramm,{
             type: 'bar',
             data: {
-                labels:xValues,
+                labels:[],
                 datasets:[{
                     backgroundColor:[
                         "#0275d8",

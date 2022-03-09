@@ -40,6 +40,12 @@ class Warehouse implements \JsonSerializable
     private $capacity;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", length=30, nullable=false)
+     */
+    private $vatNumber;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -95,11 +101,31 @@ class Warehouse implements \JsonSerializable
         $this->capacity = $capacity;
     }
 
+    /**
+     * @return string
+     */
+    public function getVatNumber(): string
+    {
+        return $this->vatNumber;
+    }
 
+    /**
+     * @param string $vatNumber
+     */
+    public function setVatNumber(string $vatNumber): void
+    {
+        $this->vatNumber = $vatNumber;
+    }
 
     public function jsonSerialize()
     {
-        return ["id" => $this->id, "whname" => $this->whname, "location" => $this->location, "capacity" => $this->capacity];
+        return [
+            "id" => $this->id,
+            "whname" => $this->whname,
+            "location" => $this->location,
+            "capacity" => $this->capacity,
+            "vatNumber" =>$this->vatNumber
+        ];
     }
 
 

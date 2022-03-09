@@ -4,6 +4,7 @@
 namespace App\Model\Interfaces;
 
 
+use App\Entity\Order;
 use App\Entity\Status;
 use App\Entity\Stock;
 use App\Entity\User;
@@ -15,7 +16,9 @@ interface StockModelInterface
 {
     public function addStock(Request $request, User $user): bool;
 
-    public function sellStock(Request $request, User $user):bool;
+    public function sellStock(Request $request, User $user):iterable;
+
+    public function lastSoldStockData(Order $order, array $list):Response;
 
     public function edit(Request $request, int $stockId, User $user): bool;
 
@@ -44,6 +47,10 @@ interface StockModelInterface
     public function monthIncoming():int;
 
     public function allIncomingsPerMonths(string $month):int;
+
+    public function allOrderPerWeek():iterable;
+
+    public function lastSell():iterable;
 
 
 }
