@@ -51,11 +51,9 @@ class UserController extends AbstractController
      * @Route(name="main", path="/main")
      */
     public function mainMenu(Request $request):Response{
-        /** @var User $user */
-        $user = $this->getUser();
-        if($user != null){
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
             return $this->render("index.html.twig", [
-                "user" => $user,
+                "user" => $this->getUser(),
                 "inStock" => $this->stockModel->stockCount(),
                 "wh" => $this->stockModel->warehouseById(),
                 "outgoingPrice" => $this->stockModel->monthOutgoing(),
@@ -65,8 +63,7 @@ class UserController extends AbstractController
                 "stocks" =>$this->stockModel->allArrivedStockPerWeek(),
                 "orders" => $this->stockModel->allOrderPerWeek()
             ]);
-        }
-        return $this->redirectToRoute('app_login');
+
 
     }
 
@@ -76,16 +73,17 @@ class UserController extends AbstractController
      * @Route(name="addUser", path="/addUser")
      */
     public function addUser(Request $request):Response{
-        if($this->isGranted("ROLE_ADMIN")){
-            if ($request->isMethod("POST")){
-                if($this->userModel->addUser($request) === true){
-                    return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser(),
-                        "resultMessage"=> "Sikeres hozzáadás!", "resultColor" => "success"]);
-                }else return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(), "user" => $this->getUser(),
-                    "resultMessage"=> "Sikertelen hozzáadás! Felhasználónév már foglalt, vagy a megadott jelszavak nem egyeznek!", "resultColor" => "danger"]);
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+        if ($request->isMethod("POST")){
+            if($this->userModel->addUser($request) === true){
+                return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser(),
+                    "resultMessage"=> "Sikeres hozzáadás!", "resultColor" => "success"]);
             }else return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(), "user" => $this->getUser(),
-                "resultMessage"=> "Rosszul érkeztek be az adatok!", "resultColor" => "warning"]);
-        }else return new Response("Hozzáférés megtagadva!");
+                "resultMessage"=> "Sikertelen hozzáadás! Felhasználónév már foglalt, vagy a megadott jelszavak nem egyeznek!", "resultColor" => "danger"]);
+        }else return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(), "user" => $this->getUser(),
+            "resultMessage"=> "Rosszul érkeztek be az adatok!", "resultColor" => "warning"]);
+
+
 
     }
 
@@ -130,6 +128,7 @@ class UserController extends AbstractController
      * @Route(name="updateUser", path="/updateUser/{userId}")
      */
     public function updateUser(Request $request, int $userId): Response{
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         if ($request->isMethod("POST")) {
             if ($this->isGranted("ROLE_ADMIN")) {
                 if($this->userModel->updateUser($request, $userId) === true){
@@ -147,6 +146,7 @@ class UserController extends AbstractController
      * @Route(name="updateLoggedUser", path="/updateLoggedUser")
      */
     public function updateLoggedUser(Request $request): Response{
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         /** @var User $user */
         $user = $this->getUser();
         if($request->isMethod("POST")){
@@ -166,6 +166,7 @@ class UserController extends AbstractController
      * @Route(name="users", path="/users")
      */
     public function allUsers():Response{
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         return $this->render("user/users.html.twig", ["users" => $this->security->getAllUser(),"user" => $this->getUser(),
             "resultMessage"=> "", "resultColor" => "", "show" => 'hide']);
     }
@@ -176,6 +177,7 @@ class UserController extends AbstractController
      * @Route(name="passChange", path="/passChange")
      */
     public function changePass(Request $request): Response{
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         /** @var User $user */
         $user = $this->getUser();
         if($request->isMethod("POST")){
@@ -191,6 +193,7 @@ class UserController extends AbstractController
      * @Route(name="generateUserPDF", path="/generateUserPDF")
      */
     public function generatePDF(){
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
         $dompdf = new Dompdf($pdfOptions);
@@ -208,6 +211,7 @@ class UserController extends AbstractController
      * @Route(name="generateUserExcel", path="/generateUserExcel")
      */
     public function generateExcel(){
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         /** @var User[] $users */
         $users = $this->security->getAllUser();
         $spreadsheet = new Spreadsheet();

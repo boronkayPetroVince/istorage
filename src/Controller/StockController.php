@@ -53,6 +53,7 @@ class StockController extends AbstractController
      * @Route(name="addStock", path="/addStock")
      */
     public function addStock(Request $request):Response{
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         /** @var User $user */
         $user = $this->getUser();
         if($request->isMethod("POST")){
@@ -72,6 +73,7 @@ class StockController extends AbstractController
      * @Route(name="orderedStock", path="/orderedStock")
      */
     public function orderedStock(Request $request):Response{
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
             "resultMessage"=> "", "resultColor" => ""]);
     }
@@ -82,6 +84,7 @@ class StockController extends AbstractController
      * @Route(name="allStock", path="/allStock")
      */
     public function allStock(Request $request):Response{
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->allArrivedStock(), "user" => $this->getUser(),
             "resultMessage"=> "", "resultColor" => "", "allElement" => ""]);
     }
@@ -92,7 +95,7 @@ class StockController extends AbstractController
      * @Route(name="updateOrderedStock", path="/updateOrdered/{stockId}")
      */
     public function updateOrdered(Request $request, int $stockId): Response{
-
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         if($request->isMethod("POST")){
             if($this->stockModel->edit($request, $stockId,$this->getUser()) === true){
                 return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
@@ -110,6 +113,7 @@ class StockController extends AbstractController
      * @Route(name="sellingStock", path="/sellingStock")
      */
     public function sellingStock(Request $request):Response{
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         /** @var User $user */
         $user = $this->getUser();
         if($request->isMethod("POST")){
@@ -140,6 +144,7 @@ class StockController extends AbstractController
      * @Route(name="allWarehouse", path="/allWarehouse")
      */
     public function allWarehouse():Response{
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         return new JsonResponse($this->stockModel->allWarehouse());
     }
 
@@ -148,6 +153,7 @@ class StockController extends AbstractController
      * @Route(name="allStatus", path="/allStatus")
      */
     public function allStatus():Response{
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         $status = $this->stockModel->allStatus();
         return new JsonResponse($status);
     }
@@ -156,6 +162,7 @@ class StockController extends AbstractController
      * @Route(name="generateOrderedPDF", path="/generateOrderedPDF")
      */
     public function generateOrderedPDF(){
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
         $dompdf = new Dompdf($pdfOptions);
@@ -173,6 +180,7 @@ class StockController extends AbstractController
      * @Route(name="generateOrderedExcel", path="/generateOrderedExcel")
      */
     public function generateOrderedExcel(){
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         /** @var Stock[] $stocks */
         $stocks = $this->stockService->getAllStock();
         $spreadsheet = new Spreadsheet();
