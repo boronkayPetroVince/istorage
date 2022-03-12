@@ -32,9 +32,8 @@
                     <table class="table table-striped my-0" id="dataTable">
                         <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Mennyiség</th>
-                            <th>Beszerzési ár</th>
+                            <th>Beszerzési ár / db</th>
                             <th>Telefon</th>
                             <th>Raktár</th>
                             <th>Megrendelve</th>
@@ -48,7 +47,7 @@
                         {% for stock in stocks|sort((a, b) => a.date <=> a.date) %}
                             {% if stock.statusID.status == "Megrendelve" %}
                                 <tr id="{{ counter }}">
-                                    <td id="id{{ counter }}">{{ stock.id }}</td>
+                                    <td class="d-none" id="id{{ counter }}">{{ stock.id }}</td>
                                     <td id="amount{{ counter }}">{{ stock.amount }}</td>
                                     <td id="purchasePrice{{ counter }}">{{ stock.purchasePrice }}</td>
                                     <td>
@@ -156,7 +155,7 @@
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
-                                                <label class="form-label" for="updatePrice"><strong>Beszerzési ár</strong><br></label>
+                                                <label class="form-label" for="updatePrice"><strong>Beszerzési ár / db</strong><br></label>
                                                 <input class="form-control" type="number" id="updatePrice" name="updatePrice">
                                             </div>
                                         </div>
@@ -242,7 +241,7 @@
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
-                                                <label class="form-label" for="purchase"><strong>Beszerzési ár</strong><br></label>
+                                                <label class="form-label" for="purchase"><strong>Beszerzési ár / db</strong><br></label>
                                                 <input class="form-control" type="text" id="purchase" name="purchase" required>
                                             </div>
                                         </div>

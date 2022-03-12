@@ -25,6 +25,8 @@ interface StockServiceInterface
 
     public function currentMonthOutgoings():int;
 
+    public function allArrivedStockPerWeek():iterable;
+
     public function originalWhCapacity(Warehouse $warehouse):int;
 
 }

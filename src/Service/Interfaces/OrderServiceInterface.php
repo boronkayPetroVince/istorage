@@ -20,7 +20,7 @@ interface OrderServiceInterface
 
     public function currentMonthIncomings():int;
 
-    public function allIncomingsPerMonth(string $month):int;
+    public function allIncomingsPerMonth():iterable;
 
     public function allOrderPerWeek():iterable;
 

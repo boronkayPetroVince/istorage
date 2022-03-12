@@ -61,8 +61,8 @@ class UserController extends AbstractController
                 "outgoingPrice" => $this->stockModel->monthOutgoing(),
                 "incomingPrice" => $this->stockModel->monthIncoming(),
                 "arrivedCount" => $this->stockModel->stockCount(),
-                "month" =>$this->stockModel->allIncomingsPerMonths("February"),
-                "stocks" =>$this->stockModel->allArrivedStock(),
+                "month" =>$this->stockModel->allIncomingsPerMonths(),
+                "stocks" =>$this->stockModel->allArrivedStockPerWeek(),
                 "orders" => $this->stockModel->allOrderPerWeek()
             ]);
         }
@@ -99,9 +99,17 @@ class UserController extends AbstractController
         $user = $this->getUser();
         if ($request->isMethod("POST")){
             if ($this->userModel->loginAction($request,$user) == true){
-                return $this->render("index.html.twig", ["user" => $this->getUser(), "inStock" => $this->stockModel->stockCount(),"inStock" => $this->stockModel->stockCount(),
+                return $this->render("index.html.twig", [
+                    "user" => $user,
+                    "inStock" => $this->stockModel->stockCount(),
                     "wh" => $this->stockModel->warehouseById(),
-                    "outgoingPrice" => $this->stockModel->monthOutgoing()]);
+                    "outgoingPrice" => $this->stockModel->monthOutgoing(),
+                    "incomingPrice" => $this->stockModel->monthIncoming(),
+                    "arrivedCount" => $this->stockModel->stockCount(),
+                    "month" =>$this->stockModel->allIncomingsPerMonths(),
+                    "stocks" =>$this->stockModel->allArrivedStockPerWeek(),
+                    "orders" => $this->stockModel->allOrderPerWeek()
+                ]);
             }else return $this->render("user/login.html.twig", ["username" => "Rossz felhasználónév, vagy jelszó!", "user" => $this->getUser()]);
         }else return $this->render("user/login.html.twig", ["username" => "", "user" => $this->getUser()]);
     }

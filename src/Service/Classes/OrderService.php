@@ -57,16 +57,21 @@ class OrderService extends CrudService implements OrderServiceInterface
         }
         return $sum;
     }
-    public function allIncomingsPerMonth(string $month):int{
+    public function allIncomingsPerMonth():iterable{
+        $months = $this->allMonths();
         /** @var Order[] $list */
         $list = $this->getAllOrder();
-        $sum = 0;
-        foreach($list as $data){
-            if($data->getDate()->format("F") == $month){
-                $sum += $data->getPrice() * $data->getAmount();
+        $incomings = [];
+        foreach ($months as $m){
+            $sum = 0;
+            foreach($list as $data){
+                if($data->getDate()->format("F") == $m){
+                    $sum += $data->getPrice() * $data->getAmount();
+                }
             }
+            array_push($incomings,$sum);
         }
-        return $sum;
+        return $incomings;
     }
 
     public function allOrderPerWeek():iterable{
@@ -87,10 +92,17 @@ class OrderService extends CrudService implements OrderServiceInterface
         $qb = $this->em->createQueryBuilder();
         $qb->select("ordered")
             ->from(Order::class, "ordered")
-            ->where("ordered.id = :id")
-            ->setParameter("id", "1");
+            ->orderBy("ordered.id", "DESC")
+            ->setMaxResults(1);
         $query = $qb->getQuery();
         return $query->getResult();
+    }
+    private function allMonths():iterable{
+        $months = [];
+        for ($i = 1; $i < 13; $i++){
+            array_push($months, date('F', mktime(0,0,0,$i, 1, date('Y'))));
+        }
+        return $months;
     }
 
 }

@@ -86,6 +86,22 @@ class StockService extends CrudService implements StockServiceInterface
         return $sum;
     }
 
+    public function allArrivedStockPerWeek():iterable{
+        /** @var Stock[] $stocks */
+        $stocks = $this->getAllStockByStatus("Beérkezett");
+        /** @var Stock[] $list */
+        $list = [];
+        $date = new \DateTime('now');
+        $file = fopen("datum.txt", "w");
+        foreach($stocks as $stock){
+            if($stock->getDate()->format("W") == $date->format("W")){
+                fwrite($file, $stock->getDate()->format("W")." - ".$date->format("W")."");
+                array_push($list,$stock);
+            }
+        }
+        return $list;
+    }
+
     public function originalWhCapacity(Warehouse $warehouse):int{
         /** @var Stock[] $list */
         $list = $this->getAllStock();

@@ -27,6 +27,11 @@
     <link rel="stylesheet" href="{{ asset('assets/css/statics.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/users.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/stock.css') }}">
+    <script type="text/javascript" src="{{ asset('/assets/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/js/chart.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bs-init.js') }}"></script>
+    <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/js/theme.js') }}"></script>
 </head>
 
 <body id="page-top">
@@ -251,91 +256,89 @@
                             </div>
                         </div>
                     </div>
+                    <script>
+                        var doughnutDiagramm = document.getElementById("doughnutChart").getContext('2d');
+                        var doughnutChart = new Chart(doughnutDiagramm,{
+                            type: 'doughnut',
+                            data: {
+                                labels:["Szabad kapacitás", "Foglalt kapacitás"],
+                                datasets:[{
+                                    backgroundColor:[
+                                        "rgb(2,117,216)",
+                                        "rgb(91,192,222)",
+                                    ],
+                                    data: [{{ wh.capacity }}, {{ arrivedCount }}],
+                                    borderWidth: [0, 0, 0]
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                cutoutPercentage: 60,
+                                legend: {
+                                    position: "bottom",
+                                    display: false,
+                                    labels: {
+                                        fontColor: '#ddd',
+                                        boxWidth: 15
+                                    }
+                                }
+                                ,
+                                tooltips: {
+                                    displayColors: false
+                                }
+                            }
+                        });
 
+                        var barDiagramm = document.getElementById("barDiagram").getContext('2d');
+                        var xValues = ["Jan", "Feb", "Már", "Ápr", "Máj", "Jún", "Júl", "Aug", "Szep", "Okt", "Nov", "Dec"]
+                        var yValues = [{% for m in month %}
+                            {{ m }},
+                            {% endfor %}]
+                        var barChart = new Chart(barDiagramm,{
+                            type: 'bar',
+                            data: {
+                                labels:xValues,
+                                datasets:[{
+                                    backgroundColor:[
+                                        "#0275d8",
+                                        "#5bc0de",
+                                        "#b91d47",
+                                        "#00aba9",
+                                        "#2b5797",
+                                        "#e8c3b9",
+                                        "#1e7145"
+                                    ],
+                                    data: yValues,
+
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                cutoutPercentage: 60,
+                                legend: {
+                                    position: "bottom",
+                                    display: false,
+                                    labels: {
+                                        fontColor: '#ddd',
+                                        boxWidth: 15
+                                    }
+                                }
+                                ,
+                                tooltips: {
+                                    displayColors: false
+                                }
+                            }
+                        });
+
+                    </script>
                 {% endblock %}
             </div>
 
         </div>
     </div>
 
-    <script type="text/javascript" src="{{ asset('/assets/bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('assets/js/chart.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bs-init.js') }}"></script>
-    <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/js/theme.js') }}"></script>
-    <script>
-        var doughnutDiagramm = document.getElementById("doughnutChart").getContext('2d');
-        var doughnutChart = new Chart(doughnutDiagramm,{
-            type: 'doughnut',
-            data: {
-                labels:["Szabad kapacitás", "Foglalt kapacitás"],
-                datasets:[{
-                    backgroundColor:[
-                        "rgb(2,117,216)",
-                        "rgb(91,192,222)",
-                    ],
-                    data: [{{ wh.capacity }}, {{ arrivedCount }}],
-                    borderWidth: [0, 0, 0]
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                cutoutPercentage: 60,
-                legend: {
-                    position: "bottom",
-                    display: false,
-                    labels: {
-                        fontColor: '#ddd',
-                        boxWidth: 15
-                    }
-                }
-                ,
-                tooltips: {
-                    displayColors: false
-                }
-            }
-        });
 
-        var barDiagramm = document.getElementById("barDiagram").getContext('2d');
-        var xValues = ["Jan", "Feb", "Már", "Ápr", "Máj", "Jún", "Júl", "Aug", "Szep", "Okt", "Nov", "Dec"]
-        var yValues = [{{ month }},10,0]
-        var barChart = new Chart(barDiagramm,{
-            type: 'bar',
-            data: {
-                labels:[],
-                datasets:[{
-                    backgroundColor:[
-                        "#0275d8",
-                        "#5bc0de",
-                        "#b91d47",
-                        "#00aba9",
-                        "#2b5797",
-                        "#e8c3b9",
-                        "#1e7145"
-                    ],
-                    data: yValues,
 
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                cutoutPercentage: 60,
-                legend: {
-                    position: "bottom",
-                    display: false,
-                    labels: {
-                        fontColor: '#ddd',
-                        boxWidth: 15
-                    }
-                }
-                ,
-                tooltips: {
-                    displayColors: false
-                }
-            }
-        });
-
-    </script>
 {% endblock %}
 </body>
 

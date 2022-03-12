@@ -113,7 +113,7 @@ class StockController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if($request->isMethod("POST")){
-            return $this->render("Stock/sellBill.html.twig", [
+            return $this->render("Stock/bill.html.twig", [
                 "lastOrder" => $this->stockModel->lastSell(),
                 "orderedPhones" => $this->stockModel->sellStock($request, $user),
                 "user" =>$this->getUser()

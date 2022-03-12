@@ -46,9 +46,11 @@ interface StockModelInterface
 
     public function monthIncoming():int;
 
-    public function allIncomingsPerMonths(string $month):int;
+    public function allIncomingsPerMonths():iterable;
 
     public function allOrderPerWeek():iterable;
+
+    public function allArrivedStockPerWeek():iterable;
 
     public function lastSell():iterable;
 

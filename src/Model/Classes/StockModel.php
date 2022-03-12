@@ -263,14 +263,19 @@ class StockModel implements StockModelInterface
     public function monthIncoming():int{
         return $this->orderService->currentMonthIncomings();
     }
-    public function allIncomingsPerMonths(string $month):int{
-        return $this->orderService->allIncomingsPerMonth($month);
+    public function allIncomingsPerMonths():iterable{
+        return $this->orderService->allIncomingsPerMonth();
     }
     public function allOrderPerWeek():iterable{
         return $this->orderService->allOrderPerWeek();
     }
+    public function allArrivedStockPerWeek():iterable{
+        return $this->stockService->allArrivedStockPerWeek();
+    }
+
     public function lastSell():iterable{
         $file = fopen("tesztt.txt", "w");
+//        fwrite($file, print_r($this->orderService->lastSell(), true));
         return $this->orderService->lastSell();
     }
 
