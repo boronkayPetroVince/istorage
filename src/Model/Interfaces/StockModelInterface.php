@@ -55,4 +55,14 @@ interface StockModelInterface
     public function allArrivedStockPerWeek():iterable;
 
     public function lastSell():iterable;
+
+    public function billPDF(Request $request);
+
+    public function OrderedPDF(string $html);
+
+    public function OrderedExcel();
+
+    public function ArrivedPDF(string $html);
+
+    public function ArrivedExcel();
 }

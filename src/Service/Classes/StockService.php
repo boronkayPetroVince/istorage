@@ -36,7 +36,8 @@ class StockService extends CrudService implements StockServiceInterface
             ->from(Stock::class, "stock")
             ->innerJoin("stock.statusID", "status", Join::WITH, $qb->expr()->eq('status.id', 'stock.statusID'))
             ->where("status.status = :statusName")
-            ->setParameter("statusName", $statusName);
+            ->setParameter("statusName", $statusName)
+            ->andWhere("stock.amount > 0");
         $query = $qb->getQuery();
         return $query->getResult();
     }

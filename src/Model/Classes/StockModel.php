@@ -5,8 +5,6 @@ namespace App\Model\Classes;
 
 
 use App\Entity\Order;
-use App\Entity\Phone;
-use App\Entity\Status;
 use App\Entity\Stock;
 use App\Entity\User;
 use App\Entity\Warehouse;
@@ -24,6 +22,12 @@ use App\Service\Interfaces\StatusServiceInterface;
 use App\Service\Interfaces\StockServiceInterface;
 use App\Service\Interfaces\VatServiceInterface;
 use App\Service\Interfaces\WarehouseServiceInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -288,5 +292,117 @@ class StockModel implements StockModelInterface
     public function lastSell():iterable{
         return $this->orderService->lastSell();
     }
+
+    public function billPDF(Request $request){
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+        $html = $this->renderView('Stock/bill.html.twig', ["lastOrder" => $this->stockModel->lastSell(),
+            "orderedPhones" => $this->stockModel->sellStock($request, $this->getUser()),
+            "user" =>$this->getUser()]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        ob_get_clean();
+        $dompdf->stream("bill.pdf", [
+            "Attachment" => true
+        ]);
+    }
+
+    public function OrderedPDF(string $html){
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        ob_get_clean();
+        $dompdf->stream("rendeltKeszlet.pdf", [
+            "Attachment" => true
+        ]);
+    }
+
+    public function OrderedExcel(){
+        /** @var Stock[] $stocks */
+        $stocks = $this->allOrderedStock();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Mennyiség');
+        $sheet->setCellValue('B1', 'Beszerzési ár (Ft)');
+        $sheet->setCellValue('C1', 'Telefon');
+        $sheet->setCellValue('D1', 'Raktár');
+        $sheet->setCellValue('E1', 'Státusz');
+        $sheet->setCellValue('F1', 'Dátum');
+        $sheet->setCellValue('G1', 'Felhasználó');
+        $spreadsheet->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
+        $counter = 2;
+        foreach ($stocks as $stock){
+            $sheet->setCellValue('A'.$counter, $stock->getAmount());
+            $sheet->setCellValue('B'.$counter, $stock->getPurchasePrice());
+            $sheet->setCellValue('C'.$counter, $stock->getPhoneID()->getBrandID()->getBrandName()." ".
+                $stock->getPhoneID()->getModelID()->getModelName()." ".$stock->getPhoneID()->getColorID()->getPhoneColor()." ".
+                $stock->getPhoneID()->getCapacityID()->getCapacity());
+            $sheet->setCellValue('D'.$counter, $stock->getWarehouseID()->getWhName());
+            $sheet->setCellValue('E'.$counter, $stock->getStatusID()->getStatus());
+            $sheet->setCellValue('F'.$counter, $stock->getDate());
+            $sheet->setCellValue('G'.$counter, $stock->getUserID()->getUsername()." (".$stock->getUserID()->getRoles()[0].")" );
+            $counter++;
+        }
+        $writer = new Xlsx($spreadsheet);
+        $filename = "rendeltKeszlet";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        $writer->save('php://output');
+        die();
+    }
+
+    public function ArrivedPDF(string $html){
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        ob_get_clean();
+        $dompdf->stream("keszlet.pdf", [
+            "Attachment" => true
+        ]);
+    }
+
+    public function ArrivedExcel(){
+        /** @var Stock[] $stocks */
+        $stocks = $this->allArrivedStock();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Mennyiség');
+        $sheet->setCellValue('B1', 'Beszerzési ár (Ft)');
+        $sheet->setCellValue('C1', 'Telefon');
+        $sheet->setCellValue('D1', 'Raktár');
+        $sheet->setCellValue('E1', 'Státusz');
+        $sheet->setCellValue('F1', 'Dátum');
+        $sheet->setCellValue('G1', 'Felhasználó');
+        $spreadsheet->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
+        $counter = 2;
+        foreach ($stocks as $stock){
+            $sheet->setCellValue('A'.$counter, $stock->getAmount());
+            $sheet->setCellValue('B'.$counter, $stock->getPurchasePrice());
+            $sheet->setCellValue('C'.$counter, $stock->getPhoneID()->getBrandID()->getBrandName()." ".
+                $stock->getPhoneID()->getModelID()->getModelName()." ".$stock->getPhoneID()->getColorID()->getPhoneColor()." ".
+                $stock->getPhoneID()->getCapacityID()->getCapacity());
+            $sheet->setCellValue('D'.$counter, $stock->getWarehouseID()->getWhName());
+            $sheet->setCellValue('E'.$counter, $stock->getStatusID()->getStatus());
+            $sheet->setCellValue('F'.$counter, $stock->getDate());
+            $sheet->setCellValue('G'.$counter, $stock->getUserID()->getUsername()." (".$stock->getUserID()->getRoles()[0].")" );
+            $counter++;
+        }
+        $writer = new Xlsx($spreadsheet);
+        $filename = "keszlet";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        $writer->save('php://output');
+        die();
+    }
+
+
 
 }

@@ -13,7 +13,6 @@
             <tr>
                 <th>Mennyiség</th>
                 <th>Beszerzési ár</th>
-                <th>Eladási ár</th>
                 <th>Telefon</th>
                 <th>Raktár</th>
                 <th>Státusz</th>
@@ -23,23 +22,20 @@
             </thead>
             <tbody>
             {% for stock in stocks %}
-                {% if stock.statusID.status != "Megrendelve" %}
-                    <tr>
-                        <td>{{ stock.amount }}</td>
-                        <td>{{ stock.purchasePrice }}</td>
-                        <td>{% set sell = stock.purchasePrice * 1.27 %} {{ sell }}</td>
-                        <td>
-                            <span>{{ stock.phoneID.brandID.brandName }} </span>
-                            <span>{{ stock.phoneID.modelID.modelName }} </span>
-                            <span>{{ stock.phoneID.colorID.phoneColor }} </span>
-                            <span>{{ stock.phoneID.capacityID.capacity }} GB </span>
-                        </td>
-                        <td>{{ stock.warehouseID.whName }}</td>
-                        <td>{{ stock.statusID.status }}</td>
-                        <td>{{ stock.date|date('Y-m-d H:i:s') }}</td>
-                        <td>{{ stock.userID.username }} ({{ stock.userID.roles[0] }})</td>
-                    </tr>
-                {% endif %}
+                <tr>
+                    <td>{{ stock.amount }}</td>
+                    <td>{{ stock.purchasePrice }}</td>
+                    <td>
+                        <span>{{ stock.phoneID.brandID.brandName }} </span>
+                        <span>{{ stock.phoneID.modelID.modelName }} </span>
+                        <span>{{ stock.phoneID.colorID.phoneColor }} </span>
+                        <span>{{ stock.phoneID.capacityID.capacity }} GB </span>
+                    </td>
+                    <td>{{ stock.warehouseID.whName }}</td>
+                    <td>{{ stock.statusID.status }}</td>
+                    <td>{{ stock.date|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ stock.userID.username }} ({{ stock.userID.roles[0] }})</td>
+                </tr>
             {% endfor %}
             </tbody>
             <tfoot>
