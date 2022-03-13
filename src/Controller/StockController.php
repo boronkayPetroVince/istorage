@@ -159,6 +159,27 @@ class StockController extends AbstractController
     }
 
     /**
+     * @param Request $request
+     * @Route(name="billPDF", path="/billPDF")
+     */
+    public function billPDF(Request $request){
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+        $html = $this->renderView('Stock/bill.html.twig', ["lastOrder" => $this->stockModel->lastSell(),
+            "orderedPhones" => $this->stockModel->sellStock($request, $this->getUser()),
+            "user" =>$this->getUser()]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        ob_get_clean();
+        $dompdf->stream("bill.pdf", [
+            "Attachment" => true
+        ]);
+    }
+
+    /**
      * @Route(name="generateOrderedPDF", path="/generateOrderedPDF")
      */
     public function generateOrderedPDF(){
@@ -166,7 +187,7 @@ class StockController extends AbstractController
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
         $dompdf = new Dompdf($pdfOptions);
-        $html = $this->renderView('Stock/orderedStockPDF.html.twig', ["stocks" => $this->stockService->getAllStock()]);
+        $html = $this->renderView('Stock/orderedStockPDF.html.twig', ["stocks" => $this->stockModel->allOrderedStock()]);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();

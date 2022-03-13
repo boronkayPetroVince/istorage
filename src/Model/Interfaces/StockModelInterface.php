@@ -36,6 +36,8 @@ interface StockModelInterface
 
     public function checkCapacity(Warehouse $warehouse, int $amount):bool;
 
+    public function addSoldStockAmountToWarehouse(Warehouse $warehouse,int $amount):void;
+
     public function checkStockAmount(Stock $stock, int $amount):bool;
 
     public function stockCount():int;
@@ -53,6 +55,4 @@ interface StockModelInterface
     public function allArrivedStockPerWeek():iterable;
 
     public function lastSell():iterable;
-
-
 }

@@ -22,6 +22,7 @@ use App\Service\Interfaces\PhoneServiceInterface;
 use App\Service\Interfaces\SecurityServiceInterface;
 use App\Service\Interfaces\StatusServiceInterface;
 use App\Service\Interfaces\StockServiceInterface;
+use App\Service\Interfaces\VatServiceInterface;
 use App\Service\Interfaces\WarehouseServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,6 +66,9 @@ class StockModel implements StockModelInterface
     /** @var OrderServiceInterface */
     private $orderService;
 
+    /** @var VatServiceInterface */
+    private $vatService;
+
     /**
      * StockModel constructor.
      * @param PhoneModelInterface $phoneModel
@@ -79,8 +83,9 @@ class StockModel implements StockModelInterface
      * @param PhoneServiceInterface $phoneService
      * @param ClientServiceInterface $clientService
      * @param OrderServiceInterface $orderService
+     * @param VatServiceInterface $vatService
      */
-    public function __construct(PhoneModelInterface $phoneModel, WarehouseServiceInterface $warehouseService, StockServiceInterface $stockService, StatusServiceInterface $statusService, SecurityServiceInterface $securityService, CapacityServiceInterface $capacityService, ColorServiceInterface $colorService, ModelServiceInterface $modelService, BrandServiceInterface $brandService, PhoneServiceInterface $phoneService, ClientServiceInterface $clientService, OrderServiceInterface $orderService)
+    public function __construct(PhoneModelInterface $phoneModel, WarehouseServiceInterface $warehouseService, StockServiceInterface $stockService, StatusServiceInterface $statusService, SecurityServiceInterface $securityService, CapacityServiceInterface $capacityService, ColorServiceInterface $colorService, ModelServiceInterface $modelService, BrandServiceInterface $brandService, PhoneServiceInterface $phoneService, ClientServiceInterface $clientService, OrderServiceInterface $orderService, VatServiceInterface $vatService)
     {
         $this->phoneModel = $phoneModel;
         $this->warehouseService = $warehouseService;
@@ -94,6 +99,7 @@ class StockModel implements StockModelInterface
         $this->phoneService = $phoneService;
         $this->clientService = $clientService;
         $this->orderService = $orderService;
+        $this->vatService = $vatService;
     }
 
 
@@ -128,7 +134,6 @@ class StockModel implements StockModelInterface
 
     public function sellStock(Request $request, User $user): iterable
     {
-        //itt json visszatérés, és akkor átadom a számlának az adatokat(igy tudom kinyerni a rendelésnek az adatait)
         $orderNumber = "";
         for ($i = 0; $i < 10;$i++){
             $orderNumber .= "".rand(0,9);
@@ -152,6 +157,7 @@ class StockModel implements StockModelInterface
 
                     $warehouse = $this->warehouseService->getOneWarehouseByName($tempList[3]);
                     $order->setWarehouseID($this->warehouseService->getOneWarehouseById($warehouse->getId()));
+                    $this->addSoldStockAmountToWarehouse($warehouse,$tempList[1]);
 
                     $phone = $this->phoneModel->existPhone(
                         $this->brandService->getOneBrandByName($tempList[4]),
@@ -165,7 +171,7 @@ class StockModel implements StockModelInterface
                     $this->orderService->addOrder($order);
                     array_push($list,$order);
                 }
-            }//szarul tér vissza
+            }
             return $list;
         }
         return $list;
@@ -241,6 +247,12 @@ class StockModel implements StockModelInterface
         return false;
     }
 
+    public function addSoldStockAmountToWarehouse(Warehouse $warehouse,int $amount):void{
+        $updatedCapacity = $warehouse->getCapacity() + $amount;
+        $warehouse->setCapacity($updatedCapacity);
+        $this->warehouseService->updateWarehouse($warehouse->getId());
+    }
+
     public function checkStockAmount(Stock $stock, int $amount):bool{
         $recentlyAmount = $stock->getAmount();
         if($recentlyAmount > 0){
@@ -274,10 +286,7 @@ class StockModel implements StockModelInterface
     }
 
     public function lastSell():iterable{
-        $file = fopen("tesztt.txt", "w");
-//        fwrite($file, print_r($this->orderService->lastSell(), true));
         return $this->orderService->lastSell();
     }
-
 
 }

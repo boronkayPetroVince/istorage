@@ -114,8 +114,4 @@ class StockService extends CrudService implements StockServiceInterface
     }
 
 
-
-
-
-
 }

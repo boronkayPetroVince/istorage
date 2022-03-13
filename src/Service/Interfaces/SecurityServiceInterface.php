@@ -12,7 +12,7 @@ interface SecurityServiceInterface
 
     public function getOneUserById(int $id):User;
 
-    public function addUser(string $username, string $password, string $fullName, string $email, int $phoneNumber, string $role):void;
+    public function addUser(string $username, string $password, string $fullName, string $email, int $phoneNumber, string $role,  string $number):void;
 
     public function updateUser(int $id):void;
 

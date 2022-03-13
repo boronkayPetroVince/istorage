@@ -39,8 +39,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Mennyiség</th>
-                                <th>Beszerzési ár</th>
-                                <th>Eladási ár</th>
+                                <th>Beszerzési ár / db</th>
                                 <th>Telefon</th>
                                 <th>Beérkezett</th>
                                 <th>Raktár</th>
@@ -55,7 +54,6 @@
                                         <td id="id{{ counter }}">{{ stock.id }}</td>
                                         <td id="amount{{ counter }}">{{ stock.amount }}</td>
                                         <td id="purchasePrice{{ counter }}">{{ stock.purchasePrice }}</td>
-                                        <td id="sellingPrice{{ counter }}">{% set sell = stock.purchasePrice * 1.27 %} {{ sell|round }}</td>
                                         <td>
                                             <span id="brand{{ counter }}">{{ stock.phoneID.brandID.brandName }}</span>
                                             <span class="d-none" id="brandID{{ counter }}">{{ stock.phoneID.brandID.id }}</span>
@@ -142,7 +140,7 @@
                                     </div>
                                     <div class="col col-12">
                                         <div class="mb-3">
-                                            <label class="form-label" for="price"><strong>Price&nbsp;</strong></label>
+                                            <label class="form-label" for="price"><strong>Eladási ár / db</strong></label>
                                             <input class="form-control" type="number" id="price" name="price" required>
                                         </div>
                                     </div>
@@ -181,6 +179,7 @@
                 }
             });
         })
+
         function searchFilter() {
             input = document.getElementById("myInput");
             filter = input.value.toUpperCase();
@@ -208,7 +207,7 @@
             rowId = rowId.replace("btn", "");
             id = rowId;
             maxAmount = document.getElementById("amount"+rowId).innerHTML;
-            sellingPrice = document.getElementById("sellingPrice"+rowId).innerHTML;
+            sellingPrice = document.getElementById("purchasePrice"+rowId).innerHTML;
             document.getElementById("maxAmount").innerHTML = maxAmount;
             document.getElementById("price").value = parseInt(sellingPrice);
         }

@@ -3,18 +3,39 @@
 {# @var orderedPhones \App\Entity\Order[] #}
 
 {% block content %}
-    <div class="container" style="margin-top: 50px;">
+    {% set whName = "" %}
+    {% set address = "" %}
+    {% set vatNumber = "" %}
+    {% set client = "" %}
+    {% set clientPostal = "" %}
+    {% set clientSettlement = "" %}
+    {% set clientAddress = "" %}
+    {% set clientVat = "" %}
+    {% set orderNumber = "" %}
+    {% for data in orderedPhones %}
+        {% set whName = data.warehouseID.whName %}
+        {% set address = data.warehouseID.location %}
+        {% set vatNumber = data.warehouseID.vatNumber %}
+        {% set client = data.clientID.clientName %}
+        {% set clientPostal = data.clientID.deliveryID.settlementID.postalCode %}
+        {% set clientSettlement = data.clientID.deliveryID.settlementID.settlementName %}
+        {% set clientAddress = data.clientID.deliveryID.address %}
+        {% set clientVat = data.clientID.vatNumber %}
+        {% set orderNumber = data.orderNumber %}
+    {% endfor %}
+    <div class="container-fluid" style="margin-top: 50px;">
+        <a href="{{ path('billPDF') }}" class="btn btn-primary buttonDesign" type="button">PDF</a>
         <div style="background: rgba(255,255,255,0.5); padding:5px; border:1px solid rgba(0,0,0,0.5);">
             <div class="row">
-                <div class="col d-flex justify-content-center">
-                    <h1 class="text-uppercase fw-bold"><i class="fa fa-mobile" style="font-size: 50px;transform: rotate(-21deg);padding-right: 15px;"></i>IStorage</h1>
+                <div class="col d-flex justify-content-start">
+                    <h3 class="px-2 text-uppercase fw-bold"><i class="fa fa-mobile" style="font-size: 40px;transform: rotate(-21deg);padding-right: 15px;"></i>IStorage</h3>
                 </div>
                 <div class="col d-flex justify-content-center">
                     <h1 class="text-uppercase text-center" style="padding-bottom: 40px;">Számla</h1>
                 </div>
-                <div class="col">
-                    <p class="text-center" style="margin-bottom: 1px;">Rendelési azonosító:</p>
-                    <p class="fw-bold text-center">orderNumver</p>
+                <div class="col d-flex justify-content-end">
+                    <p class="text-center" style="margin-bottom: 1px;">Rendelési azonosító: </p><br>
+                    <p class="fw-bold text-center"> {{ orderNumber }}</p>
                 </div>
             </div>
             <div class="row" style="background: rgba(177,233,254,0.6);">
@@ -27,18 +48,14 @@
             </div>
             <div class="row">
                 <div class="col">
-                    {% set whName = "" %}
-                    {% for o in orderedPhones %}
-                        {% set whName = o.warehouseID.whName %}
-                    {% endfor %}
                     <p class="fw-bold" style="margin-bottom: 0 !important;">{{ whName }}</p>
-                    <p style="margin-bottom: 0 !important;">Cím</p>
-                    <p>Adószám:&nbsp;</p>
+                    <p style="margin-bottom: 0 !important;">{{ address }}</p>
+                    <p>Adószám: {{ vatNumber }}</p>
                 </div>
                 <div class="col">
-                    <p class="fw-bold" style="margin-bottom: 0 !important;">Ügyfél</p>
-                    <p style="margin-bottom: 0 !important;">Cím</p>
-                    <p>Adószám:&nbsp;</p>
+                    <p class="fw-bold" style="margin-bottom: 0 !important;">{{ client }}</p>
+                    <p style="margin-bottom: 0 !important;">{{ clientPostal }} {{ clientSettlement }}, {{ clientAddress }}</p>
+                    <p>Adószám: {{ clientVat }}</p>
                 </div>
             </div>
             <div class="row" style="background: rgba(177,233,254,0.6);">
@@ -55,117 +72,73 @@
                     <h6>Fizetési határidő</h6>
                 </div>
             </div>
+            {% set datetime = date('')|date("Y/m/d") %}
             <div class="row" style="background: rgba(249,12,12,0);">
                 <div class="col d-flex justify-content-center align-items-center">
                     <h6>Átutalás</h6>
                 </div>
                 <div class="col d-flex justify-content-center align-items-center">
-                    <h6>dátum</h6>
+                    <h6>{{ datetime }}</h6>
                 </div>
                 <div class="col d-flex justify-content-center align-items-center">
-                    <h6>dátum<br></h6>
+                    <h6>{{ datetime }}<br></h6>
                 </div>
                 <div class="col d-flex justify-content-center align-items-center">
-                    <h6>dátum<br></h6>
-                </div>
-            </div>
-            <div class="row" style="background: rgba(177,233,254,0.6);">
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>Termék</h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>Mennyiség</h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>Nettó egységár<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>ÁFA<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>Nettó<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>ÁFA érték<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>Bruttó</h6>
+                    <h6>{{ datetime|date_modify('+1 day')|date("Y/m/d")}}<br></h6>
                 </div>
             </div>
-            <div class="row" style="background: rgba(249,12,12,0);">
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>Termék</h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>Mennyiség</h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>Nettó egységár<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>ÁFA<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>Nettó<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>ÁFA érték<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>Bruttó</h6>
+            <div class="">
+                {% set fullPrice = 0 %}
+                <table class="table" style="">
+                    <thead style="background: rgba(177,233,254,0.6);">
+                    <tr>
+                        <th>Termék</th>
+                        <th>Mennyiség</th>
+                        <th>Nettó egységár</th>
+                        <th>ÁFA</th>
+                        <th>Nettó</th>
+                    </tr>
+                    </thead>
+                    <tbody style="border-color:black;">
+                    {% for data in orderedPhones %}
+                        <tr>
+                            <td>
+                                {{ data.phoneID.brandID.brandName }}
+                                {{ data.phoneID.modelID.modelName }}
+                                {{ data.phoneID.colorID.phoneColor }}
+                                {{ data.phoneID.capacityID.capacity }} GB
+                            </td>
+                            <td>
+                                {{ data.amount }}
+                            </td>
+                            <td>
+                                {{ data.price }} Ft
+                            </td>
+                            <td>
+                                0%
+                            </td>
+                            {% set deviceFullPrice = data.price * data.amount %}
+                            <td>
+                                {{ deviceFullPrice }} Ft
+                            </td>
+                            {% set fullPrice = fullPrice + deviceFullPrice %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="row " style="background: rgba(177,233,254,0.6);">
+                <div class="col d-flex justify-content-end align-items-center">
+                    <h5 class="fw-bold">Fizetendő összeg <br></h5>
                 </div>
             </div>
-            <div class="row" style="background: rgba(249,12,12,0);">
-                <div class="col d-flex justify-content-center align-items-center"></div>
-                <div class="col d-flex justify-content-center align-items-center"></div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>(27%-os ÁFA)<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>27%<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>Nettó összes<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>ÁFA érték<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6>Bruttó összes</h6>
+            <div class="row">
+                <div class="col d-flex justify-content-end align-items-center">
+                    <h6 class="fw-bold">{{ fullPrice }} Ft</h6>
                 </div>
             </div>
             <div class="row" style="background: rgba(249,12,12,0);">
-                <div class="col d-flex justify-content-center align-items-center"></div>
-                <div class="col d-flex justify-content-center align-items-center"></div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6 class="fw-bold">Összesen<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center"></div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6 class="fw-bold">Nettó összes<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6 class="fw-bold">ÁFA érték<br></h6>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6 class="fw-bold">Bruttó összes</h6>
-                </div>
-            </div>
-            <div class="row" style="background: rgba(249,12,12,0);">
-                <div class="col d-flex justify-content-center align-items-center"></div>
-                <div class="col d-flex justify-content-center align-items-center"></div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h3 class="fw-bold">Végösszeg:<br></h3>
-                </div>
-                <div class="col d-flex justify-content-center align-items-center"></div>
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col d-flex justify-content-center align-items-center">
-                    <h6 class="fw-bold">Bruttó<br></h6>
-                </div>
-            </div>
-            <div class="row" style="background: rgba(249,12,12,0);">
-                <div class="col d-flex justify-content-center align-items-center">
+                <div class="col align-items-center">
                     <h5 class="w-100" style="margin-top: 50px;">Köszönjük a vásárlást!</h5>
                 </div>
             </div>

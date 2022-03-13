@@ -29,4 +29,5 @@ interface StockServiceInterface
 
     public function originalWhCapacity(Warehouse $warehouse):int;
 
+
 }

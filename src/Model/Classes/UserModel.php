@@ -40,8 +40,9 @@ class UserModel implements UserModelInterface
             $email = $request->request->get("newEmail");
             $phoneNumber = "+36".$request->request->get("newPhoneNumber");
             $role = $request->request->get("newRole");
+            $userNumber = "111";
             if ($request->request->get("newPassword") === $request->request->get("newPasswordAgain")){
-                $this->securityService->addUser($user,$request->request->get("newPasswordAgain"), $fullName, $email, $phoneNumber, $role);
+                $this->securityService->addUser($user,$request->request->get("newPasswordAgain"), $fullName, $email, $phoneNumber, $role, $userNumber);
             }else return false;
             return true;
         }return false;
@@ -64,7 +65,7 @@ class UserModel implements UserModelInterface
             $user->setFullName($request->request->get("fullName"));
             $user->setEmail($request->request->get("email"));
             $user->setPhoneNumber("+36".$request->request->get("phoneNumber"));
-            $user->setRoles([$request->request->get("role")]);
+            $user->setRoles(["ROLE_ADMIN"]);
             $this->securityService->updateUser($user->getId());
             return true;
         }else return false;

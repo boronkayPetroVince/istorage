@@ -36,7 +36,6 @@
                         <tr>
                             <th>Mennyiség</th>
                             <th>Beszerzési ár / db</th>
-                            <th>Eladási ár / db</th>
                             <th>Telefon</th>
                             <th>Raktár</th>
                             <th>Beérkezett</th>
@@ -51,7 +50,6 @@
                                 <tr>
                                     <td>{{ stock.amount }}</td>
                                     <td>{{ stock.purchasePrice }}</td>
-                                    <td>{% set sell = stock.purchasePrice * 1.27 %} {{ sell|round }}</td>
                                     <td>
                                         <span>{{ stock.phoneID.brandID.brandName }} </span>
                                         <span>{{ stock.phoneID.modelID.modelName }} </span>
