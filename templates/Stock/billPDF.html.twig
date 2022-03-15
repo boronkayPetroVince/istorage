@@ -1,7 +1,9 @@
-{% extends 'index.html.twig' %}
+{% extends 'base.html.twig' %}
 {# @var orderedPhones \App\Entity\Order[] #}
-
-{% block content %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
+{% endblock %}
+{% block body %}
     {% set whName = "" %}
     {% set address = "" %}
     {% set vatNumber = "" %}
@@ -23,7 +25,6 @@
         {% set orderNumber = data.orderNumber %}
     {% endfor %}
     <div class="container-fluid" style="margin-top: 50px;">
-        <a href="{{ path('billPDF') }}" class="btn btn-primary buttonDesign" type="button">PDF</a>
         <div style="background: rgba(255,255,255,0.5); padding:5px; border:1px solid rgba(0,0,0,0.5);">
             <div class="row">
                 <div class="col d-flex justify-content-start">
@@ -142,6 +143,5 @@
                 </div>
             </div>
         </div>
-        <a href="{{ path('main') }}" class="btn btn-primary buttonDesign" type="submit">Befejezés</a>
     </div>
 {% endblock %}

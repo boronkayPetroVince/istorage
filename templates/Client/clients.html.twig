@@ -90,19 +90,19 @@
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="clientName"><strong>Ügyfél név</strong></label>
-                                                <input class="form-control" type="text" id="clientName" name="clientName" required>
+                                                <input class="form-control" type="text" id="clientName" name="clientName" maxlength="100" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="vatNumber"><strong>Adószám</strong><br></label>
-                                                <input class="form-control" type="text" id="vatNumber" name="vatNumber" required>
+                                                <input class="form-control" type="text" id="vatNumber" name="vatNumber" maxlength="10" required>
                                             </div>
                                         </div>
                                         <div class="col col-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="postalCode"><strong>Irányítószám</strong><br></label>
-                                                <input class="form-control" type="number" id="postalCode" name="postalCode" onchange="loadUpdateData()" required>
+                                                <input class="form-control" type="number" id="postalCode" name="postalCode" onchange="loadUpdateData()" maxlength="4" required>
                                             </div>
                                         </div>
                                         <div class="col col-12 col-lg-6">
@@ -120,13 +120,13 @@
                                         <div class="col col-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="address"><strong>Utca, házszám</strong><br></label>
-                                                <input class="form-control" type="text" id="address" name="address" required>
+                                                <input class="form-control" type="text" id="address" name="address" maxlength="50" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="contact_FullName"><strong>Kontakt neve</strong><br></label>
-                                                <input class="form-control" type="text" id="contact_FullName" name="contact_FullName" required>
+                                                <input class="form-control" type="text" id="contact_FullName" name="contact_FullName" maxlength="100" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
@@ -135,13 +135,13 @@
                                                 <div class="input-group-append">
                                                     <button class="input-group-text" style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled>+36</button>
                                                 </div>
-                                                <input class="form-control" type="text" id="contact_PhoneNumber" name="contact_PhoneNumber" required>
+                                                <input class="form-control" type="text" id="contact_PhoneNumber" name="contact_PhoneNumber" maxlength="30" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="contact_Email"><strong>Kontakt email</strong><br></label>
-                                                <input class="form-control" type="email" id="contact_Email" name="contact_Email" required>
+                                                <input class="form-control" type="email" id="contact_Email" name="contact_Email" maxlength="255" required>
                                             </div>
                                         </div>
                                     </div>
@@ -173,19 +173,19 @@
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newClientName"><strong>Ügyfél név</strong></label>
-                                                <input class="form-control" type="text" id="newClientName" name="newClientName" required>
+                                                <input class="form-control" type="text" id="newClientName" name="newClientName" maxlength="100" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newVatNumber"><strong>Adószám</strong><br></label>
-                                                <input class="form-control" type="text" id="newVatNumber" name="newVatNumber" required>
+                                                <input class="form-control" type="text" id="newVatNumber" name="newVatNumber" maxlength="10" required>
                                             </div>
                                         </div>
                                         <div class="col col-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="postCode"><strong>Irányítószám</strong><br></label>
-                                                <input class="form-control" type="number" id="postCode" name="postCode" onchange="loadAddData()" required>
+                                                <input class="form-control" type="number" id="postCode" name="postCode" onchange="loadAddData()" maxlength="4" required>
                                             </div>
                                         </div>
                                         <div class="col col-12 col-lg-6">
@@ -203,13 +203,13 @@
                                         <div class="col col-sm-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newAddress"><strong>Utca, házszám</strong><br></label>
-                                                <input class="form-control" type="text" id="newAddress" name="newAddress" required>
+                                                <input class="form-control" type="text" id="newAddress" name="newAddress" maxlength="50" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newContact_Fullname"><strong>Kontakt neve</strong><br></label>
-                                                <input class="form-control" type="text" id="newContact_Fullname" name="newContact_Fullname" required>
+                                                <input class="form-control" type="text" id="newContact_Fullname" name="newContact_Fullname" maxlength="100" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
@@ -218,13 +218,13 @@
                                                 <div class="input-group-append">
                                                     <button class="input-group-text" style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled>+36</button>
                                                 </div>
-                                                <input class="form-control" type="text" id="newContact_Phonenumber" name="newContact_Phonenumber" placeholder="304407954" required>
+                                                <input class="form-control" type="text" id="newContact_Phonenumber" name="newContact_Phonenumber" placeholder="304407954" maxlength="30" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newContact_Email"><strong>Kontakt email</strong><br></label>
-                                                <input class="form-control" type="email" id="newContact_Email" name="newContact_Email" required>
+                                                <input class="form-control" type="email" id="newContact_Email" name="newContact_Email" maxlength="255" required>
                                             </div>
                                         </div>
                                     </div>

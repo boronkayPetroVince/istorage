@@ -89,19 +89,19 @@
                                             <div class="mb-3">
                                                 <label class="form-label" for="username"><strong>Felhasználónév</strong></label>
                                                 <small style="color:red">(Ha létező a megadott felhasználónév, akkor nem kerül módosításra!)</small>
-                                                <input class="form-control" type="text" id="username"  name="username" required>
+                                                <input class="form-control" type="text" id="username"  name="username" maxlength="30" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="fullName"><strong>Teljes név</strong><br></label>
-                                                <input class="form-control" type="text" id="fullName" name="fullName" required>
+                                                <input class="form-control" type="text" id="fullName" name="fullName" maxlength="100" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="email"><strong>Email cím&nbsp;</strong></label>
-                                                <input class="form-control" type="email" id="email" name="email" required>
+                                                <input class="form-control" type="email" id="email" name="email" maxlength="255" required>
                                             </div>
                                         </div>
                                         <div class="col">
@@ -110,7 +110,7 @@
                                                 <div class="input-group-append">
                                                     <button class="input-group-text" style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled>+36</button>
                                                 </div>
-                                                <input class="form-control" type="text" id="phoneNumber" name="phoneNumber" required>
+                                                <input class="form-control" type="text" id="phoneNumber" name="phoneNumber" maxlength="30" required>
                                             </div>
                                         </div>
                                         <div class="col">
@@ -146,31 +146,31 @@
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newUsername"><strong>Felhasználónév</strong></label>
-                                                <input class="form-control" type="text" id="newUsername"  name="newUsername" required>
+                                                <input class="form-control" type="text" id="newUsername"  name="newUsername" maxlength="30" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newPassword"><strong>Jelszó</strong><br></label>
-                                                <input class="form-control" type="password" id="newPassword"  name="newPassword" required>
+                                                <input class="form-control" type="password" id="newPassword"  name="newPassword" maxlength="30" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newPasswordAgain"><strong>Jelszó megerősítése</strong><br></label>
-                                                <input class="form-control" type="password" id="newPasswordAgain"  name="newPasswordAgain" required>
+                                                <input class="form-control" type="password" id="newPasswordAgain"  name="newPasswordAgain" maxlength="30" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newFullname"><strong>Teljes név</strong><br></label>
-                                                <input class="form-control" type="text" id="newFullname"  name="newFullname" required>
+                                                <input class="form-control" type="text" id="newFullname"  name="newFullname" maxlength="100" required>
                                             </div>
                                         </div>
                                         <div class="col col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newEmail"><strong>Email cím&nbsp;</strong></label>
-                                                <input class="form-control" type="email" id="newEmail" name="newEmail" required>
+                                                <input class="form-control" type="email" id="newEmail" name="newEmail" maxlength="255" required>
                                             </div>
                                         </div>
                                         <div class="col">
@@ -179,7 +179,7 @@
                                                 <div class="input-group-append">
                                                     <button class="input-group-text" style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled>+36</button>
                                                 </div>
-                                                <input class="form-control" type="text" id="newPhoneNumber" name="newPhoneNumber"  placeholder="304407954" required>
+                                                <input class="form-control" type="text" id="newPhoneNumber" name="newPhoneNumber"  placeholder="304407954" maxlength="30" required>
                                             </div>
                                         </div>
                                         <div class="col">

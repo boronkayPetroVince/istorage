@@ -41,7 +41,7 @@ class Warehouse implements \JsonSerializable
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=30, nullable=false)
+     * @ORM\Column(type="string", length=10, nullable=false)
      */
     private $vatNumber;
 

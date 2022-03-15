@@ -29,7 +29,7 @@ class Client implements \JsonSerializable
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=false, length=30)
+     * @ORM\Column(type="string", nullable=false, length=10)
      */
     private $vatNumber;
 

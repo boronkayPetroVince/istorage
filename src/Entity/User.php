@@ -39,13 +39,13 @@ class User implements UserInterface, JsonSerializable
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=1000, nullable=false)
+     * @ORM\Column(type="string", length=100, nullable=false)
      */
     private $fullName = "";
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=40, nullable=false)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $email = "";
 
@@ -54,12 +54,6 @@ class User implements UserInterface, JsonSerializable
      * @ORM\Column(type="string", length=30 ,nullable=false)
      */
     private $phoneNumber = "";
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=10, nullable=false)
-     */
-    private $userNumber;
 
     /**
      * @var string[]
@@ -156,22 +150,6 @@ class User implements UserInterface, JsonSerializable
     }
 
     /**
-     * @return string
-     */
-    public function getUserNumber(): string
-    {
-        return $this->userNumber;
-    }
-
-    /**
-     * @param string $userNumber
-     */
-    public function setUserNumber(string $userNumber): void
-    {
-        $this->userNumber = $userNumber;
-    }
-
-    /**
      * @return string[]
      */
     public function getRoles(): array
@@ -205,7 +183,6 @@ class User implements UserInterface, JsonSerializable
             "fullName" =>$this->fullName,
             "phoneNumber" => $this->phoneNumber,
             "email" => $this->email ,
-            "userNumver" => $this->userNumber,
             "role"=>$this->roles[0]];
     }
 }

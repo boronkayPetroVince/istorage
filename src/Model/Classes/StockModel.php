@@ -287,7 +287,7 @@ class StockModel implements StockModelInterface
     }
 
     public function sellingStockHelper(array $list):iterable{
-        return $list;
+        return $this->sellStock();
     }
 
     public function billPDF(string $html){

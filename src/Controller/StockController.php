@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Order;
 use App\Entity\User;
 use App\Model\Interfaces\StockModelInterface;
 use App\Service\Interfaces\SecurityServiceInterface;
@@ -26,11 +27,14 @@ class StockController extends AbstractController
     /** @var StockServiceInterface */
     private $stockService;
 
+    private $list = array();
+
     /**
      * StockController constructor.
      * @param StockModelInterface $stockModel
      * @param SecurityServiceInterface $securityService
      * @param StockServiceInterface $stockService
+     * @param array $list
      */
     public function __construct(StockModelInterface $stockModel, SecurityServiceInterface $securityService, StockServiceInterface $stockService)
     {
@@ -109,6 +113,10 @@ class StockController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if($request->isMethod("POST")){
+            /** @var Order[] $temp */
+            $temp = $this->list;
+            array_push($this->list,$this->stockModel->sellStock($request, $user));
+
             return $this->render("Stock/bill.html.twig", [
                 "orderedPhones" => $this->stockModel->sellStock($request, $user),
                 "user" =>$this->getUser()
@@ -146,10 +154,12 @@ class StockController extends AbstractController
      */
     public function generateBillPDF(Request $request){
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        $html = $this->renderView('Stock/bill.html.twig', [
-            "orderedPhones" => $this->stockModel->sellStock($request, $this->getUser()),
+        $html = $this->renderView('Stock/billPDF.html.twig', [
+            "orderedPhones" => $this->list,
             "user" =>$this->getUser()]);
         $this->stockModel->billPDF($html);
+        $file = fopen("bill.txt","w" );
+        fwrite($file, var_export($this->list));
     }
 
     /**
