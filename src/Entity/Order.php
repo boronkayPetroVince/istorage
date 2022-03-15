@@ -50,20 +50,6 @@ class Order
     private $warehouse_ID;
 
     /**
-     * @var Status
-     * @ORM\JoinColumn(name="statusID", referencedColumnName="id")
-     * @ORM\ManyToOne(targetEntity="Status")
-     */
-    private $statusID;
-
-    /**
-     * @var Vat
-     * @ORM\JoinColumn(name="vatID", referencedColumnName="id")
-     * @ORM\ManyToOne(targetEntity="Vat")
-     */
-    private $vatID;
-
-    /**
      * @var int
      * @ORM\Column(type="integer", nullable=false)
      */
@@ -158,38 +144,6 @@ class Order
     public function setWarehouseID(Warehouse $warehouse_ID): void
     {
         $this->warehouse_ID = $warehouse_ID;
-    }
-
-    /**
-     * @return Status
-     */
-    public function getStatusID(): Status
-    {
-        return $this->statusID;
-    }
-
-    /**
-     * @param Status $statusID
-     */
-    public function setStatusID(Status $statusID): void
-    {
-        $this->statusID = $statusID;
-    }
-
-    /**
-     * @return Vat
-     */
-    public function getVatID(): Vat
-    {
-        return $this->vatID;
-    }
-
-    /**
-     * @param Vat $vatID
-     */
-    public function setVatID(Vat $vatID): void
-    {
-        $this->vatID = $vatID;
     }
 
     /**

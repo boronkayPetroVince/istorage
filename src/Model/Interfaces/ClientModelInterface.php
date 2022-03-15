@@ -18,13 +18,17 @@ interface ClientModelInterface
 
     public function getOneSettlement(Request $request):Response;
 
-    public function getAllCountry():Response;
-
     public function allClients(): iterable;
 
     public function getOneClientById(Request $request): iterable;
 
+    public function clientsPDF(string $html);
+
+    public function clientsExcel();
+
     public function checkClient(string $clientName): bool;
+
+
 
 
 

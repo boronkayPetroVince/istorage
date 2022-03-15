@@ -17,7 +17,11 @@ use App\Service\Interfaces\DeliveryServiceInterface;
 use App\Service\Interfaces\RegionServiceInterface;
 use App\Service\Interfaces\SecurityServiceInterface;
 use App\Service\Interfaces\SettlementServiceInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use DragonBe\Vies\Vies;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -127,17 +131,8 @@ class ClientModel implements ClientModelInterface
 
     public function getOneSettlement(Request $request): Response
     {
-        if($request){
-            $postalCode = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postalCode"));
-            return new JsonResponse($postalCode);
-        }
-        return new JsonResponse(null);
-    }
-
-    public function getAllCountry(): Response
-    {
-        $country = $this->countryService->getAllCountry();
-        return new JsonResponse($country);
+        $postalCode = $this->settlementService->getOneSettlementByPostalcode($request->request->get("postalCode"));
+        return new JsonResponse($postalCode);
     }
 
     public function allClients(): iterable
@@ -159,6 +154,55 @@ class ClientModel implements ClientModelInterface
         }
         return true;
     }
+
+    public function clientsPDF(string $html)
+    {
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($pdfOptions);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        ob_get_clean();
+        $dompdf->stream("ugyfelek.pdf", [
+            "Attachment" => true
+        ]);
+    }
+
+    public function clientsExcel()
+    {
+        /** @var Client[] $clients */
+        $clients = $this->clientService->getAllClient();
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'ID');
+        $sheet->setCellValue('B1', 'Ügyfél neve');
+        $sheet->setCellValue('C1', 'Adószám');
+        $sheet->setCellValue('D1', 'Kapcsolattartó név');
+        $sheet->setCellValue('E1', 'Kapcsolattartó telefon');
+        $sheet->setCellValue('F1', 'Kapcsolattartó email');
+        $sheet->setCellValue('G1', 'Cím');
+        $spreadsheet->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
+        $counter = 2;
+        foreach ($clients as $client){
+            $sheet->setCellValue('A'.$counter, $client->getId());
+            $sheet->setCellValue('B'.$counter, $client->getClientName());
+            $sheet->setCellValue('C'.$counter, $client->getVatNumber());
+            $sheet->setCellValue('D'.$counter, $client->getContactID()->getFullName());
+            $sheet->setCellValue('E'.$counter, $client->getContactID()->getPhoneNumber());
+            $sheet->setCellValue('F'.$counter, $client->getContactID()->getEmail());
+            $sheet->setCellValue('G'.$counter, $client->getDeliveryID()->getSettlementID()->getPostalCode(). " ".
+                $client->getDeliveryID()->getSettlementID()->getSettlementName()." ".$client->getDeliveryID()->getAddress());
+            $counter++;
+        }
+        $writer = new Xlsx($spreadsheet);
+        $filename = "ugyfelek";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        $writer->save('php://output');
+        die();
+    }
+
 
     private function checkVat(string $vatNumber):bool{
         $vies = new Vies();

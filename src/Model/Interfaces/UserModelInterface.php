@@ -19,6 +19,10 @@ interface UserModelInterface
 
     public function changePass(Request $request, User $user):bool;
 
+    public function usersPDF(string $html);
+
+    public function usersExcel();
+
     public function checkUser(string $username):bool;
 
 

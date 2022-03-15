@@ -110,7 +110,6 @@ class StockController extends AbstractController
         $user = $this->getUser();
         if($request->isMethod("POST")){
             return $this->render("Stock/bill.html.twig", [
-                "lastOrder" => $this->stockModel->lastSell(),
                 "orderedPhones" => $this->stockModel->sellStock($request, $user),
                 "user" =>$this->getUser()
             ]);
@@ -145,21 +144,12 @@ class StockController extends AbstractController
      * @param Request $request
      * @Route(name="billPDF", path="/billPDF")
      */
-    public function billPDF(Request $request){
+    public function generateBillPDF(Request $request){
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        $pdfOptions = new Options();
-        $pdfOptions->set('defaultFont', 'Arial');
-        $dompdf = new Dompdf($pdfOptions);
-        $html = $this->renderView('Stock/bill.html.twig', ["lastOrder" => $this->stockModel->lastSell(),
+        $html = $this->renderView('Stock/bill.html.twig', [
             "orderedPhones" => $this->stockModel->sellStock($request, $this->getUser()),
             "user" =>$this->getUser()]);
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-        ob_get_clean();
-        $dompdf->stream("bill.pdf", [
-            "Attachment" => true
-        ]);
+        $this->stockModel->billPDF($html);
     }
 
     /**

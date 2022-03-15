@@ -70,9 +70,6 @@ class StockModel implements StockModelInterface
     /** @var OrderServiceInterface */
     private $orderService;
 
-    /** @var VatServiceInterface */
-    private $vatService;
-
     /**
      * StockModel constructor.
      * @param PhoneModelInterface $phoneModel
@@ -87,9 +84,8 @@ class StockModel implements StockModelInterface
      * @param PhoneServiceInterface $phoneService
      * @param ClientServiceInterface $clientService
      * @param OrderServiceInterface $orderService
-     * @param VatServiceInterface $vatService
      */
-    public function __construct(PhoneModelInterface $phoneModel, WarehouseServiceInterface $warehouseService, StockServiceInterface $stockService, StatusServiceInterface $statusService, SecurityServiceInterface $securityService, CapacityServiceInterface $capacityService, ColorServiceInterface $colorService, ModelServiceInterface $modelService, BrandServiceInterface $brandService, PhoneServiceInterface $phoneService, ClientServiceInterface $clientService, OrderServiceInterface $orderService, VatServiceInterface $vatService)
+    public function __construct(PhoneModelInterface $phoneModel, WarehouseServiceInterface $warehouseService, StockServiceInterface $stockService, StatusServiceInterface $statusService, SecurityServiceInterface $securityService, CapacityServiceInterface $capacityService, ColorServiceInterface $colorService, ModelServiceInterface $modelService, BrandServiceInterface $brandService, PhoneServiceInterface $phoneService, ClientServiceInterface $clientService, OrderServiceInterface $orderService)
     {
         $this->phoneModel = $phoneModel;
         $this->warehouseService = $warehouseService;
@@ -103,7 +99,6 @@ class StockModel implements StockModelInterface
         $this->phoneService = $phoneService;
         $this->clientService = $clientService;
         $this->orderService = $orderService;
-        $this->vatService = $vatService;
     }
 
 
@@ -170,8 +165,6 @@ class StockModel implements StockModelInterface
                         $this->capacityService->getOneCapacityByMemory($tempList[7])
                     );
                     $order->setPhoneID($this->phoneService->getOnePhoneById($phone->getId()));
-                    $status = $this->statusService->getOneStatusByName("Eladva");
-                    $order->setStatusID($this->statusService->getOneStatusById($status->getId()));
                     $this->orderService->addOrder($order);
                     array_push($list,$order);
                 }
@@ -293,13 +286,14 @@ class StockModel implements StockModelInterface
         return $this->orderService->lastSell();
     }
 
-    public function billPDF(Request $request){
+    public function sellingStockHelper(array $list):iterable{
+        return $list;
+    }
+
+    public function billPDF(string $html){
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
         $dompdf = new Dompdf($pdfOptions);
-        $html = $this->renderView('Stock/bill.html.twig', ["lastOrder" => $this->stockModel->lastSell(),
-            "orderedPhones" => $this->stockModel->sellStock($request, $this->getUser()),
-            "user" =>$this->getUser()]);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
