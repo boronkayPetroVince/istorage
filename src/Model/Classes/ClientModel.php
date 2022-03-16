@@ -7,7 +7,6 @@ namespace App\Model\Classes;
 use App\Entity\Client;
 use App\Entity\Contact;
 use App\Entity\Delivery_address;
-use App\Entity\Settlement;
 use App\Entity\User;
 use App\Model\Interfaces\ClientModelInterface;
 use App\Service\Interfaces\ClientServiceInterface;

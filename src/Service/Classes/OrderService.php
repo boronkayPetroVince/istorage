@@ -95,7 +95,20 @@ class OrderService extends CrudService implements OrderServiceInterface
             ->orderBy("ordered.id", "DESC")
             ->setMaxResults(1);
         $query = $qb->getQuery();
-        return $query->getResult();
+
+        $tempList = [];
+        /** @var Order $lastSold */
+        $lastSold = $query->getResult();
+        /** @var Order[] $allOrder */
+        $allOrder = $this->getAllOrder();
+        foreach($lastSold as $last){
+            foreach($allOrder as $order){
+                if($order->getOrderNumber() == $last->getOrderNumber()){
+                    array_push($tempList, $order);
+                }
+            }
+        }
+        return $tempList;
     }
     private function allMonths():iterable{
         $months = [];

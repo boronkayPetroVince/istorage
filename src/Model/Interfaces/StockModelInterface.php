@@ -56,6 +56,8 @@ interface StockModelInterface
 
     public function lastSell():iterable;
 
+    public function checkOrderNumber(string $orderNumber):bool;
+
     public function billPDF(string $html);
 
     public function OrderedPDF(string $html);

@@ -133,10 +133,15 @@ class StockModel implements StockModelInterface
 
     public function sellStock(Request $request, User $user): iterable
     {
-        $orderNumber = "";
-        for ($i = 0; $i < 10;$i++){
-            $orderNumber .= "".rand(0,9);
+        /** @var Order[] $lastOrder */
+        $lastOrder = $this->orderService->lastSell();
+        $number = 0;
+        foreach($lastOrder as $last){
+            $number = $last->getId();
         }
+        $number++;
+        $orderNumber = date("Y")."/".$number;
+
         $list = [];
         if ($request) {
             $allSellingData = $request->request->get("sellingTableData");
@@ -286,8 +291,13 @@ class StockModel implements StockModelInterface
         return $this->orderService->lastSell();
     }
 
-    public function sellingStockHelper(array $list):iterable{
-        return $this->sellStock();
+    public function checkOrderNumber(string $orderNumber):bool{
+        /** @var Order[] $orders */
+        $orders = $this->orderService->getAllOrder();
+        foreach($orders as $order){
+            if($order->getOrderNumber() == $orderNumber) return true;
+        }
+        return false;
     }
 
     public function billPDF(string $html){

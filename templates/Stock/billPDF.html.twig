@@ -1,8 +1,24 @@
-{% extends 'base.html.twig' %}
 {# @var orderedPhones \App\Entity\Order[] #}
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ asset('assets/css/bill.css') }}">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+
+    {% block stylesheets %}
+        {#{{ encore_entry_link_tags('app') }}#}
+    {% endblock %}
+
+    {% block jquery %}
+        {#{{ encore_entry_script_tags('app') }}#}
+    {% endblock %}
+
+    {% block javascripts %}
+
+    {% endblock %}
+</head>
+<body>
 {% block body %}
     {% set whName = "" %}
     {% set address = "" %}
@@ -24,21 +40,23 @@
         {% set clientVat = data.clientID.vatNumber %}
         {% set orderNumber = data.orderNumber %}
     {% endfor %}
-    <div class="container-fluid" style="margin-top: 50px;">
-        <div style="background: rgba(255,255,255,0.5); padding:5px; border:1px solid rgba(0,0,0,0.5);">
-            <div class="row">
-                <div class="col d-flex justify-content-start">
-                    <h3 class="px-2 text-uppercase fw-bold"><i class="fa fa-mobile" style="font-size: 40px;transform: rotate(-21deg);padding-right: 15px;"></i>IStorage</h3>
+    <div class="container">
+        <div class="row">
+        </div>
+        <div class="bg-light" style="border-style: solid;width: 100% !important;">
+            <div class="row" style="margin:auto;">
+                <div class="col">
+                    <h3 class="text-uppercase fw-bold"><i class="fa fa-mobile" style="font-size: 40px;transform: rotate(-21deg);padding-right: 15px;"></i>IStorage</h3>
                 </div>
                 <div class="col d-flex justify-content-center">
                     <h1 class="text-uppercase text-center" style="padding-bottom: 40px;">Számla</h1>
                 </div>
-                <div class="col d-flex justify-content-end">
-                    <p class="text-center" style="margin-bottom: 1px;">Rendelési azonosító: </p><br>
-                    <p class="fw-bold text-center"> {{ orderNumber }}</p>
+                <div class="col">
+                    <p class="text-end" style="margin-bottom: 1px;">Rendelési azonosító:</p>
+                    <p class="fw-bold text-end">{{ orderNumber }}</p>
                 </div>
             </div>
-            <div class="row" style="background: rgba(177,233,254,0.6);">
+            <div class="row" style="margin:auto;background: rgba(177,233,254,0.6);">
                 <div class="col d-flex align-items-center">
                     <h6>Számla kiállító adatai:<br></h6>
                 </div>
@@ -46,19 +64,19 @@
                     <h6>Vevő adatai:<br></h6>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="margin:auto;">
                 <div class="col">
                     <p class="fw-bold" style="margin-bottom: 0 !important;">{{ whName }}</p>
-                    <p style="margin-bottom: 0 !important;">{{ address }}</p>
+                    <p style="margin-bottom: 0 !important;">Cím: {{ address }}</p>
                     <p>Adószám: {{ vatNumber }}</p>
                 </div>
                 <div class="col">
                     <p class="fw-bold" style="margin-bottom: 0 !important;">{{ client }}</p>
-                    <p style="margin-bottom: 0 !important;">{{ clientPostal }} {{ clientSettlement }}, {{ clientAddress }}</p>
-                    <p>Adószám: {{ clientVat }}</p>
+                    <p style="margin-bottom: 0 !important;">Cím: {{ clientPostal }} {{ clientSettlement }}, {{ clientAddress }}</p>
+                    <p>Adószám:&nbsp;{{ clientVat }}</p>
                 </div>
             </div>
-            <div class="row" style="background: rgba(177,233,254,0.6);">
+            <div class="row" style="margin:auto;background: rgba(177,233,254,0.6);">
                 <div class="col d-flex justify-content-center align-items-center">
                     <h6>Fizetési mód<br></h6>
                 </div>
@@ -73,7 +91,7 @@
                 </div>
             </div>
             {% set datetime = date('')|date("Y/m/d") %}
-            <div class="row" style="background: rgba(249,12,12,0);">
+            <div class="row" style="margin:auto;background: rgba(249,12,12,0);">
                 <div class="col d-flex justify-content-center align-items-center">
                     <h6>Átutalás</h6>
                 </div>
@@ -87,61 +105,51 @@
                     <h6>{{ datetime|date_modify('+1 day')|date("Y/m/d")}}<br></h6>
                 </div>
             </div>
-            <div class="">
-                {% set fullPrice = 0 %}
-                <table class="table" style="">
-                    <thead style="background: rgba(177,233,254,0.6);">
-                    <tr>
+
+            <div class="row" style="margin:auto;background: rgba(177,233,254,0);">
+                <table>
+                    {% set fullPrice = 0 %}
+                    <tr style="text-align: center !important;background: rgba(177,233,254,0.6);">
                         <th>Termék</th>
                         <th>Mennyiség</th>
                         <th>Nettó egységár</th>
                         <th>ÁFA</th>
                         <th>Nettó</th>
                     </tr>
-                    </thead>
-                    <tbody style="border-color:black;">
                     {% for data in orderedPhones %}
-                        <tr>
-                            <td>
-                                {{ data.phoneID.brandID.brandName }}
+                        <tr style="text-align: center !important;" >
+                            <td>{{ data.phoneID.brandID.brandName }}
                                 {{ data.phoneID.modelID.modelName }}
                                 {{ data.phoneID.colorID.phoneColor }}
                                 {{ data.phoneID.capacityID.capacity }} GB
                             </td>
-                            <td>
-                                {{ data.amount }}
-                            </td>
-                            <td>
-                                {{ data.price }} Ft
-                            </td>
-                            <td>
-                                0%
-                            </td>
+                            <td>{{ data.amount }}</td>
+                            <td>{{ data.price }}</td>
+                            <td>0%</td>
                             {% set deviceFullPrice = data.price * data.amount %}
-                            <td>
-                                {{ deviceFullPrice }} Ft
-                            </td>
-                            {% set fullPrice = fullPrice + deviceFullPrice %}
+                            <td>{{ deviceFullPrice }} Ft</td>
                         </tr>
+                        {% set fullPrice = fullPrice + deviceFullPrice %}
                     {% endfor %}
-                    </tbody>
                 </table>
             </div>
-            <div class="row " style="background: rgba(177,233,254,0.6);">
-                <div class="col d-flex justify-content-end align-items-center">
-                    <h5 class="fw-bold">Fizetendő összeg <br></h5>
+            <div class="row" style="margin:auto;background: rgba(177,233,254,0.6);">
+                <div class="col offset-md-0 d-flex justify-content-end align-items-center">
+                    <h5 class="fw-bold">Fizetendő összeg</h5>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="margin:auto;">
                 <div class="col d-flex justify-content-end align-items-center">
-                    <h6 class="fw-bold">{{ fullPrice }} Ft</h6>
+                    <p>{{ fullPrice }} Ft</p>
                 </div>
             </div>
-            <div class="row" style="background: rgba(249,12,12,0);">
-                <div class="col align-items-center">
-                    <h5 class="w-100" style="margin-top: 50px;">Köszönjük a vásárlást!</h5>
+            <div class="row" style="margin:auto;background: rgba(249,12,12,0);">
+                <div class="col d-flex justify-content-center align-items-center">
+                    <h4 class="w-100" style="margin-top: 50px;">Köszönjük a vásárlást!</h4>
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
+</body>
+</html>

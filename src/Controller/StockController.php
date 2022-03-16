@@ -155,7 +155,7 @@ class StockController extends AbstractController
     public function generateBillPDF(Request $request){
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
         $html = $this->renderView('Stock/billPDF.html.twig', [
-            "orderedPhones" => $this->list,
+            "orderedPhones" => $this->stockModel->lastSell(),
             "user" =>$this->getUser()]);
         $this->stockModel->billPDF($html);
         $file = fopen("bill.txt","w" );
