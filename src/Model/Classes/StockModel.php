@@ -141,11 +141,13 @@ class StockModel implements StockModelInterface
         }
         $number++;
         $orderNumber = date("Y")."/".$number;
-
+        $file = fopen("teszt.txt", "w");
+        /** @var Order[] $list */
         $list = [];
         if ($request) {
             $allSellingData = $request->request->get("sellingTableData");
             $oneData = explode(";", "".$allSellingData);
+            fwrite($file,print_r($oneData,true));
             foreach ($oneData as $data) {
                 $tempList = explode("|", $data);
 

@@ -6,6 +6,8 @@
     {% set address = "" %}
     {% set vatNumber = "" %}
     {% set client = "" %}
+    {% set clientCountry = "" %}
+    {% set clientRegion = "" %}
     {% set clientPostal = "" %}
     {% set clientSettlement = "" %}
     {% set clientAddress = "" %}
@@ -16,6 +18,8 @@
         {% set address = data.warehouseID.location %}
         {% set vatNumber = data.warehouseID.vatNumber %}
         {% set client = data.clientID.clientName %}
+        {% set clientCountry = data.clientID.deliveryID.settlementID.regionID.countryID.countryName %}
+        {% set clientRegion = data.clientID.deliveryID.settlementID.regionID.regionName %}
         {% set clientPostal = data.clientID.deliveryID.settlementID.postalCode %}
         {% set clientSettlement = data.clientID.deliveryID.settlementID.settlementName %}
         {% set clientAddress = data.clientID.deliveryID.address %}
@@ -29,17 +33,14 @@
                 <a href="{{ path('main') }}" class="btn btn-primary buttonDesign" style="border-radius: 0;" type="button">Tovább a főoldalra</a>
             </div>
         </div>
-        <div class="bg-light" style="border-style: solid;width: 100% !important;">
-            <div class="row" style="margin:auto;">
-                <div class="col">
-                    <h3 class="text-uppercase fw-bold"><i class="fa fa-mobile" style="font-size: 40px;transform: rotate(-21deg);padding-right: 15px;"></i>IStorage</h3>
-                </div>
-                <div class="col d-flex justify-content-center">
+        <div class="bg-light" style="border-style: solid;width: 100% !important;margin-bottom:20px;">
+            <div class="row" style="margin:auto;padding-top: 20px;">
+                <div class="col d-flex justify-content-start">
                     <h1 class="text-uppercase text-center" style="padding-bottom: 40px;">Számla</h1>
                 </div>
                 <div class="col">
                     <p class="text-end" style="margin-bottom: 1px;">Rendelési azonosító:</p>
-                    <p class="fw-bold text-end">{{ orderNumber }}</p>
+                    <p class="fw-bold text-end"><span style="padding-right:1.6rem;">{{ orderNumber }}</span></p>
                 </div>
             </div>
             <div class="row" style="margin:auto;background: rgba(177,233,254,0.6);">
@@ -60,6 +61,16 @@
                     <p class="fw-bold" style="margin-bottom: 0 !important;">{{ client }}</p>
                     <p style="margin-bottom: 0 !important;">Cím: {{ clientPostal }} {{ clientSettlement }}, {{ clientAddress }}</p>
                     <p>Adószám:&nbsp;{{ clientVat }}</p>
+                </div>
+            </div>
+            <div class="row" style="margin:auto;background: rgba(177,233,254,0.6);">
+                <div class="col d-flex align-items-center">
+                    Szállítási cím
+                </div>
+            </div>
+            <div class="row" style="margin:auto;">
+                <div class="col d-flex align-items-center">
+                    <span>{{ clientCountry|upper }}, </span> {{ clientRegion }}, {{ clientPostal }} {{ clientSettlement }}, {{ clientAddress }}
                 </div>
             </div>
             <div class="row" style="margin:auto;background: rgba(177,233,254,0.6);">
@@ -103,14 +114,14 @@
                         <th>Nettó</th>
                     </tr>
                     {% for data in orderedPhones %}
-                        <tr style="text-align: center !important;" >
+                        <tr style="text-align: center !important;border-bottom:1px solid gainsboro;" >
                             <td>{{ data.phoneID.brandID.brandName }}
                                 {{ data.phoneID.modelID.modelName }}
                                 {{ data.phoneID.colorID.phoneColor }}
                                 {{ data.phoneID.capacityID.capacity }} GB
                             </td>
                             <td>{{ data.amount }}</td>
-                            <td>{{ data.price }}</td>
+                            <td>{{ data.price }} Ft</td>
                             <td>0%</td>
                         {% set deviceFullPrice = data.price * data.amount %}
                             <td>{{ deviceFullPrice }} Ft</td>
@@ -121,7 +132,7 @@
             </div>
             <div class="row" style="margin:auto;background: rgba(177,233,254,0.6);">
                 <div class="col offset-md-0 d-flex justify-content-end align-items-center">
-                    <h5 class="fw-bold">Fizetendő összeg</h5>
+                    <h5 class="fw-bold">Nettó összeg</h5>
                 </div>
             </div>
             <div class="row" style="margin:auto;">
@@ -129,9 +140,25 @@
                     <p>{{ fullPrice }} Ft</p>
                 </div>
             </div>
+            <div class="row" style="margin:auto;">
+                <div class="col d-flex justify-content-end align-items-center">
+                    <p>+0% VAT: 0 Ft</p>
+                </div>
+            </div>
+            <div class="row" style="margin:auto;">
+                <div class="col d-flex justify-content-end align-items-center">
+                    <p>Végösszeg: {{ fullPrice }} Ft</p>
+                </div>
+            </div>
+
             <div class="row" style="margin:auto;background: rgba(249,12,12,0);">
                 <div class="col d-flex justify-content-center align-items-center">
-                    <h4 class="w-100" style="margin-top: 50px;">Köszönjük a vásárlást!</h4>
+                    <h4 class="w-100" style="margin-top: 20px;">Köszönjük a vásárlást!</h4>
+                </div>
+            </div>
+            <div class="row" style="margin:auto;background: rgba(249,12,12,0);">
+                <div class="col d-flex justify-content-end align-items-center">
+                    <h1 class="w-100" style="margin-top: 50px;text-align: right;">IStorage</h1>
                 </div>
             </div>
         </div>

@@ -113,10 +113,6 @@ class StockController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if($request->isMethod("POST")){
-            /** @var Order[] $temp */
-            $temp = $this->list;
-            array_push($this->list,$this->stockModel->sellStock($request, $user));
-
             return $this->render("Stock/bill.html.twig", [
                 "orderedPhones" => $this->stockModel->sellStock($request, $user),
                 "user" =>$this->getUser()

@@ -51,54 +51,6 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         // $product = new Product();
         // $manager->persist($product);
 
-        // TELEFON
-        $marka = new Brand();
-        $marka->setMarka("IPhone");
-        $this->em->persist($marka);
-
-        $model = new Model();
-        $model->setModel("XI");
-        $model->setMarkaID($marka);
-        $this->em->persist($model);
-
-        $szin = new Color();
-        $szin->setSzin("Fehér");
-        $this->em->persist($szin);
-
-        $telefon = new Phone();
-        $telefon->setModelID($model);
-        $telefon->setMeretGB(64);
-        $telefon->setSzinID($szin);
-        $this->em->persist($telefon);
-
-        // ÜGYFÉL
-        $ugyfel = new Client();
-        $ugyfel->setCegnev("PetroSoft");
-        $ugyfel->setAdoszam(1234565-4-13);
-        $this->em->persist($ugyfel);
-
-        $orszag = new Country();
-        $orszag->setOrszag("Magyarország");
-        $this->em->persist($orszag);
-
-        $telepules = new City();
-        $telepules->setOrszagID($orszag);
-        $telepules->setIranyitoszam(2600);
-        $telepules->setTelepules("Vác");
-        $this->em->persist($telepules);
-
-        $szallitasi_cim = new Deliveryaddress();
-        $szallitasi_cim->setTelepulesID($telepules);
-        $szallitasi_cim->setUtcaHazszam("Bottyán utca 17.");
-        $szallitasi_cim->setUgyfelID($ugyfel);
-        $this->em->persist($szallitasi_cim);
-
-        $elerhetoseg = new Contact();
-        $elerhetoseg->setTelNev("Petróleum Vince");
-        $elerhetoseg->setEmail("petroking@gmail.com");
-        $elerhetoseg->setTelefonszam(06305506354);
-        $elerhetoseg->setUgyfelID($ugyfel);
-        $this->em->persist($elerhetoseg);
 
         //FELHASZNÁLÓ - RAKTÁROS
         $felhasznalo = new User();
@@ -109,31 +61,6 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $felhasznalo->setEmail("petrogod@gmail.com");
         $felhasznalo->setRoles(["ROLE_ADMIN"]);
         $this->em->persist($felhasznalo);
-
-        // RAKTÁR - RENDELÉS
-        $raktar = new Warehouse();
-        $raktar->setHelyszin("Budapest");
-        $raktar->setKapacitas(1000);
-        $this->em->persist($raktar);
-
-        $keszlet = new Stock();
-        $keszlet->setTelefonID($telefon);
-        $keszlet->setRaktarID($raktar);
-        $keszlet->setBeszerszAr(5000);
-        $keszlet->setMennyiseg(500);
-        $keszlet->setElerhetoE("Igen");
-        $this->em->persist($keszlet);
-
-        $rendeles = new Order();
-        $rendeles->setRaktarID($raktar);
-        $rendeles->setFelhaszID($felhasznalo);
-        $rendeles->setSzallitasID($szallitasi_cim);
-        $rendeles->setTelefonID($telefon);
-        $rendeles->setRendelDB(100);
-        $rendeles->setEladAr(10000);
-        $rendeles->setMikor(new \DateTime());
-        $rendeles->setStatusz("Átadva!");
-        $this->em->persist($rendeles);
 
         $this->em->flush();
     }
