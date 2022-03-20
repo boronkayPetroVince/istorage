@@ -95,9 +95,9 @@ class StockController extends AbstractController
         if($request->isMethod("POST")){
             if($this->stockModel->edit($request, $stockId,$this->getUser()) === true){
                 return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
-                    "resultMessage"=> "Sikeres módosítás", "resultColor" => "success", "allElement" => ""]);
+                    "resultMessage"=> "Sikeres módosítás!", "resultColor" => "success", "allElement" => ""]);
             }else return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
-                "resultMessage"=> "Sikertelen módosítás", "resultColor" => "danger", "allElement" =>""]);
+                "resultMessage"=> "Sikertelen módosítás!", "resultColor" => "danger", "allElement" =>""]);
         }
         return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
             "resultMessage"=> "", "resultColor" => "", "allElement" => ""]);

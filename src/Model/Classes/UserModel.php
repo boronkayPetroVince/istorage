@@ -78,7 +78,9 @@ class UserModel implements UserModelInterface
     public function updateLoggedUser(Request $request, User $user): bool{
         if($request->isMethod("POST")){
             $user->setFullName($request->request->get("fullName"));
-            $user->setUsername($request->request->get("username"));
+            if($this->checkUser($request->request->get("username"))){
+                $user->setUsername($request->request->get("username"));
+            }
             $user->setEmail($request->request->get("email"));
             $user->setPhoneNumber("+36".$request->request->get("phoneNumber"));
             $this->securityService->updateUser($user->getId());

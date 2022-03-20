@@ -101,7 +101,7 @@ class UserController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if($request->isMethod("POST")){
-            if ($this->userModel->loginAction($request,$user) == true) {
+            if ($this->userModel->loginAction($request,$user) === true) {
                 return $this->render("index.html.twig", [
                     "user" => $user,
                     "inStock" => $this->stockModel->stockCount(),
@@ -113,8 +113,8 @@ class UserController extends AbstractController
                     "stocks" => $this->stockModel->allArrivedStockPerWeek(),
                     "orders" => $this->stockModel->allOrderPerWeek()
                 ]);
-            }else return $this->render("User/login.html.twig");
-        }else return $this->render("User/login.html.twig");
+            }else return $this->render("User/login.html.twig", ["resultMessage" => "Hibás felhasználónév, vagy jelszó!"]);
+        }else return $this->render("User/login.html.twig", ["resultMessage" => ""]);
 
     }
 
@@ -160,27 +160,19 @@ class UserController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
         /** @var User $user */
         $user = $this->getUser();
-        if($request->isMethod("POST")){
-            if($this->userModel->updateLoggedUser($request, $user) === true){
-                return $this->render("user/profile.html.twig", [
-                    "user" =>$this->getUser(),
-                    "resultMessage"=> "Sikeres adatmódosítás!",
-                    "resultColor" => "success"
-                ]);
-            }else {
-                return $this->render("user/profile.html.twig", [
-                    "user" =>$this->getUser(),
-                    "resultMessage"=> "Sikertelen adatmódosítás!",
-                    "resultColor" => "danger"
-                ]);
-            }
+        if($this->userModel->updateLoggedUser($request, $user) === true){
+            return $this->render("user/profile.html.twig", [
+                "user" =>$this->getUser(),
+                "resultMessage"=> "Sikeres adatmódosítás!",
+                "resultColor" => "success"
+            ]);
+        }else {
+            return $this->render("user/profile.html.twig", [
+                "user" =>$this->getUser(),
+                "resultMessage"=> "",
+                "resultColor" => ""
+            ]);
         }
-        return $this->render("user/profile.html.twig", [
-            "user" => $this->getUser(),
-            "resultMessage"=> "",
-            "resultColor" => ""
-        ]);
-
     }
 
     /**

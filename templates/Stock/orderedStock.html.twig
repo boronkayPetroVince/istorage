@@ -501,6 +501,7 @@
                                             });
                                             document.getElementById("updateCapacity").value = document.getElementById("phoneCapacityID"+rowId).innerHTML;
                                             $("#updateCapacity").prop('disabled', false);
+                                            $("#save").prop('disabled', false)
                                             $("#save").prop('disabled', false);
                                         }
                                     });
@@ -709,19 +710,24 @@
             });
         }
         function addPhone(){
-            $.ajax({
-                url:"{{ path('addPhone') }}",
-                method: "post",
-                data:{
-                    "brandName": document.getElementById("newBrandName").value,
-                    "modelName": document.getElementById("newModelName").value,
-                    "colorName": document.getElementById("newColorName").value,
-                    "capacity": document.getElementById("newCapacity").value
-                },
-                success:function (result){
-                    alert("Sikeres hozzáadás!");
-                }
-            })
+            if($("#newBrandName").val() != "" && $("#newModelName").val() != "" && $("#newColorName").val() != "" && $("#newCapacity").val() != ""){
+                console.log(typeof $("#newModelName").val());
+                $.ajax({
+                    url:"{{ path('addPhone') }}",
+                    method: "post",
+                    data:{
+                        "brandName": document.getElementById("newBrandName").value,
+                        "modelName": document.getElementById("newModelName").value,
+                        "colorName": document.getElementById("newColorName").value,
+                        "capacity": document.getElementById("newCapacity").value
+                    },
+                    success:function (result){
+                        alert("Sikeres hozzáadás!");
+                    }
+                })
+            }else{
+                alert("Sikertelen hozzáadás! Nem töltött ki minden mezőt!");
+            }
         }
     </script>
 {% endblock %}

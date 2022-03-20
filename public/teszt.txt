@@ -1,5 +1,4 @@
 Array
 (
-    [0] => 32|1|5000|Bp-MOBILE|iphone|x|fekete|128
-    [1] => 30|1|10000|Bp-MOBILE|iphone|xs|barna|128
+    [0] => 29|1|100000|Bp-MOBILE|iphone|xs|barna|128
 )

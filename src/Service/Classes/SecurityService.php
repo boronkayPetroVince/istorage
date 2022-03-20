@@ -39,7 +39,7 @@ class SecurityService implements SecurityServiceInterface
     public function getOneUserById(int $id):User{
         return $this->getRepo()->find($id);
     }
-    public function addUser(string $username, string $password, string $fullName, string $email, int $phoneNumber, string $role, string $number):void{
+    public function addUser(string $username, string $password, string $fullName, string $email, int $phoneNumber, string $role):void{
         $user = new User();
         $user->setUsername($username);
         $user->setPassword($this->encoder->encodePassword($user, $password));
@@ -47,7 +47,6 @@ class SecurityService implements SecurityServiceInterface
         $user->setEmail($email);
         $user->setPhoneNumber($phoneNumber);
         $user->setRoles([$role]);
-        $user->setUserNumber($number);
         $this->em->persist($user);
         $this->em->flush();
     }
