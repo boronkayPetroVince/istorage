@@ -15,8 +15,4 @@ interface BrandServiceInterface
     public function getOneBrandByName(string $name):Brand;
 
     public function addBrand(Brand $brand):void;
-
-    public function updateBrand(int $id):void;
-
-    public function removeBrand(int $id):void;
 }

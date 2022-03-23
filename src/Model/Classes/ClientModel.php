@@ -28,9 +28,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ClientModel implements ClientModelInterface
 {
-    /** @var SecurityServiceInterface */
-    private $securityService;
-
     /** @var ClientServiceInterface */
     private $clientService;
 
@@ -40,12 +37,6 @@ class ClientModel implements ClientModelInterface
     /** @var DeliveryServiceInterface */
     private $deliveryService;
 
-    /** @var CountryServiceInterface */
-    private $countryService;
-
-    /** @var RegionServiceInterface */
-    private $regionService;
-
     /** @var SettlementServiceInterface */
     private $settlementService;
 
@@ -54,27 +45,20 @@ class ClientModel implements ClientModelInterface
 
     /**
      * ClientModel constructor.
-     * @param SecurityServiceInterface $securityService
      * @param ClientServiceInterface $clientService
      * @param ContactServiceInterface $contactService
      * @param DeliveryServiceInterface $deliveryService
-     * @param CountryServiceInterface $countryService
-     * @param RegionServiceInterface $regionService
      * @param SettlementServiceInterface $settlementService
      * @param EntityManagerInterface $em
      */
-    public function __construct(SecurityServiceInterface $securityService, ClientServiceInterface $clientService, ContactServiceInterface $contactService, DeliveryServiceInterface $deliveryService, CountryServiceInterface $countryService, RegionServiceInterface $regionService, SettlementServiceInterface $settlementService, EntityManagerInterface $em)
+    public function __construct(ClientServiceInterface $clientService, ContactServiceInterface $contactService, DeliveryServiceInterface $deliveryService, SettlementServiceInterface $settlementService, EntityManagerInterface $em)
     {
-        $this->securityService = $securityService;
         $this->clientService = $clientService;
         $this->contactService = $contactService;
         $this->deliveryService = $deliveryService;
-        $this->countryService = $countryService;
-        $this->regionService = $regionService;
         $this->settlementService = $settlementService;
         $this->em = $em;
     }
-
 
     public function addClient(Request $request, User $user): bool
     {
@@ -104,7 +88,6 @@ class ClientModel implements ClientModelInterface
             return true;
         }
         return false;
-
     }
 
     public function updateClient(Request $request, int $clientId): bool

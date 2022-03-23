@@ -16,9 +16,5 @@ interface SecurityServiceInterface
 
     public function updateUser(int $id):void;
 
-    public function getOneUserByName(string $name): User;
-
-    public function removeUser(int $id):void;
-
     public function checkPassword(string $username, string $password):bool;
 }

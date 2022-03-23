@@ -72,7 +72,7 @@
             </div>
         </div>
     </div>
-    </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     <div class="modal fade" role="dialog" tabindex="-1" id="addOrder">
         <div class="modal-dialog modal-lg modal-fullscreen-lg-down" role="document">
             <div class="modal-content">
@@ -426,7 +426,6 @@
         }
         function addPhone(){
             if($("#newBrandName").val() != "" && $("#newModelName").val() != "" && $("#newColorName").val() != "" && $("#newCapacity").val() != ""){
-                console.log(typeof $("#newModelName").val());
                 $.ajax({
                     url:"{{ path('addPhone') }}",
                     method: "post",

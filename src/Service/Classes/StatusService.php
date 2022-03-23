@@ -34,6 +34,4 @@ class StatusService extends CrudService implements StatusServiceInterface
     {
         return $this->getRepo()->findOneBy(["status" => $name]);
     }
-
-
 }

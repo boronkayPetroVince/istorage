@@ -74,13 +74,4 @@ class Delivery_address
     {
         $this->address = $address;
     }
-
-
-
-
-
-
-
-
-
 }

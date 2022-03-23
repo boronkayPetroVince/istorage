@@ -36,18 +36,4 @@ class BrandService extends CrudService implements BrandServiceInterface
         $this->em->persist($brand);
         $this->em->flush();
     }
-
-    public function updateBrand(int $id): void
-    {
-        $brand = $this->getOneBrandById($id);
-        $this->em->persist($brand);
-        $this->em->flush();
-    }
-
-
-    public function removeBrand(int $id):void{
-        $this->em->remove($this->getOneBrandById($id));
-        $this->em->flush();
-    }
-
 }

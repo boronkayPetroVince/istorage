@@ -13,11 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Country implements \JsonSerializable
 {
-    public function jsonSerialize()
-    {
-        return ["id" => $this->id, "country_name" => $this->countryName];
-    }
-
     /**
      * @var int
      * @ORM\Column(type="integer")
@@ -55,9 +50,8 @@ class Country implements \JsonSerializable
     {
         $this->countryName = $countryName;
     }
-
-
-
-
-
+    public function jsonSerialize()
+    {
+        return ["id" => $this->id, "country_name" => $this->countryName];
+    }
 }

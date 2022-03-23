@@ -5,26 +5,20 @@ namespace App\Controller;
 
 
 use App\Entity\User;
-use App\Model\Classes\StockModel;
 use App\Model\Interfaces\StockModelInterface;
 use App\Model\Interfaces\UserModelInterface;
 use App\Service\Interfaces\SecurityServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Dompdf\Dompdf;
-use Dompdf\Options;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
 
 
 class UserController extends AbstractController
 {
     /** @var UserModelInterface */
     private $userModel;
+
     /** @var SecurityServiceInterface */
     private $security;
 

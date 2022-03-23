@@ -87,10 +87,7 @@
             </div>
         </div>
     </div>
-    </div>
-
-    </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
-    </div>
+    <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     <div class="modal fade" role="dialog" tabindex="-1" id="updateOrder">
         <div class="modal-dialog modal-lg modal-fullscreen-lg-down" role="document">
             <div class="modal-content">
@@ -183,7 +180,7 @@
                 <div class="modal-header modalHeaderFooter">
                     <h5 class="w-100 text-center"><strong>Készülék rendelése</strong></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ path('addStock') }}" method="post">
+                <form action="{{ path('addStock') }}" id="addStock" method="post">
                     <div class="modal-body modalBody">
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
                             <div class="card-body" style="background: rgba(255,255,255,0.5);">
@@ -242,7 +239,7 @@
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="purchase"><strong>Beszerzési ár / db</strong><br></label>
-                                                <input class="form-control" type="text" id="purchase" name="purchase" required>
+                                                <input class="form-control" type="number" id="purchase" name="purchase" required>
                                             </div>
                                         </div>
                                     </div>
@@ -396,7 +393,6 @@
         var rowId="";
         function updateItem(rowId){
             rowId = rowId.replace("btn","");
-            console.log(rowId);
             id = document.getElementById("id"+rowId).innerHTML;
             capacity = document.getElementById("phoneCapacity"+rowId).innerHTML.replace("GB", "");
             document.getElementById("updateAmount").value = document.getElementById("amount"+rowId).innerHTML;
@@ -572,10 +568,9 @@
                         $("#updateCapacity").append(capacityOption);
                     });
                 }
-            })
+            });
         }
         function addingStock(){
-            //itt nem működik
             $('#addStock').find("input:text,select, textarea").html("");
             $('#addStock').find("input[type=number]").val("");
             $("#modelName").prop('disabled', 'disabled');

@@ -37,6 +37,4 @@ class SettlementService extends CrudService implements SettlementServiceInterfac
     public function getOneSettlementById(int $id): Settlement{
         return $this->getRepo()->find($id);
     }
-
-
 }

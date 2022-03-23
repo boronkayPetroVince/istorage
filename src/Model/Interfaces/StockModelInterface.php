@@ -5,7 +5,6 @@ namespace App\Model\Interfaces;
 
 
 use App\Entity\Order;
-use App\Entity\Status;
 use App\Entity\Stock;
 use App\Entity\User;
 use App\Entity\Warehouse;

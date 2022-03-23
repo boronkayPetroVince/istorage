@@ -3,23 +3,10 @@
 
 namespace App\Controller;
 
-
-
-
-use App\Entity\Client;
-use App\Entity\Country;
-use App\Entity\Delivery_address;
-use App\Entity\Settlement;
 use App\Entity\User;
 use App\Model\Interfaces\ClientModelInterface;
 use App\Service\Interfaces\ClientServiceInterface;
-use App\Service\Interfaces\CountryServiceInterface;
-use App\Service\Interfaces\SecurityServiceInterface;
 use App\Service\Interfaces\SettlementServiceInterface;
-use Dompdf\Dompdf;
-use Dompdf\Options;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,9 +20,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ClientController extends AbstractController
 {
-    /** @var SecurityServiceInterface */
-    private $securityService;
-
     /** @var ClientServiceInterface */
     private $clientService;
 
@@ -45,24 +29,17 @@ class ClientController extends AbstractController
     /** @var SettlementServiceInterface */
     private $settlementService;
 
-    /** @var CountryServiceInterface */
-    private $countryService;
-
     /**
      * ClientController constructor.
-     * @param SecurityServiceInterface $securityService
      * @param ClientServiceInterface $clientService
      * @param ClientModelInterface $clientModel
      * @param SettlementServiceInterface $settlementService
-     * @param CountryServiceInterface $countryService
      */
-    public function __construct(SecurityServiceInterface $securityService, ClientServiceInterface $clientService, ClientModelInterface $clientModel, SettlementServiceInterface $settlementService, CountryServiceInterface $countryService)
+    public function __construct(ClientServiceInterface $clientService, ClientModelInterface $clientModel, SettlementServiceInterface $settlementService)
     {
-        $this->securityService = $securityService;
         $this->clientService = $clientService;
         $this->clientModel = $clientModel;
         $this->settlementService = $settlementService;
-        $this->countryService = $countryService;
     }
 
     /**

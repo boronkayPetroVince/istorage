@@ -25,8 +25,6 @@ use App\Service\Interfaces\WarehouseServiceInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -273,7 +271,7 @@ class StockModel implements StockModelInterface
     }
 
     public function stockCount():int{
-        return $this->stockService->stockCount("Beérkezett");
+        return $this->stockService->stockCount();
     }
     public function stockCountByStatus(string $status):int{
         return $this->stockService->stockCountByStatus($status);
@@ -413,7 +411,4 @@ class StockModel implements StockModelInterface
         $writer->save('php://output');
         die();
     }
-
-
-
 }

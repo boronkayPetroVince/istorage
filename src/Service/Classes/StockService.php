@@ -50,10 +50,6 @@ class StockService extends CrudService implements StockServiceInterface
         $this->em->persist($stock);
         $this->em->flush();
     }
-    public function removeStock(int $id):void{
-        $this->em->remove($this->getOneStockById($id));
-        $this->em->flush();
-    }
 
     public function stockCount(): int
     {
@@ -97,10 +93,8 @@ class StockService extends CrudService implements StockServiceInterface
         /** @var Stock[] $list */
         $list = [];
         $date = new \DateTime('now');
-        $file = fopen("datum.txt", "w");
         foreach($stocks as $stock){
             if($stock->getDate()->format("W") == $date->format("W")){
-                fwrite($file, $stock->getDate()->format("W")." - ".$date->format("W")."");
                 array_push($list,$stock);
             }
         }
@@ -117,6 +111,4 @@ class StockService extends CrudService implements StockServiceInterface
         $sum += $warehouse->getCapacity();
         return $sum;
     }
-
-
 }

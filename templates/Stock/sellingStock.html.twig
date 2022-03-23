@@ -1,10 +1,7 @@
 {% extends 'index.html.twig' %}
-{#
-    Eladott tábla adatain végig megyek for ciklussal, és hozzászúrom egy js string változóhoz amit majd elküldök inputként a backendhez
-#}
+
 {# @var stocks \App\Entity\Stock[] #}
 {% block content %}
-
     <form action="{{ path('sellingStock') }}"  method="post">
         <div class="container-fluid">
             <h3 class="text-dark mb-4">Eladás<br></h3>
@@ -121,8 +118,7 @@
         </div>
         <input class="d-none" type="text" id="sellingTableData" name="sellingTableData">
     </form>
-
-        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+        <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
         <div class="modal fade" role="dialog" id="orderingModal">
             <div class="modal-dialog modal-lg modal-fullscreen-lg-down" role="document">
                 <div class="modal-content">
@@ -187,7 +183,7 @@
             table = document.getElementById("tempTable");
             tr = table.getElementsByTagName("tr");
             for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[4];
+                td = tr[i].getElementsByTagName("td")[3];
                 if (td) {
                     txtValue = td.textContent || td.innerText;
                     if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -236,7 +232,6 @@
                         temp = ID.replace("sellTable", "");
                         if (temp === id) {
                             tID = temp;
-                            console.log("tid:" +tID);
                             inSell = true;
                         }
                     }
@@ -289,7 +284,6 @@
         }
 
         function deleteRow(rowId) {
-            console.log(rowId);
             rowId = rowId.replace("btn", "");
             var recentlyPrice = tempPrice;
             var phonePrice = parseInt(getTdById(rowId, "sellPrice")) * parseInt(getTdById(rowId, "sellAmount"));

@@ -127,16 +127,4 @@ class Phone implements \JsonSerializable
         return ["id" => $this->id,"brandID" => $this->brandID, "modelID" =>$this->modelID,
             "colorID"=>$this->colorID ,"capacityID" => $this->capacityID];
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }

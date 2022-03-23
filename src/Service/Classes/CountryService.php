@@ -5,7 +5,6 @@ namespace App\Service\Classes;
 
 
 use App\Entity\Country;
-use App\Service\Classes\CrudService;
 use App\Service\Interfaces\CountryServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -31,10 +30,4 @@ class CountryService extends CrudService implements CountryServiceInterface
         $this->em->persist($country);
         $this->em->flush();
     }
-    public function removeCountry(int $id):void{
-        $this->em->remove($this->getOneCountryById($id));
-        $this->em->flush();
-    }
-
-
 }

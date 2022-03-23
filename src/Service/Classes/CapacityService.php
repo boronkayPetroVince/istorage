@@ -50,19 +50,4 @@ class CapacityService extends CrudService implements CapacityServiceInterface
         $this->em->persist($capacity);
         $this->em->flush();
     }
-
-    public function updateCapacity(int $id): void
-    {
-        $capacity = $this->getOneCapacityById($id);
-        $this->em->persist($capacity);
-        $this->em->flush();
-    }
-
-
-    public function removeCapacity(int $id): void
-    {
-        $this->em->remove($this->getOneCapacityById($id));
-        $this->em->flush();
-    }
-
 }

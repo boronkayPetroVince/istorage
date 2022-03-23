@@ -78,8 +78,4 @@ class Region implements \JsonSerializable
     {
         return ["id" => $this->id, "country_ID" => $this->country_ID, "region_name" => $this->region_name];
     }
-
-
-
-
 }

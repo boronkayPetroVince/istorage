@@ -79,19 +79,4 @@ class PhoneService extends CrudService implements PhoneServiceInterface
         $this->em->persist($phone);
         $this->em->flush();
     }
-
-    public function updatePhone(int $id): void
-    {
-        $phone = $this->getOnePhoneById($id);
-        $this->em->persist($phone);
-        $this->em->flush();
-    }
-
-    public function removePhone(int $id):void{
-        $this->em->persist($this->getOnePhoneById($id));
-        $this->em->flush();
-    }
-
-
-
 }

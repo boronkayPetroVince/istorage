@@ -17,6 +17,4 @@ interface ClientServiceInterface
     public function addClient(Client $client):void;
 
     public function updateClient(int $id):void;
-
-
 }

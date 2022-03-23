@@ -46,18 +46,4 @@ class ColorService extends CrudService implements ColorServiceInterface
         $this->em->persist($color);
         $this->em->flush();
     }
-
-    public function updateColor(int $id): void
-    {
-        $color = $this->getOneColorById($id);
-        $this->em->persist($color);
-        $this->em->flush();
-    }
-
-    public function removeColor(int $id):void{
-        $this->em->remove($this->getOneColorById($id));
-        $this->em->flush();
-    }
-
-
 }

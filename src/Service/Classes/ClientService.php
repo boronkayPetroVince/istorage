@@ -49,8 +49,4 @@ class ClientService extends CrudService implements ClientServiceInterface
         $this->em->persist($client);
         $this->em->flush();
     }
-
-
-
-
 }

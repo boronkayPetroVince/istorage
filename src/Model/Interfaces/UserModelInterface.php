@@ -24,6 +24,4 @@ interface UserModelInterface
     public function usersExcel();
 
     public function checkUser(string $username):bool;
-
-
 }

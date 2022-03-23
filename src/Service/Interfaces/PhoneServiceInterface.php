@@ -21,10 +21,4 @@ interface PhoneServiceInterface
     public function getOnePhoneById(int $id):Phone;
 
     public function addPhone(Phone $phone):void;
-
-    public function updatePhone(int $id):void;
-
-    public function removePhone(int $id):void;
-
-
 }

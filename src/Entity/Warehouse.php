@@ -127,6 +127,4 @@ class Warehouse implements \JsonSerializable
             "vatNumber" =>$this->vatNumber
         ];
     }
-
-
 }

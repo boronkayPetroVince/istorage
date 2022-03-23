@@ -13,9 +13,4 @@ interface CountryServiceInterface
     public function getOneCountryById(int $id):Country;
 
     public function addCountry(Country $country):void;
-
-    public function removeCountry(int $id):void;
-
-
-
 }

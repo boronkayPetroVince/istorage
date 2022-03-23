@@ -33,15 +33,7 @@ class ModelService extends CrudService implements ModelServiceInterface
         $query = $qb->getQuery();
         return $query->getResult();
     }
-    public function removeAllModelByBrand(int $brand_ID):iterable{
-        $qb = $this->em->createQueryBuilder();
-        $qb->delete()
-            ->from(Model::class, "model")
-            ->where("model.brand_ID =:brand_ID")
-            ->setParameter("brand_ID", $brand_ID);
-        $query = $qb->getQuery();
-        return $query->getResult();
-    }
+
     public function getOneModelById(int $id):Model{
         return $this->getRepo()->find($id);
     }
@@ -55,18 +47,4 @@ class ModelService extends CrudService implements ModelServiceInterface
         $this->em->persist($model);
         $this->em->flush();
     }
-
-    public function updateModel(int $id): void
-    {
-        $model = $this->getOneModelById($id);
-        $this->em->persist($model);
-        $this->em->flush();
-    }
-
-    public function removeModel(int $id):void{
-        $this->em->remove($this->getOneModelById($id));
-        $this->em->flush();
-    }
-
-
 }

@@ -15,8 +15,4 @@ interface CapacityServiceInterface
     public function getOneCapacityByMemory(int $memory): Capacity;
 
     public function addCapacity(Capacity $capacity):void;
-
-    public function updateCapacity(int $id):void;
-
-    public function removeCapacity(int $id):void;
 }

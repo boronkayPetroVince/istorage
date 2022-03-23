@@ -43,9 +43,4 @@ class WarehouseService extends CrudService implements WarehouseServiceInterface
         $this->em->persist($wh);
         $this->em->flush();
     }
-    public function removeWarehouse(int $id):void{
-        $this->em->remove($this->getOneWarehouseById($id));
-        $this->em->flush();
-    }
-
 }

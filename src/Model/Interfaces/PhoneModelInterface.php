@@ -9,9 +9,7 @@ use App\Entity\Capacity;
 use App\Entity\Color;
 use App\Entity\Model;
 use App\Entity\Phone;
-use App\Entity\Stock;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 interface PhoneModelInterface
 {
@@ -36,6 +34,4 @@ interface PhoneModelInterface
     public function checkColor(string $colorName):bool;
 
     public function checkCapacity(int $capacity):bool;
-
-
 }

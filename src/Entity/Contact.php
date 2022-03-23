@@ -94,7 +94,4 @@ class Contact
     {
         $this->email = $email;
     }
-
-
-
 }

@@ -100,7 +100,4 @@ class Settlement implements \JsonSerializable
     {
         return ["id" =>$this->id,"region_ID" => $this->region_ID, "settlementName" =>$this->settlementName, "postalCode" => $this->postalCode];
     }
-
-
-
 }

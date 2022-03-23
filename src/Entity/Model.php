@@ -55,8 +55,4 @@ class Model implements \JsonSerializable
     {
         return ["id" => $this->id, "modelName" => $this->modelName];
     }
-
-
-
-
 }

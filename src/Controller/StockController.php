@@ -3,13 +3,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Order;
 use App\Entity\User;
 use App\Model\Interfaces\StockModelInterface;
-use App\Service\Interfaces\SecurityServiceInterface;
-use App\Service\Interfaces\StockServiceInterface;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,26 +16,13 @@ class StockController extends AbstractController
     /** @var StockModelInterface */
     private $stockModel;
 
-    /** @var SecurityServiceInterface */
-    private $securityService;
-
-    /** @var StockServiceInterface */
-    private $stockService;
-
-    private $list = array();
-
     /**
      * StockController constructor.
      * @param StockModelInterface $stockModel
-     * @param SecurityServiceInterface $securityService
-     * @param StockServiceInterface $stockService
-     * @param array $list
      */
-    public function __construct(StockModelInterface $stockModel, SecurityServiceInterface $securityService, StockServiceInterface $stockService)
+    public function __construct(StockModelInterface $stockModel)
     {
         $this->stockModel = $stockModel;
-        $this->securityService = $securityService;
-        $this->stockService = $stockService;
     }
 
     /**
@@ -183,8 +165,6 @@ class StockController extends AbstractController
             "orderedPhones" => $this->stockModel->lastSell(),
             "user" =>$this->getUser()]);
         $this->stockModel->billPDF($html);
-        $file = fopen("bill.txt","w" );
-        fwrite($file, var_export($this->list));
     }
 
     /**

@@ -96,7 +96,6 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         throw new BadCredentialsException();
     }
 
-
     /**
      * @inheritDoc
      */
@@ -104,9 +103,4 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     {
         return null;
     }
-
-
-
-
-
 }

@@ -27,6 +27,4 @@ abstract class CrudService
      * @return EntityRepository
      */
     public abstract function getRepo() : EntityRepository;
-
-
 }

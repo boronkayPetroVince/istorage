@@ -55,14 +55,8 @@ class SecurityService implements SecurityServiceInterface
         $this->em->persist($user);
         $this->em->flush();
     }
-    public function getOneUserByName(string $name): User //iittttt ezt kell a frissitéshez
-    {
-        return $this->getRepo()->findOneBy(["username" => $name]);
-    }
-    public function removeUser(int $id):void{
-        $this->em->remove($this->getOneUserById($id));
-        $this->em->flush();
-    }
+
+
     public function checkPassword(string $username, string $password):bool{
         $user = $this->em->getRepository(User::class)->findOneBy(["username"=>$username]);
         if (!$user) return false;

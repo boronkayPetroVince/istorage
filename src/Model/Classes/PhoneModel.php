@@ -3,23 +3,19 @@
 
 namespace App\Model\Classes;
 
-
 use App\Entity\Brand;
 use App\Entity\Capacity;
 use App\Entity\Color;
 use App\Entity\Model;
 use App\Entity\Phone;
-use App\Entity\Stock;
 use App\Model\Interfaces\PhoneModelInterface;
 use App\Service\Interfaces\BrandServiceInterface;
 use App\Service\Interfaces\CapacityServiceInterface;
 use App\Service\Interfaces\ColorServiceInterface;
 use App\Service\Interfaces\ModelServiceInterface;
 use App\Service\Interfaces\PhoneServiceInterface;
-use App\Service\Interfaces\StockServiceInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+
 
 class PhoneModel implements PhoneModelInterface
 {
@@ -38,9 +34,6 @@ class PhoneModel implements PhoneModelInterface
     /** @var CapacityServiceInterface */
     private $capacityService;
 
-    /** @var StockServiceInterface */
-    private $stockService;
-
     /**
      * PhoneModel constructor.
      * @param ColorServiceInterface $colorService
@@ -48,18 +41,15 @@ class PhoneModel implements PhoneModelInterface
      * @param BrandServiceInterface $brandService
      * @param PhoneServiceInterface $phoneService
      * @param CapacityServiceInterface $capacityService
-     * @param StockServiceInterface $stockService
      */
-    public function __construct(ColorServiceInterface $colorService, ModelServiceInterface $modelService, BrandServiceInterface $brandService, PhoneServiceInterface $phoneService, CapacityServiceInterface $capacityService, StockServiceInterface $stockService)
+    public function __construct(ColorServiceInterface $colorService, ModelServiceInterface $modelService, BrandServiceInterface $brandService, PhoneServiceInterface $phoneService, CapacityServiceInterface $capacityService)
     {
         $this->colorService = $colorService;
         $this->modelService = $modelService;
         $this->brandService = $brandService;
         $this->phoneService = $phoneService;
         $this->capacityService = $capacityService;
-        $this->stockService = $stockService;
     }
-
 
     public function addPhone(Request $request): Phone
     {

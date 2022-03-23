@@ -4,8 +4,6 @@
 namespace App\Model\Interfaces;
 
 
-use App\Entity\Client;
-use App\Entity\Settlement;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,9 +25,4 @@ interface ClientModelInterface
     public function clientsExcel();
 
     public function checkClient(string $clientName): bool;
-
-
-
-
-
 }

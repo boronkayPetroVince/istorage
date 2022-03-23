@@ -19,8 +19,6 @@ interface StockServiceInterface
 
     public function updateStock(int $id):void;
 
-    public function removeStock(int $id):void;
-
     public function stockCount():int;
 
     public function stockCountByStatus(string $statusName): int;
@@ -30,6 +28,4 @@ interface StockServiceInterface
     public function allArrivedStockPerWeek():iterable;
 
     public function originalWhCapacity(Warehouse $warehouse):int;
-
-
 }

@@ -216,6 +216,4 @@ class Stock implements \JsonSerializable
             "warehouseID" => $this->warehouseID, "phoneID" => $this->phoneID, "date" => $this->date,
             "userID" => $this->userID, "clientID" => $this->clientID];
     }
-
-
 }

@@ -24,15 +24,7 @@ class ContactService extends CrudService implements ContactServiceInterface
     public function getAllContact():iterable{
         return $this->getRepo()->findAll();
     }
-    public function getAllContactByClient(int $client_ID):iterable{
-        $qb = $this->em->createQueryBuilder();
-        $qb->select("contact")
-            ->from(Contact::class, "contact")
-            ->where("contact.client_ID =: client_ID")
-            ->setParameter("client_ID", $client_ID);
-        $query = $qb->getQuery();
-        return $query->getResult();
-    }
+
     public function removeAllContactByClient(int $client_ID):iterable{
         $qb = $this->em->createQueryBuilder();
         $qb->delete()
@@ -49,10 +41,7 @@ class ContactService extends CrudService implements ContactServiceInterface
         $this->em->persist($contact);
         $this->em->flush();
     }
-    public function removeContact(int $id):void{
-        $this->em->remove($this->getOneContactById($id));
-        $this->em->flush();
-    }
+
     public function updateContact(int $id):void{
         $contact = $this->getOneContactById($id);
         $this->em->persist($contact);

@@ -59,8 +59,4 @@ class Color implements \JsonSerializable
         return ["id" => $this->id, "phoneColor" => $this->phoneColor];
     }
 
-
-
-
-
 }

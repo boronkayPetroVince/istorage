@@ -209,14 +209,4 @@ class Order
     {
         $this->orderNumber = $orderNumber;
     }
-
-
-
-
-
-
-
-
-
-
 }
