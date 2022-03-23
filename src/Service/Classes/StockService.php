@@ -4,16 +4,12 @@
 namespace App\Service\Classes;
 
 
-use App\Entity\Order;
-use App\Entity\Phone;
 use App\Entity\Stock;
 use App\Entity\Warehouse;
 use App\Service\Interfaces\StockServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
-use function Symfony\Component\String\b;
 
 class StockService extends CrudService implements StockServiceInterface
 {
@@ -59,7 +55,17 @@ class StockService extends CrudService implements StockServiceInterface
         $this->em->flush();
     }
 
-    public function stockCount(string $statusName): int
+    public function stockCount(): int
+    {
+        /** @var Stock[] $list */
+        $list = $this->getAllStock();
+        $sum = 0;
+        foreach($list as $data){
+            $sum += $data->getAmount();
+        }
+        return $sum;
+    }
+    public function stockCountByStatus(string $statusName): int
     {
         /** @var Stock[] $list */
         $list = $this->getAllStock();
@@ -79,9 +85,7 @@ class StockService extends CrudService implements StockServiceInterface
         $sum = 0;
         foreach($list as $data){
             if($data->getDate()->format('m') == $month->format('m')){
-                if($data->getStatusID()->getStatus() != "Eladva"){
-                    $sum += $data->getPurchasePrice();
-                }
+                    $sum += $data->getPurchasePrice() * $data->getAmount();
             }
         }
         return $sum;

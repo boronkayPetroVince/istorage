@@ -42,11 +42,14 @@ class UserModel implements UserModelInterface
             $user = $request->request->get("newUsername");
             $fullName = $request->request->get("newFullname");
             $email = $request->request->get("newEmail");
-            $phoneNumber = "+36".$request->request->get("newPhoneNumber");
-            $role = $request->request->get("newRole");
-            $userNumber = "111";
+            if(str_contains($request->request->get("newPhoneNumber"), "+36")){
+                $phoneNumber = $request->request->get("newPhoneNumber");
+            }else{
+                $phoneNumber = "+36".$request->request->get("newPhoneNumber");
+            }
+            $role = "ROLE_ADMIN";
             if ($request->request->get("newPassword") === $request->request->get("newPasswordAgain")){
-                $this->securityService->addUser($user,$request->request->get("newPasswordAgain"), $fullName, $email, $phoneNumber, $role, $userNumber);
+                $this->securityService->addUser($user,$request->request->get("newPasswordAgain"), $fullName, $email, $phoneNumber, $role);
             }else return false;
             return true;
         }return false;
@@ -68,7 +71,11 @@ class UserModel implements UserModelInterface
             }
             $user->setFullName($request->request->get("fullName"));
             $user->setEmail($request->request->get("email"));
-            $user->setPhoneNumber("+36".$request->request->get("phoneNumber"));
+            if(str_contains($request->request->get("phoneNumber"), "+36")){
+                $user->setPhoneNumber($request->request->get("phoneNumber"));
+            }else{
+                $user->setPhoneNumber("+36".$request->request->get("phoneNumber"));
+            }
             $user->setRoles(["ROLE_ADMIN"]);
             $this->securityService->updateUser($user->getId());
             return true;

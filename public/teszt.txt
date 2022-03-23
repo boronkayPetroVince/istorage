@@ -1,4 +1,0 @@
-Array
-(
-    [0] => 29|1|100000|Bp-MOBILE|iphone|xs|barna|128
-)

@@ -54,11 +54,19 @@ class StockController extends AbstractController
         $user = $this->getUser();
         if($request->isMethod("POST")){
             if($this->stockModel->addStock($request, $user)=== true){
-                return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
-                    "resultMessage"=> "Sikeres hozzáadás!", "resultColor" => "success"]);
+                return $this->render("Stock/orderedStock.html.twig",[
+                    "stocks" => $this->stockModel->allOrderedStock(),
+                    "user" => $this->getUser(),
+                    "resultMessage"=> "Sikeres hozzáadás!",
+                    "resultColor" => "success"
+                ]);
             }
-            return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
-                "resultMessage"=> "Sikertelen hozzáadás!", "resultColor" => "danger"]);
+            return $this->render("Stock/orderedStock.html.twig",[
+                "stocks" => $this->stockModel->allOrderedStock(),
+                "user" => $this->getUser(),
+                "resultMessage"=> "Sikertelen hozzáadás!",
+                "resultColor" => "danger"
+            ]);
         }
         return $this->redirectToRoute('orderedStock');
     }
@@ -70,8 +78,12 @@ class StockController extends AbstractController
      */
     public function orderedStock(Request $request):Response{
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
-            "resultMessage"=> "", "resultColor" => ""]);
+        return $this->render("Stock/orderedStock.html.twig",[
+            "stocks" => $this->stockModel->allOrderedStock(),
+            "user" => $this->getUser(),
+            "resultMessage"=> "",
+            "resultColor" => ""
+        ]);
     }
 
     /**
@@ -81,8 +93,13 @@ class StockController extends AbstractController
      */
     public function allStock(Request $request):Response{
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        return $this->render("Stock/allStock.html.twig",["stocks" => $this->stockModel->allArrivedStock(), "user" => $this->getUser(),
-            "resultMessage"=> "", "resultColor" => "", "allElement" => ""]);
+        return $this->render("Stock/allStock.html.twig",[
+            "stocks" => $this->stockModel->allArrivedStock(),
+            "user" => $this->getUser(),
+            "resultMessage"=> "",
+            "resultColor" => "",
+            "allElement" => ""
+        ]);
     }
     /**
      * @param Request $request
@@ -94,13 +111,25 @@ class StockController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
         if($request->isMethod("POST")){
             if($this->stockModel->edit($request, $stockId,$this->getUser()) === true){
-                return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
-                    "resultMessage"=> "Sikeres módosítás!", "resultColor" => "success", "allElement" => ""]);
-            }else return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
-                "resultMessage"=> "Sikertelen módosítás!", "resultColor" => "danger", "allElement" =>""]);
+                return $this->render("Stock/orderedStock.html.twig",[
+                    "stocks" => $this->stockModel->allOrderedStock(),
+                    "user" => $this->getUser(),
+                    "resultMessage"=> "Sikeres módosítás!",
+                    "resultColor" => "success", "allElement" => ""
+                ]);
+            }else return $this->render("Stock/orderedStock.html.twig",[
+                "stocks" => $this->stockModel->allOrderedStock(),
+                "user" => $this->getUser(),
+                "resultMessage"=> "Sikertelen módosítás!",
+                "resultColor" => "danger", "allElement" =>""
+            ]);
         }
-        return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(), "user" => $this->getUser(),
-            "resultMessage"=> "", "resultColor" => "", "allElement" => ""]);
+        return $this->render("Stock/orderedStock.html.twig",["stocks" => $this->stockModel->allOrderedStock(),
+            "user" => $this->getUser(),
+            "resultMessage"=> "",
+            "resultColor" => "",
+            "allElement" => ""
+        ]);
     }
 
     /**

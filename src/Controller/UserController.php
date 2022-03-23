@@ -54,11 +54,12 @@ class UserController extends AbstractController
         $this->denyAccessUnlessGranted("ROLE_ADMIN");
             return $this->render("index.html.twig", [
                 "user" => $this->getUser(),
-                "inStock" => $this->stockModel->stockCount(),
+                "inStockCount" => $this->stockModel->stockCountByStatus("Beérkezett"),
+                "orderedStockCount" => $this->stockModel->stockCountByStatus("Megrendelve"),
                 "wh" => $this->stockModel->warehouseById(),
                 "outgoingPrice" => $this->stockModel->monthOutgoing(),
                 "incomingPrice" => $this->stockModel->monthIncoming(),
-                "arrivedCount" => $this->stockModel->stockCount(),
+                "stockCount" => $this->stockModel->stockCount(),
                 "month" =>$this->stockModel->allIncomingsPerMonths(),
                 "stocks" =>$this->stockModel->allArrivedStockPerWeek(),
                 "orders" => $this->stockModel->allOrderPerWeek()
@@ -104,11 +105,12 @@ class UserController extends AbstractController
             if ($this->userModel->loginAction($request,$user) === true) {
                 return $this->render("index.html.twig", [
                     "user" => $user,
-                    "inStock" => $this->stockModel->stockCount(),
+                    "inStockCount" => $this->stockModel->stockCountByStatus("Beérkezett"),
+                    "orderedStockCount" => $this->stockModel->stockCountByStatus("Megrendelve"),
                     "wh" => $this->stockModel->warehouseById(),
                     "outgoingPrice" => $this->stockModel->monthOutgoing(),
                     "incomingPrice" => $this->stockModel->monthIncoming(),
-                    "arrivedCount" => $this->stockModel->stockCount(),
+                    "stockCount" => $this->stockModel->stockCount(),
                     "month" => $this->stockModel->allIncomingsPerMonths(),
                     "stocks" => $this->stockModel->allArrivedStockPerWeek(),
                     "orders" => $this->stockModel->allOrderPerWeek()

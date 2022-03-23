@@ -42,6 +42,8 @@ interface StockModelInterface
 
     public function stockCount():int;
 
+    public function stockCountByStatus(string $status):int;
+
     public function warehouseById():Warehouse;
 
     public function monthOutgoing():int;

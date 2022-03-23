@@ -79,7 +79,7 @@
                 <div class="modal-header modalHeaderFooter">
                     <h5 class="w-100 text-center"><strong>Készülék rendelése</strong></h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ path('addStock') }}" method="post">
+                <form action="{{ path('addStock') }}" id="addStock" method="post">
                     <div class="modal-body modalBody">
                         <div class="card shadow mb-3" style="background: rgba(255,255,255,0.5);">
                             <div class="card-body" style="background: rgba(255,255,255,0.5);">
@@ -136,7 +136,7 @@
                                             <div class="col col-sm-6 col-12">
                                                 <div class="mb-3">
                                                     <label class="form-label" for="purchase"><strong>Beszerzési ár / db</strong><br></label>
-                                                    <input class="form-control" type="text" id="purchase" name="purchase" required>
+                                                    <input class="form-control" type="number" id="purchase" name="purchase" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -286,9 +286,8 @@
     <script src="{{ asset('assets/bootstrap/js/jquery.min.js') }}"></script>
     <script>
         function addingStock(){
-            $("#clientName").html("");
-            $("#brandName").html("");
-            $("#warehouse").html("");
+            $('#addStock').find("input:text,select, textarea").html("");
+            $('#addStock').find("input[type=number]").val("");
             $("#modelName").prop('disabled', 'disabled');
             $("#colorName").prop('disabled', 'disabled');
             $("#capacity").prop('disabled', 'disabled');
@@ -337,6 +336,8 @@
                 },
                 success:function (result){
                     $("#modelName").html("");
+                    $("#colorName").html("");
+                    $("#capacity").html("");
                     $("#modelName").prop('disabled', false);
                     $("#colorName").prop('disabled', 'disabled');
                     $("#capacity").prop('disabled', 'disabled');
@@ -360,6 +361,7 @@
                 },
                 success:function (result){
                     $("#colorName").html("");
+                    $("#capacity").html("");
                     $("#colorName").prop('disabled', false);
                     $("#capacity").prop('disabled', 'disabled');
                     var defaultVal = $('<option>', {value:"", text:"Válassz színt!"});
@@ -398,7 +400,7 @@
             table = document.getElementById("dataTable");
             tr = table.getElementsByTagName("tr");
             for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[3];
+                td = tr[i].getElementsByTagName("td")[2];
                 if (td) {
                     txtValue = td.textContent || td.innerText;
                     if (txtValue.toUpperCase().indexOf(filter) > -1) {

@@ -88,7 +88,7 @@
         </div>
     </div>
     </div>
-    <footer class="bg-white sticky-footer" style="background: #1e2833 !important;"></footer>
+
     </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="updateOrder">
@@ -106,7 +106,7 @@
                                             <small style="color: red">Kérem várjon amíg az adatok betöltődnek!</small>
                                         </div>
                                         <div class="col col-12">
-                                            <label class="form-label" for="updateClient"><strong>Partner</strong></label>
+                                            <label class="form-label" for="updateClient"><strong>Ügyfél</strong></label>
                                             <div class="input-group mb-3">
                                                 <select name="updateClient" id="updateClient" class="form-select orderSelect" required></select>
                                                 <div class="input-group-append">
@@ -145,23 +145,23 @@
                                         </div>
                                         <div class="col-12">
                                             <label class="form-label" for="updateWarehouse"><strong>Raktár</strong><br></label>
-                                            <select name="updateWarehouse" id="updateWarehouse" class="form-select orderSelect"></select>
+                                            <select name="updateWarehouse" id="updateWarehouse" class="form-select orderSelect" required></select>
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="updateAmount"><strong>Mennyiség</strong><br></label>
-                                                <input class="form-control" type="number" id="updateAmount" name="updateAmount">
+                                                <input class="form-control" type="number" id="updateAmount" name="updateAmount" required>
                                             </div>
                                         </div>
                                         <div class="col col-sm-6 col-12">
                                             <div class="mb-3">
                                                 <label class="form-label" for="updatePrice"><strong>Beszerzési ár / db</strong><br></label>
-                                                <input class="form-control" type="number" id="updatePrice" name="updatePrice">
+                                                <input class="form-control" type="number" id="updatePrice" name="updatePrice" required>
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="mb-3"><label class="form-label" for="updateStatus"><strong>Státusz</strong><br></label>
-                                                <select class="form-select orderSelect" name="updateStatus" id="updateStatus"></select>
+                                                <select class="form-select orderSelect" name="updateStatus" id="updateStatus" required></select>
                                             </div>
                                         </div>
                                     </div>
@@ -384,7 +384,7 @@
                     </div>
                     <div class="modal-footer modalHeaderFooter">
                         <button class="btn btn-light modalCloseButton" type="button" data-bs-dismiss="modal">Bezárás</button>
-                        <button class="btn btn-primary modalSaveButton" onclick="addPhone()" type="submit">Hozzáadás</button>
+                        <button class="btn btn-primary modalSaveButton" onclick="addPhone()" type="button">Hozzáadás</button>
                     </div>
                 </form>
             </div>
@@ -575,9 +575,9 @@
             })
         }
         function addingStock(){
-            $("#clientName").html("");
-            $("#brandName").html("");
-            $("#warehouse").html("");
+            //itt nem működik
+            $('#addStock').find("input:text,select, textarea").html("");
+            $('#addStock').find("input[type=number]").val("");
             $("#modelName").prop('disabled', 'disabled');
             $("#colorName").prop('disabled', 'disabled');
             $("#capacity").prop('disabled', 'disabled');
@@ -711,7 +711,6 @@
         }
         function addPhone(){
             if($("#newBrandName").val() != "" && $("#newModelName").val() != "" && $("#newColorName").val() != "" && $("#newCapacity").val() != ""){
-                console.log(typeof $("#newModelName").val());
                 $.ajax({
                     url:"{{ path('addPhone') }}",
                     method: "post",
@@ -728,6 +727,7 @@
             }else{
                 alert("Sikertelen hozzáadás! Nem töltött ki minden mezőt!");
             }
+            $("#addPhone").modal('hide');
         }
     </script>
 {% endblock %}

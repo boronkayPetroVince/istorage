@@ -113,7 +113,7 @@
                     <h5 class="mx-3" style="text-align: right;font-weight: bold;padding-top: 10px;">Végösszeg: <span id="fullPrice"></span> Ft</h5>
                     <div class="row">
                         <div class="col d-flex justify-content-end">
-                            <button  class="btn btn-primary my-2 mx-2 buttonDesign" type="submit" style="width: 25%;" onclick="finishSale()">Elfogadás</button>
+                            <button id="submitButton" class="btn btn-primary my-2 mx-2 buttonDesign" type="submit" style="width: 25%;" onclick="finishSale()">Elfogadás</button>
                         </div>
                     </div>
                 </div>
@@ -166,6 +166,7 @@
         var sellingPrice = 0;
 
         $(document).ready(function (){
+            $("#submitButton").attr('disabled','disabled');
             var defaultVal = $('<option>', {value:"", text:"Válassz ügyfelet!"});
             $("#clientName").append(defaultVal);
             $.ajax({
@@ -220,7 +221,9 @@
             var salePrice = document.getElementById("price").value;
             if (parseFloat(maxAmount) < parseFloat(amount)) {
                 alert("Ebből a készülékből összesen nincsen ennyi darab a raktáron!");
-            }else if(maxAmount == 0 || maxAmount < 0){
+            }else if(parseFloat(amount) === 0 || parseFloat(amount) < 0){
+                alert("Rossz darabszámot adott meg! 0-nál nagyobb kell a hozzáadáshoz!");
+            }else if(maxAmount === 0 || maxAmount < 0){
                 alert("Ebből a készülékből nincsen több a raktáron!");
             }else {
                 var sellTable = document.getElementById("sellingTableBody");
@@ -235,15 +238,14 @@
                             tID = temp;
                             console.log("tid:" +tID);
                             inSell = true;
-                            console.log(inSell);
                         }
                     }
-
                 }
                 if (inSell) {
                     var tempAmount = parseFloat(getTdById(tID, "sellAmount")) + parseFloat(amount);
                     setTdById(tID, "sellAmount", tempAmount);
                 } else {
+                    $("#submitButton").attr('disabled',false);
                     var row = sellTable.insertRow();
                     row.id = "sellTable" + id;
                     var cell1 = row.insertCell(0);
@@ -285,26 +287,28 @@
                 document.getElementById("fullPrice").innerHTML = tempPrice;
             }
         }
-        function deleteRow(rowId){
+
+        function deleteRow(rowId) {
             console.log(rowId);
-            rowId = rowId.replace("btn","");
+            rowId = rowId.replace("btn", "");
             var recentlyPrice = tempPrice;
-            var phonePrice = parseInt(getTdById(rowId,"sellPrice")) * parseInt(getTdById(rowId,"sellAmount"));
+            var phonePrice = parseInt(getTdById(rowId, "sellPrice")) * parseInt(getTdById(rowId, "sellAmount"));
             tempPrice = recentlyPrice - phonePrice;
             document.getElementById("fullPrice").innerHTML = tempPrice;
-            document.getElementById("amount"+rowId).innerHTML = parseInt(getTdById(rowId,"sellAmount")) + parseInt(getTdById(rowId,"amount"));
-            document.getElementById("sellTable"+rowId).remove();
+            document.getElementById("amount" + rowId).innerHTML = parseInt(getTdById(rowId, "sellAmount")) + parseInt(getTdById(rowId, "amount"));
+            document.getElementById("sellTable" + rowId).remove();
+            var table = document.getElementById("sellingTableBody");
+            if(table.rows.length === 0){
+                $("#submitButton").attr('disabled','disabled');
+            }
         }
         function finishSale(){
             var data = "";
             var tempRowId = "";
             var table = document.getElementById("sellingTableBody");
             for (var i = 0; i < table.rows.length; i++) {
-                console.log(table.rows.length);
                 tempRowId = table.rows[i].id;
-                console.log(tempRowId);
                 var tempId = tempRowId.replace("sellTable","");
-                console.log(tempId);
                 data +=
                     parseInt(document.getElementById("sellId"+tempId).innerHTML) + "|" +
                     document.getElementById("sellAmount"+tempId).innerHTML + "|" +
@@ -317,17 +321,6 @@
             }
             data = data.substring(0,data.length-1);
             document.querySelector("#sellingTableData").value = data;
-            {#$.ajax({#}
-            {#    url:"{{ path('teszt') }}",#}
-            {#    method: "post",#}
-            {#    data: {#}
-            {#        "sellingTableData" : document.getElementById("sellingTableData").value,#}
-            {#        "clientName": document.getElementById("clientName").value#}
-            {#    },#}
-            {#    success: function (result){#}
-            {#        alert("Siker");#}
-            {#    }#}
-            {#})#}
         }
     </script>
 {% endblock %}

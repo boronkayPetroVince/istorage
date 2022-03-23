@@ -2,25 +2,13 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Contact;
 use App\Entity\User;
-use App\Entity\Stock;
-use App\Entity\Brand;
-use App\Entity\Model;
-use App\Entity\Country;
-use App\Entity\Warehouse;
-use App\Entity\Order;
-use App\Entity\Deliveryaddress;
-use App\Entity\Color;
-use App\Entity\Phone;
-use App\Entity\City;
-use App\Entity\Client;
-use App\Kernel;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture implements ContainerAwareInterface
 {
@@ -39,6 +27,8 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
      */
     private $container;
 
+
+
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
@@ -51,16 +41,14 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         // $product = new Product();
         // $manager->persist($product);
 
-
-        //FELHASZNÁLÓ - RAKTÁROS
-        $felhasznalo = new User();
-        $felhasznalo->setTelNev("Czobori Effi");
-        $felhasznalo->setFelhNev("PetroTheGod");
-        $felhasznalo->setJelszo("12345");
-        $felhasznalo->setTelefonszam(06305506453);
-        $felhasznalo->setEmail("petrogod@gmail.com");
-        $felhasznalo->setRoles(["ROLE_ADMIN"]);
-        $this->em->persist($felhasznalo);
+        $user = new User();
+        $user->setFullName("Petró Vince");
+        $user->setUsername("petro");
+        $user->setPassword(password_hash("123", PASSWORD_ARGON2ID));
+        $user->setPhoneNumber("+36305506454");
+        $user->setEmail("petro.vince.2001@tanulo.boronkay.hu");
+        $user->setRoles(["ROLE_ADMIN"]);
+        $this->em->persist($user);
 
         $this->em->flush();
     }

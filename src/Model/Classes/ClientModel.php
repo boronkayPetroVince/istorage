@@ -24,6 +24,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ClientModel implements ClientModelInterface
 {
@@ -48,6 +49,9 @@ class ClientModel implements ClientModelInterface
     /** @var SettlementServiceInterface */
     private $settlementService;
 
+    /** @var EntityManagerInterface */
+    private $em;
+
     /**
      * ClientModel constructor.
      * @param SecurityServiceInterface $securityService
@@ -55,10 +59,11 @@ class ClientModel implements ClientModelInterface
      * @param ContactServiceInterface $contactService
      * @param DeliveryServiceInterface $deliveryService
      * @param CountryServiceInterface $countryService
-     * @param SettlementServiceInterface $settlementService
      * @param RegionServiceInterface $regionService
+     * @param SettlementServiceInterface $settlementService
+     * @param EntityManagerInterface $em
      */
-    public function __construct(SecurityServiceInterface $securityService, ClientServiceInterface $clientService, ContactServiceInterface $contactService, DeliveryServiceInterface $deliveryService, CountryServiceInterface $countryService,RegionServiceInterface $regionService, SettlementServiceInterface $settlementService)
+    public function __construct(SecurityServiceInterface $securityService, ClientServiceInterface $clientService, ContactServiceInterface $contactService, DeliveryServiceInterface $deliveryService, CountryServiceInterface $countryService, RegionServiceInterface $regionService, SettlementServiceInterface $settlementService, EntityManagerInterface $em)
     {
         $this->securityService = $securityService;
         $this->clientService = $clientService;
@@ -67,7 +72,9 @@ class ClientModel implements ClientModelInterface
         $this->countryService = $countryService;
         $this->regionService = $regionService;
         $this->settlementService = $settlementService;
+        $this->em = $em;
     }
+
 
     public function addClient(Request $request, User $user): bool
     {
@@ -204,14 +211,19 @@ class ClientModel implements ClientModelInterface
 
 
     private function checkVat(string $vatNumber):bool{
-        $vies = new Vies();
-        $vatResult = $vies->validateVat(
-            'HU',
-            $vatNumber,
-            'HU',
-            '56960646'
-        );
-        return $vatResult->isValid();
+        //Internet ellenőrzés
+        $isConnected = $this->em->getConnection()->isConnected();
+        if($isConnected === true){
+            $vies = new Vies();
+            $vatResult = $vies->validateVat(
+                'HU',
+                $vatNumber,
+                'HU',
+                '56960646'
+            );
+            return $vatResult->isValid();
+        }
+        return true;
     }
 
 }

@@ -141,42 +141,44 @@ class StockModel implements StockModelInterface
         }
         $number++;
         $orderNumber = date("Y")."/".$number;
-        $file = fopen("teszt.txt", "w");
         /** @var Order[] $list */
         $list = [];
         if ($request) {
             $allSellingData = $request->request->get("sellingTableData");
             $oneData = explode(";", "".$allSellingData);
-            fwrite($file,print_r($oneData,true));
-            foreach ($oneData as $data) {
-                $tempList = explode("|", $data);
+            if(empty($oneData)){
+                return $list;
+            }else{
+                foreach ($oneData as $data) {
+                    $tempList = explode("|", $data);
 
-                $stock = $this->stockService->getOneStockById((int)$tempList[0]);
-                if($this->checkStockAmount($stock, $tempList[1])){
-                    $order = new Order();
-                    $order->setOrderNumber($orderNumber);
-                    $order->setAmount($tempList[1]);
-                    $order->setPrice($tempList[2]);
-                    $order->setDate(new \DateTime('now'));
-                    $order->setClientID($this->clientService->getOneClientById($request->request->get("clientName")));
-                    $order->setUserID($this->securityService->getOneUserById($user->getId()));
+                    $stock = $this->stockService->getOneStockById((int)$tempList[0]);
+                    if($this->checkStockAmount($stock, $tempList[1])){
+                        $order = new Order();
+                        $order->setOrderNumber($orderNumber);
+                        $order->setAmount($tempList[1]);
+                        $order->setPrice($tempList[2]);
+                        $order->setDate(new \DateTime('now'));
+                        $order->setClientID($this->clientService->getOneClientById($request->request->get("clientName")));
+                        $order->setUserID($this->securityService->getOneUserById($user->getId()));
 
-                    $warehouse = $this->warehouseService->getOneWarehouseByName($tempList[3]);
-                    $order->setWarehouseID($this->warehouseService->getOneWarehouseById($warehouse->getId()));
-                    $this->addSoldStockAmountToWarehouse($warehouse,$tempList[1]);
+                        $warehouse = $this->warehouseService->getOneWarehouseByName($tempList[3]);
+                        $order->setWarehouseID($this->warehouseService->getOneWarehouseById($warehouse->getId()));
+                        $this->addSoldStockAmountToWarehouse($warehouse,$tempList[1]);
 
-                    $phone = $this->phoneModel->existPhone(
-                        $this->brandService->getOneBrandByName($tempList[4]),
-                        $this->modelService->getOneModelByName($tempList[5]),
-                        $this->colorService->getOneColorByName($tempList[6]),
-                        $this->capacityService->getOneCapacityByMemory($tempList[7])
-                    );
-                    $order->setPhoneID($this->phoneService->getOnePhoneById($phone->getId()));
-                    $this->orderService->addOrder($order);
-                    array_push($list,$order);
+                        $phone = $this->phoneModel->existPhone(
+                            $this->brandService->getOneBrandByName($tempList[4]),
+                            $this->modelService->getOneModelByName($tempList[5]),
+                            $this->colorService->getOneColorByName($tempList[6]),
+                            $this->capacityService->getOneCapacityByMemory($tempList[7])
+                        );
+                        $order->setPhoneID($this->phoneService->getOnePhoneById($phone->getId()));
+                        $this->orderService->addOrder($order);
+                        array_push($list,$order);
+                    }
                 }
+                return $list;
             }
-            return $list;
         }
         return $list;
     }
@@ -190,9 +192,9 @@ class StockModel implements StockModelInterface
         if($request){
             $stock = $this->stockService->getOneStockById($stockId);
             $warehouse = $this->warehouseService->getOneWarehouseById($request->request->get("updateWarehouse"));
-            $phone = $this->phoneModel->updatePhone($request, $stock->getPhoneID()->getId());
-            $amount = $stock->getAmount();
             if($this->checkCapacity($warehouse, $request->request->get("updateAmount"))){
+                $phone = $this->phoneModel->updatePhone($request, $stock->getPhoneID()->getId());
+                $amount = $stock->getAmount();
                 $stock->setClientID($this->clientService->getOneClientById($request->request->get("updateClient")));
                 $stock->setPhoneID($phone);
                 $stock->setWarehouseID($warehouse);
@@ -273,6 +275,9 @@ class StockModel implements StockModelInterface
     public function stockCount():int{
         return $this->stockService->stockCount("Beérkezett");
     }
+    public function stockCountByStatus(string $status):int{
+        return $this->stockService->stockCountByStatus($status);
+    }
     public function monthOutgoing():int{
         return $this->stockService->currentMonthOutgoings();
     }
@@ -347,7 +352,7 @@ class StockModel implements StockModelInterface
             $sheet->setCellValue('B'.$counter, $stock->getPurchasePrice());
             $sheet->setCellValue('C'.$counter, $stock->getPhoneID()->getBrandID()->getBrandName()." ".
                 $stock->getPhoneID()->getModelID()->getModelName()." ".$stock->getPhoneID()->getColorID()->getPhoneColor()." ".
-                $stock->getPhoneID()->getCapacityID()->getCapacity());
+                $stock->getPhoneID()->getCapacityID()->getCapacity()." GB");
             $sheet->setCellValue('D'.$counter, $stock->getWarehouseID()->getWhName());
             $sheet->setCellValue('E'.$counter, $stock->getStatusID()->getStatus());
             $sheet->setCellValue('F'.$counter, $stock->getDate());
@@ -394,7 +399,7 @@ class StockModel implements StockModelInterface
             $sheet->setCellValue('B'.$counter, $stock->getPurchasePrice());
             $sheet->setCellValue('C'.$counter, $stock->getPhoneID()->getBrandID()->getBrandName()." ".
                 $stock->getPhoneID()->getModelID()->getModelName()." ".$stock->getPhoneID()->getColorID()->getPhoneColor()." ".
-                $stock->getPhoneID()->getCapacityID()->getCapacity());
+                $stock->getPhoneID()->getCapacityID()->getCapacity()." GB");
             $sheet->setCellValue('D'.$counter, $stock->getWarehouseID()->getWhName());
             $sheet->setCellValue('E'.$counter, $stock->getStatusID()->getStatus());
             $sheet->setCellValue('F'.$counter, $stock->getDate());

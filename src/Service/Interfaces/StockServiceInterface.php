@@ -21,7 +21,9 @@ interface StockServiceInterface
 
     public function removeStock(int $id):void;
 
-    public function stockCount(string $statusName):int;
+    public function stockCount():int;
+
+    public function stockCountByStatus(string $statusName): int;
 
     public function currentMonthOutgoings():int;
 
