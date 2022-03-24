@@ -13,7 +13,7 @@
 
 
 <!DOCTYPE html>
-<html>
+<html lang="hu">
 
 <head>
     <meta charset="utf-8">
@@ -182,8 +182,7 @@
                                                 <thead>
                                                 <tr>
                                                     <th>Mennyiség</th>
-                                                    <th>Beszerzési ár</th>
-                                                    <th>Eladási ár</th>
+                                                    <th>Beszerzési ár / db</th>
                                                     <th>Telefon</th>
                                                     <th>Raktár</th>
                                                     <th>Beérkezett</th>
@@ -195,9 +194,8 @@
                                                 {% for stock in stocks %}
                                                     {% if stock.amount > 0 %}
                                                         <tr>
-                                                            <td>{{ stock.amount }}</td>
-                                                            <td>{{ stock.purchasePrice }}</td>
-                                                            <td>{% set sell = stock.purchasePrice * 1.27 %} {{ sell|round }}</td>
+                                                            <td>{{ stock.amount }} db</td>
+                                                            <td>{{ stock.purchasePrice }} Ft</td>
                                                             <td>
                                                                 <span>{{ stock.phoneID.brandID.brandName }} </span>
                                                                 <span>{{ stock.phoneID.modelID.modelName }} </span>
@@ -233,7 +231,7 @@
                                                 <thead>
                                                 <tr>
                                                     <th>Mennyiség</th>
-                                                    <th>Eladási ár</th>
+                                                    <th>Eladási ár / db</th>
                                                     <th>Telefon</th>
                                                     <th>Raktár</th>
                                                     <th>Ügyfél</th>
@@ -244,8 +242,8 @@
                                                 <tbody>
                                                 {% for order in orders %}
                                                     <tr>
-                                                        <td>{{ order.amount }}</td>
-                                                        <td>{{ order.price }}</td>
+                                                        <td>{{ order.amount }} db</td>
+                                                        <td>{{ order.price }} Ft</td>
                                                         <td>
                                                             <span>{{ order.phoneID.brandID.brandName }} </span>
                                                             <span>{{ order.phoneID.modelID.modelName }} </span>

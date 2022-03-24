@@ -191,7 +191,12 @@ class StockModel implements StockModelInterface
             $stock = $this->stockService->getOneStockById($stockId);
             $warehouse = $this->warehouseService->getOneWarehouseById($request->request->get("updateWarehouse"));
             if($this->checkCapacity($warehouse, $request->request->get("updateAmount"))){
-                $phone = $this->phoneModel->updatePhone($request, $stock->getPhoneID()->getId());
+                $phone = $this->phoneModel->existPhone(
+                    $this->brandService->getOneBrandById($request->request->get("updateBrand")),
+                    $this->modelService->getOneModelById($request->request->get("updateModel")),
+                    $this->colorService->getOneColorById($request->request->get("updateColor")),
+                    $this->capacityService->getOneCapacityById($request->request->get("updateCapacity"))
+                );
                 $amount = $stock->getAmount();
                 $stock->setClientID($this->clientService->getOneClientById($request->request->get("updateClient")));
                 $stock->setPhoneID($phone);
@@ -255,6 +260,8 @@ class StockModel implements StockModelInterface
         $updatedCapacity = $warehouse->getCapacity() + $amount;
         $warehouse->setCapacity($updatedCapacity);
         $this->warehouseService->updateWarehouse($warehouse->getId());
+//        $file = fopen("darab.txt", "w");
+//        fwrite($file,$warehouse->getCapacity()." hozzáadott darab:".$amount." frissitett capacitás:". $updatedCapacity);
     }
 
     public function checkStockAmount(Stock $stock, int $amount):bool{

@@ -89,7 +89,7 @@
                                             <div class="input-group mb-3">
                                                 <select name="clientName" id="clientName" class="form-select orderSelect" required></select>
                                                 <div class="input-group-append">
-                                                    <button style="border-radius: 0 !important;"  class="btn buttonDesign" data-bs-target="#addClient" data-bs-toggle="modal">+</button>
+                                                    <button type="button" style="border-radius: 0 !important;" class="btn buttonDesign" data-bs-target="#addClient" data-bs-toggle="modal">+</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -99,7 +99,7 @@
                                                 <select name="brandName" id="brandName" class="form-select orderSelect" onchange="addBrandChange()" required>
                                                 </select>
                                                 <div class="input-group-append">
-                                                    <button style="border-radius: 0 !important;" class="btn buttonDesign" data-bs-target="#addPhone" data-bs-toggle="modal">+</button>
+                                                    <button type="button" style="border-radius: 0 !important;" class="btn buttonDesign" onclick="emptyInputs()" data-bs-target="#addPhone" data-bs-toggle="modal">+</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -442,8 +442,12 @@
             }else{
                 alert("Sikertelen hozzáadás! Nem töltött ki minden mezőt!");
             }
-
-
+        }
+        function emptyInputs(){
+            $("#newBrandName").val('');
+            $("#newModelName").val('');
+            $("#newColorName").val('');
+            $("#newCapacity").val('');
         }
     </script>
 {% endblock %}

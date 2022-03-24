@@ -111,7 +111,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="col col-sm-6 col-12">
                                             <label class="form-label" for="updateBrand"><strong>Márka</strong></label>
                                             <div class="input-group mb-3">
@@ -192,7 +191,7 @@
                                                 <option value="">Válassz ügyfelet!</option>
                                             </select>
                                             <div class="input-group-append">
-                                                <button style="border-radius: 0 !important;"  class="btn buttonDesign" data-bs-target="#addClient" data-bs-toggle="modal">+</button>
+                                                <button style="border-radius: 0 !important;" type="button" class="btn buttonDesign" data-bs-target="#addClient" data-bs-toggle="modal">+</button>
                                             </div>
                                         </div>
                                     </div>
@@ -202,7 +201,7 @@
                                             <select name="brandName" id="brandName" class="form-select orderSelect" onchange="addBrandChange()" required>
                                             </select>
                                             <div class="input-group-append">
-                                                <button style="border-radius: 0 !important;" class="btn buttonDesign" data-bs-target="#addPhone" data-bs-toggle="modal">+</button>
+                                                <button style="border-radius: 0 !important;" class="btn buttonDesign" type="button" onclick="emptyInputs()"  data-bs-target="#addPhone" data-bs-toggle="modal">+</button>
                                             </div>
                                         </div>
                                     </div>
@@ -406,6 +405,9 @@
             $("#updateClient").html("");
             $("#updateWarehouse").html("");
             $("#updateBrand").html("");
+            $("#updateModel").html("");
+            $("#updateColor").html("");
+            $("#updateCapacity").html("");
             $("#updateModel").prop('disabled', 'disabled');
             $("#updateColor").prop('disabled', 'disabled');
             $("#updateCapacity").prop('disabled', 'disabled');
@@ -497,7 +499,6 @@
                                             });
                                             document.getElementById("updateCapacity").value = document.getElementById("phoneCapacityID"+rowId).innerHTML;
                                             $("#updateCapacity").prop('disabled', false);
-                                            $("#save").prop('disabled', false)
                                             $("#save").prop('disabled', false);
                                         }
                                     });
@@ -512,8 +513,10 @@
             $("#updateModel").html("");
             $("#updateColor").html("");
             $("#updateCapacity").html("");
+            $("#updateModel").prop('disabled', false);
             $("#updateColor").prop('disabled', 'disabled');
             $("#updateCapacity").prop('disabled', 'disabled');
+            $("#save").prop('disabled', 'disabled');
             $.ajax({
                 url:"{{ path('allModelByBrand') }}",
                 method:"post",
@@ -533,6 +536,9 @@
         function updateModellChange(){
             $("#updateColor").html("");
             $("#updateCapacity").html("");
+            $("#updateColor").prop('disabled', 'disabled');
+            $("#updateCapacity").prop('disabled', 'disabled');
+            $("#save").prop('disabled', 'disabled');
             $.ajax({
                 url:"{{ path('allColorByModel') }}",
                 method:"post",
@@ -552,6 +558,8 @@
         }
         function updateColorChange(){
             $("#updateCapacity").html("");
+            $("#updateCapacity").prop('disabled', 'disabled');
+            $("#save").prop('disabled', 'disabled');
             $.ajax({
                 url:"{{ path('allCapacityByModel') }}",
                 method:"post",
@@ -560,6 +568,7 @@
                     "colorNameID": document.getElementById("updateColor").value
                 },
                 success:function (result) {
+                    $("#save").prop('disabled', false);
                     $("#updateCapacity").prop('disabled', false);
                     var defaultVal = $('<option>', {value:"", text:"Válassz kapacitást!"});
                     $("#updateCapacity").append(defaultVal);
@@ -723,6 +732,13 @@
                 alert("Sikertelen hozzáadás! Nem töltött ki minden mezőt!");
             }
             $("#addPhone").modal('hide');
+        }
+
+        function emptyInputs(){
+            $("#newBrandName").val('');
+            $("#newModelName").val('');
+            $("#newColorName").val('');
+            $("#newCapacity").val('');
         }
     </script>
 {% endblock %}

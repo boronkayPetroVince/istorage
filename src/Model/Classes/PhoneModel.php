@@ -55,25 +55,25 @@ class PhoneModel implements PhoneModelInterface
     {
         $phone = new Phone();
         if($request){
-            if($this->checkBrand(strtolower($request->request->get("brandName"))) === false){
+            if($this->checkBrand(strtolower(trim($request->request->get("brandName")))) === false){
                 $brand = new Brand();
-                $brand->setBrandName(strtolower($request->request->get("brandName")));
+                $brand->setBrandName(strtolower(trim($request->request->get("brandName"))));
                 $this->brandService->addBrand($brand);
             }else{
                 $brand = $this->brandService->getOneBrandByName(strtolower($request->request->get("brandName")));
             }
 
-            if($this->checkModel(strtolower($request->request->get("modelName"))) === false){
+            if($this->checkModel(strtolower(trim($request->request->get("modelName")))) === false){
                 $model = new Model();
-                $model->setModelName(strtolower($request->request->get("modelName")));
+                $model->setModelName(strtolower(trim($request->request->get("modelName"))));
                 $this->modelService->addModel($model);
             }else{
                 $model = $this->modelService->getOneModelByName(strtolower($request->request->get("modelName")));
             }
 
-            if($this->checkColor(strtolower($request->request->get("colorName"))) === false){
+            if($this->checkColor(strtolower(trim($request->request->get("colorName")))) === false){
                 $color = new Color();
-                $color->setPhoneColor($request->request->get("colorName"));
+                $color->setPhoneColor(strtolower(trim($request->request->get("colorName"))));
                 $this->colorService->addColor($color);
             }else{
                 $color = $this->colorService->getOneColorByName(strtolower($request->request->get("colorName")));
@@ -144,7 +144,7 @@ class PhoneModel implements PhoneModelInterface
         /** @var Brand[] $brands */
         $brands = $this->brandService->getAllBrand();
         foreach($brands as $brand){
-            if($brand->getBrandName() === $brandName){
+            if(strtolower($brand->getBrandName()) === strtolower($brandName)){
                 return true;
             }
         }
@@ -155,7 +155,7 @@ class PhoneModel implements PhoneModelInterface
         /** @var Model[] $models */
         $models = $this->modelService->getAllModel();
         foreach($models as $model){
-            if($model->getModelName() === $modelName){
+            if(strtolower($model->getModelName()) === strtolower($modelName)){
                 return true;
             }
         }
@@ -166,7 +166,7 @@ class PhoneModel implements PhoneModelInterface
         /** @var Color[] $colors */
         $colors = $this->colorService->getAllColor();
         foreach($colors as $color){
-            if($color->getPhoneColor() === $colorName){
+            if(strtolower($color->getPhoneColor()) === strtolower($colorName)){
                 return true;
             }
         }

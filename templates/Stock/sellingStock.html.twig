@@ -49,8 +49,8 @@
                                 {% if stock.amount > 0 %}
                                     <tr id="{{ counter }}">
                                         <td id="id{{ counter }}">{{ stock.id }}</td>
-                                        <td id="amount{{ counter }}">{{ stock.amount }}</td>
-                                        <td id="purchasePrice{{ counter }}">{{ stock.purchasePrice }}</td>
+                                        <td id="amount{{ counter }}">{{ stock.amount }} </td>
+                                        <td id="purchasePrice{{ counter }}">{{ stock.purchasePrice }} </td>
                                         <td>
                                             <span id="brand{{ counter }}">{{ stock.phoneID.brandID.brandName }}</span>
                                             <span class="d-none" id="brandID{{ counter }}">{{ stock.phoneID.brandID.id }}</span>

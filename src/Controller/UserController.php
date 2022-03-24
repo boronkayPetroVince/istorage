@@ -109,8 +109,8 @@ class UserController extends AbstractController
                     "stocks" => $this->stockModel->allArrivedStockPerWeek(),
                     "orders" => $this->stockModel->allOrderPerWeek()
                 ]);
-            }else return $this->render("User/login.html.twig", ["resultMessage" => "Hibás felhasználónév, vagy jelszó!"]);
-        }else return $this->render("User/login.html.twig", ["resultMessage" => ""]);
+            }else return $this->render("user/login.html.twig", ["resultMessage" => "Hibás felhasználónév, vagy jelszó!"]);
+        }else return $this->render("user/login.html.twig", ["resultMessage" => ""]);
 
     }
 

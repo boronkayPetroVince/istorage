@@ -42,9 +42,7 @@ class UserModel implements UserModelInterface
             $email = $request->request->get("newEmail");
             if(str_contains($request->request->get("newPhoneNumber"), "+36")){
                 $phoneNumber = $request->request->get("newPhoneNumber");
-            }else{
-                $phoneNumber = "+36".$request->request->get("newPhoneNumber");
-            }
+            }else $phoneNumber = "+36".$request->request->get("newPhoneNumber");
             $role = "ROLE_ADMIN";
             if ($request->request->get("newPassword") === $request->request->get("newPasswordAgain")){
                 $this->securityService->addUser($user,$request->request->get("newPasswordAgain"), $fullName, $email, $phoneNumber, $role);
@@ -87,7 +85,11 @@ class UserModel implements UserModelInterface
                 $user->setUsername($request->request->get("username"));
             }
             $user->setEmail($request->request->get("email"));
-            $user->setPhoneNumber("+36".$request->request->get("phoneNumber"));
+            if(str_contains($request->request->get("phoneNumber"), "+36")){
+                $user->setPhoneNumber($request->request->get("phoneNumber"));
+            }else{
+                $user->setPhoneNumber("+36".$request->request->get("phoneNumber"));
+            }
             $this->securityService->updateUser($user->getId());
             return true;
         }

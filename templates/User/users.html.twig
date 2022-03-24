@@ -219,6 +219,7 @@
                 }
             }
         }
+        var url = document.getElementById("updateForm").action;
         function updateUser(rowId){
             rowId = rowId.replace("btn","");
             id = document.getElementById("id"+rowId).innerHTML;
@@ -228,7 +229,6 @@
             document.getElementById("phoneNumber").value = document.getElementById("phoneNumber"+rowId).innerHTML;
             document.getElementById("role").value = document.getElementById("role"+rowId).innerHTML;
 
-            let url = document.getElementById("updateForm").action;
             var newUrl = url.replace("id", parseInt(id));
             document.getElementById("updateForm").action = newUrl;
             $("#updateUser").show();

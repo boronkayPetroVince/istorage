@@ -107,13 +107,13 @@
                                         <div class="col col-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="region"><strong>Megye</strong><br></label>
-                                                <input class="form-control" type="text" id="region" name="region" required>
+                                                <input class="form-control" type="text" id="region" name="region" required disabled>
                                             </div>
                                         </div>
                                         <div class="col col-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="settlement"><strong>Város</strong><br></label>
-                                                <input class="form-control" type="text" id="settlement" name="settlement" required>
+                                                <input class="form-control" type="text" id="settlement" name="settlement" required disabled>
                                             </div>
                                         </div>
                                         <div class="col col-12 col-lg-6">
@@ -190,19 +190,19 @@
                                         <div class="col col-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newRegion"><strong>Megye</strong><br></label>
-                                                <input class="form-control" type="text" id="newRegion" name="newRegion" required>
+                                                <input class="form-control" type="text" id="newRegion" name="newRegion" required disabled>
                                             </div>
                                         </div>
                                         <div class="col col-sm-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newSettlement"><strong>Város</strong><br></label>
-                                                <input class="form-control" type="text" id="newSettlement" name="newSettlement" required>
+                                                <input class="form-control" type="text" id="newSettlement" name="newSettlement" required disabled>
                                             </div>
                                         </div>
                                         <div class="col col-sm-12 col-lg-6">
                                             <div class="mb-3">
                                                 <label class="form-label" for="newAddress"><strong>Utca, házszám</strong><br></label>
-                                                <input class="form-control" type="text" id="newAddress" name="newAddress" maxlength="50" required>
+                                                <input class="form-control" type="text" id="newAddress" name="newAddress" maxlength="50" required >
                                             </div>
                                         </div>
                                         <div class="col col-12">
@@ -283,8 +283,10 @@
                 }
             });
         }
+        var url = document.getElementById("updateForm").action;
         function updateClient(rowId){
             rowId = rowId.replace("btn", "");
+
             id = document.getElementById("id"+rowId).innerHTML;
             document.getElementById("clientName").value = document.getElementById("clientName"+rowId).innerHTML;
             document.getElementById("vatNumber").value = document.getElementById("vatNumber"+rowId).innerHTML;
@@ -296,7 +298,6 @@
             document.getElementById("contact_PhoneNumber").value = document.getElementById("contactPhone"+rowId).innerHTML;
             document.getElementById("contact_Email").value = document.getElementById("contactEmail"+rowId).innerHTML;
 
-            let url = document.getElementById("updateForm").action;
             var newUrl = url.replace("id", parseInt(id));
             document.getElementById("updateForm").action = newUrl;
             $("#updateClient").show();

@@ -7,7 +7,7 @@
 
 {% block body %}
     <h1 style="margin-bottom: 5px; text-align: center;">Összes ügyfél adata</h1><br>
-    <div>
+    <div >
         <table border="1" class="table my-0" id="dataTable">
             <thead>
             <tr>
@@ -21,7 +21,7 @@
             </tr>
             </thead>
             {% for client in clients %}
-                <tr >
+                <tr>
                     <td>{{ client.id }}</td>
                     <td>{{ client.clientName }}</td>
                     <td>{{ client.vatNumber }}</td>

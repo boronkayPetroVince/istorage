@@ -36,13 +36,13 @@
                                         <div class="col">
                                             <div class="mb-3">
                                                 <label class="form-label" for="username"><strong>Felhasználónév</strong></label>
-                                                <input class="form-control" type="text" id="username" value="{{ user.username }}" name="username" maxlength="30">
+                                                <input class="form-control" type="text" id="username" value="{{ user.username }}" name="username" maxlength="30" required>
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="mb-3">
                                                 <label class="form-label" for="email"><strong>Email cím</strong></label>
-                                                <input class="form-control" type="email" id="email" value="{{ user.email }}" name="email" maxlength="255">
+                                                <input class="form-control" type="email" id="email" value="{{ user.email }}" name="email" maxlength="255" required>
                                             </div>
                                         </div>
                                     </div>
@@ -50,13 +50,13 @@
                                         <div class="col">
                                             <div class="mb-3">
                                                 <label class="form-label" for="fullName"><strong>Teljes név</strong><br></label>
-                                                <input class="form-control" type="text" id="fullName" value="{{ user.fullName }}" name="fullName" maxlength="100">
+                                                <input class="form-control" type="text" id="fullName" value="{{ user.fullName }}" name="fullName" maxlength="100" required>
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="mb-3">
                                                 <label class="form-label" for="phoneNumber"><strong>Telefonszám</strong><br></label>
-                                                <input class="form-control" type="text" id="phoneNumber" value="{{ user.phoneNumber|replace({'+36': ''}) }}" name="phoneNumber" maxlength="30">
+                                                <input class="form-control" type="text" id="phoneNumber" value="{{ user.phoneNumber|replace({'+36': ''}) }}" name="phoneNumber" maxlength="12" required>
                                             </div>
                                         </div>
                                     </div>

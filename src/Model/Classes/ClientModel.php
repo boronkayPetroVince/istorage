@@ -78,7 +78,9 @@ class ClientModel implements ClientModelInterface
             $contact = new Contact();
             $contact->setFullName($request->request->get("newContact_Fullname"));
             $contact->setEmail($request->request->get("newContact_Email"));
-            $contact->setPhoneNumber("+36".$request->request->get("newContact_Phonenumber"));
+            if(str_contains($request->request->get("newContact_Phonenumber"), "+36")){
+                $contact->setPhoneNumber($request->request->get("newContact_Phonenumber"));
+            }else $contact->setPhoneNumber("+36".$request->request->get("newContact_Phonenumber"));
             $this->contactService->addContact($contact);
 
             $client->setVatNumber($vatNumber);
@@ -110,7 +112,9 @@ class ClientModel implements ClientModelInterface
 
             $contact = $this->contactService->getOneContactById($client->getContactID()->getId());
             $contact->setFullName($request->request->get("contact_FullName"));
-            $contact->setPhoneNumber("+36".$request->request->get("contact_PhoneNumber"));
+            if(str_contains($request->request->get("contact_PhoneNumber"), "+36")){
+                $contact->setPhoneNumber($request->request->get("contact_PhoneNumber"));
+            }else $contact->setPhoneNumber("+36".$request->request->get("contact_PhoneNumber"));
             $contact->setEmail($request->request->get("contact_Email"));
             $this->contactService->updateContact($contact->getId());
             return true;
