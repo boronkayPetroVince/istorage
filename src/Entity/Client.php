@@ -121,7 +121,13 @@ class Client implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return ["id"=>$this->id,"clientName" => $this->clientName, "vatNumber" => $this->vatNumber, "contactID" => $this->contact_ID, "deliveryID" => $this->delivery_ID];
+        return [
+            "id"=>$this->id,
+            "clientName" => $this->clientName,
+            "vatNumber" => $this->vatNumber,
+            "contactID" => $this->contact_ID,
+            "deliveryID" => $this->delivery_ID
+        ];
     }
 
 

@@ -16,11 +16,9 @@ class RegionService extends CrudService implements RegionServiceInterface
         parent::__construct($em);
     }
 
-    public function getRepo(): EntityRepository
-    {
-        return $this->em->getRepository(Region::class);
-    }
-
+    public function getRepo() : EntityRepository{
+ // TODO: Implement getRepo() method.
+}
     public function getAllRegion():iterable{
         return $this->getRepo()->findAll();
     }

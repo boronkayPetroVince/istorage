@@ -51,14 +51,15 @@ class UserController extends AbstractController
                 "inStockCount" => $this->stockModel->stockCountByStatus("Beérkezett"),
                 "orderedStockCount" => $this->stockModel->stockCountByStatus("Megrendelve"),
                 "wh" => $this->stockModel->warehouseById(),
-                "outgoingPrice" => $this->stockModel->monthOutgoing(),
-                "incomingPrice" => $this->stockModel->monthIncoming(),
+                "outgoingPrice" => number_format($this->stockModel->monthOutgoing(),0,","," "),
+                "incomingPrice" => number_format($this->stockModel->monthIncoming(),0,","," "),
                 "stockCount" => $this->stockModel->stockCount(),
                 "month" =>$this->stockModel->allIncomingsPerMonths(),
                 "stocks" =>$this->stockModel->allArrivedStockPerWeek(),
                 "orders" => $this->stockModel->allOrderPerWeek()
             ]);
     }
+
 
     /**
      * @param Request $request
@@ -97,21 +98,16 @@ class UserController extends AbstractController
         $user = $this->getUser();
         if($request->isMethod("POST")){
             if ($this->userModel->loginAction($request,$user) === true) {
-                return $this->render("index.html.twig", [
-                    "user" => $user,
-                    "inStockCount" => $this->stockModel->stockCountByStatus("Beérkezett"),
-                    "orderedStockCount" => $this->stockModel->stockCountByStatus("Megrendelve"),
-                    "wh" => $this->stockModel->warehouseById(),
-                    "outgoingPrice" => $this->stockModel->monthOutgoing(),
-                    "incomingPrice" => $this->stockModel->monthIncoming(),
-                    "stockCount" => $this->stockModel->stockCount(),
-                    "month" => $this->stockModel->allIncomingsPerMonths(),
-                    "stocks" => $this->stockModel->allArrivedStockPerWeek(),
-                    "orders" => $this->stockModel->allOrderPerWeek()
-                ]);
+                return $this->redirectToRoute("main");
             }else return $this->render("user/login.html.twig", ["resultMessage" => "Hibás felhasználónév, vagy jelszó!"]);
         }else return $this->render("user/login.html.twig", ["resultMessage" => ""]);
-
+    }
+    /**
+     * @Route("/", name="index")
+     */
+    public function index()
+    {
+        return $this->redirectToRoute('app_login');
     }
 
     /**

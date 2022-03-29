@@ -121,10 +121,10 @@
                                 {{ data.phoneID.capacityID.capacity }} GB
                             </td>
                             <td>{{ data.amount }}</td>
-                            <td>{{ data.price }} Ft</td>
+                            <td>{{ data.price|number_format(0,","," ") }} Ft</td>
                             <td>0%</td>
                         {% set deviceFullPrice = data.price * data.amount %}
-                            <td>{{ deviceFullPrice }} Ft</td>
+                            <td>{{ deviceFullPrice|number_format(0,","," ") }} Ft</td>
                         </tr>
                         {% set fullPrice = fullPrice + deviceFullPrice %}
                     {% endfor %}
@@ -137,7 +137,7 @@
             </div>
             <div class="row" style="margin:auto;">
                 <div class="col d-flex justify-content-end align-items-center">
-                    <p>{{ fullPrice }} Ft</p>
+                    <p>{{ fullPrice|number_format(0,","," ") }} Ft</p>
                 </div>
             </div>
             <div class="row" style="margin:auto;">
@@ -147,7 +147,7 @@
             </div>
             <div class="row" style="margin:auto;">
                 <div class="col d-flex justify-content-end align-items-center">
-                    <p>Végösszeg: {{ fullPrice }} Ft</p>
+                    <p>Végösszeg: {{ fullPrice|number_format(0,","," ") }} Ft</p>
                 </div>
             </div>
 

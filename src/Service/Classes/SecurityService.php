@@ -10,31 +10,24 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class SecurityService implements SecurityServiceInterface
+class SecurityService extends CrudService implements SecurityServiceInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
-
     /** @var UserPasswordEncoderInterface */
     private $encoder;
 
-    /**
-     * SecurityService constructor.
-     * @param EntityManagerInterface $em
-     * @param UserPasswordEncoderInterface $encoder
-     */
     public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $encoder)
     {
-        $this->em = $em;
+        parent::__construct($em);
         $this->encoder = $encoder;
     }
+
     public function getRepo(): EntityRepository
     {
         return $this->em->getRepository(User::class);
     }
 
     public function getAllUser():iterable{
-        return $this->getRepo()->findAll();;
+        return $this->getRepo()->findAll();
     }
     public function getOneUserById(int $id):User{
         return $this->getRepo()->find($id);
@@ -55,7 +48,6 @@ class SecurityService implements SecurityServiceInterface
         $this->em->persist($user);
         $this->em->flush();
     }
-
 
     public function checkPassword(string $username, string $password):bool{
         $user = $this->em->getRepository(User::class)->findOneBy(["username"=>$username]);

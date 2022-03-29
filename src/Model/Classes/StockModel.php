@@ -149,8 +149,9 @@ class StockModel implements StockModelInterface
             }else{
                 foreach ($oneData as $data) {
                     $tempList = explode("|", $data);
-
                     $stock = $this->stockService->getOneStockById((int)$tempList[0]);
+                    $warehouse = $this->warehouseService->getOneWarehouseByName($tempList[3]);
+
                     if($this->checkStockAmount($stock, $tempList[1])){
                         $order = new Order();
                         $order->setOrderNumber($orderNumber);
@@ -160,10 +161,8 @@ class StockModel implements StockModelInterface
                         $order->setClientID($this->clientService->getOneClientById($request->request->get("clientName")));
                         $order->setUserID($this->securityService->getOneUserById($user->getId()));
 
-                        $warehouse = $this->warehouseService->getOneWarehouseByName($tempList[3]);
                         $order->setWarehouseID($this->warehouseService->getOneWarehouseById($warehouse->getId()));
-                        $this->addSoldStockAmountToWarehouse($warehouse,$tempList[1]);
-
+                        $this->addSoldStockAmountToWarehouse($warehouse, $tempList[1]);
                         $phone = $this->phoneModel->existPhone(
                             $this->brandService->getOneBrandByName($tempList[4]),
                             $this->modelService->getOneModelByName($tempList[5]),
@@ -254,14 +253,6 @@ class StockModel implements StockModelInterface
             }
         }
         return false;
-    }
-
-    public function addSoldStockAmountToWarehouse(Warehouse $warehouse,int $amount):void{
-        $updatedCapacity = $warehouse->getCapacity() + $amount;
-        $warehouse->setCapacity($updatedCapacity);
-        $this->warehouseService->updateWarehouse($warehouse->getId());
-//        $file = fopen("darab.txt", "w");
-//        fwrite($file,$warehouse->getCapacity()." hozzáadott darab:".$amount." frissitett capacitás:". $updatedCapacity);
     }
 
     public function checkStockAmount(Stock $stock, int $amount):bool{
@@ -417,5 +408,12 @@ class StockModel implements StockModelInterface
         header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
         $writer->save('php://output');
         die();
+    }
+
+    private function addSoldStockAmountToWarehouse(Warehouse $warehouse, int $amount):void{
+        $wareCapacity = $warehouse->getCapacity();
+        $updated = $wareCapacity + $amount;
+        $warehouse->setCapacity($updated);
+        $this->warehouseService->updateWarehouse($warehouse->getId());
     }
 }

@@ -141,10 +141,10 @@
                             {{ data.phoneID.capacityID.capacity }} GB
                         </td>
                         <td>{{ data.amount }}</td>
-                        <td>{{ data.price }}</td>
+                        <td>{{ data.price|number_format(0,","," ") }}</td>
                         <td>0%</td>
                         {% set deviceFullPrice = data.price * data.amount %}
-                        <td>{{ deviceFullPrice }} Ft</td>
+                        <td>{{ deviceFullPrice|number_format(0,","," ") }} Ft</td>
                     </tr>
                     {% set fullPrice = fullPrice + deviceFullPrice %}
                 {% endfor %}
@@ -154,13 +154,13 @@
                     <th style="padding-right: 15px;text-align: right !important;">Nettó összeg</th>
                 </tr>
                 <tr style="line-height: 25px !important;text-align: right;">
-                    <td style="padding-right: 15px !important;">{{ fullPrice }} Ft</td>
+                    <td style="padding-right: 15px !important;">{{ fullPrice|number_format(0,","," ") }} Ft</td>
                 </tr>
                 <tr style="line-height: 25px !important;text-align: right;">
                     <td style="padding-right: 15px !important;">+0% VAT: 0 Ft</td>
                 </tr>
                 <tr style="line-height: 25px !important;text-align: right;">
-                    <td style="padding-right: 15px !important;">Végösszeg: {{ fullPrice }} Ft</td>
+                    <td style="padding-right: 15px !important;">Végösszeg: {{ fullPrice|number_format(0,","," ") }} Ft</td>
                 </tr>
 
             </table>

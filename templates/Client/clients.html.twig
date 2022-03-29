@@ -19,7 +19,7 @@
                                     <div class="input-group-prepend">
                                         <button style="background: #e6f8fe;opacity: 1; border:solid black; color:black;" disabled><i class="fa fa-search"></i></button>
                                     </div>
-                                    <input type="text" id="myInput" onkeyup="searchFilter()" title="Ügyfél keresése">
+                                    <input type="text" id="myInput" onkeyup="searchFilter()" title="Ügyfél keresése, név alapján">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -44,6 +44,7 @@
                                     <th>Módosítás</th>
                                 </tr>
                                 </thead>
+                                <tbody>
                                 {% set counter = 0 %}
                                 {% for client in clients %}
                                     <tr id="{{ counter }}">

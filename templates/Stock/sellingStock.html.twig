@@ -6,17 +6,6 @@
         <div class="container-fluid">
             <h3 class="text-dark mb-4">Eladás<br></h3>
             <div class="card shadow" style="background: rgba(255,255,255,0.5);margin-bottom: 5%;">
-                <div class="card-header py-3" style="background: #003247;">
-                    <h5 style="color: rgb(255,255,255);">Kérem válassza ki azt az ügyfelet kinek eladni szeretne!</h5>
-                    <div class="row d-flex align-items-center text-center">
-                        <div class="col-3">
-                            <div class="mb-3">
-                                <select name="clientName" id="clientName" class="form-select orderSelect showSelect" required>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 {{ result }}
                 <div class="card-body" style="background: #e6f8fe;">
                     <div class="row">
@@ -109,8 +98,19 @@
 
                     <h5 class="mx-3" style="text-align: right;font-weight: bold;padding-top: 10px;">Végösszeg: <span id="fullPrice"></span> Ft</h5>
                     <div class="row">
+                        <div class="col">
+                            <h5 style="color: rgb(5,5,5);">Kérem válassza ki azt az ügyfelet kinek eladni szeretne!</h5>
+                            <div class="row d-flex align-items-center text-center">
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <select name="clientName" id="clientName" class="form-select orderSelect showSelect" required>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col d-flex justify-content-end">
-                            <button id="submitButton" class="btn btn-primary my-2 mx-2 buttonDesign" type="submit" style="width: 25%;" onclick="finishSale()">Elfogadás</button>
+                            <button id="submitButton" class="btn btn-primary my-4 mx-2 buttonDesign" type="submit" style="width: 50%;" onclick="finishSale()">Elfogadás</button>
                         </div>
                     </div>
                 </div>
@@ -214,10 +214,11 @@
         var inSell = false;
         function addToList() {
             var amount = document.getElementById("numberofdevice").value;
+            console.log(typeof amount);
             var salePrice = document.getElementById("price").value;
             if (parseFloat(maxAmount) < parseFloat(amount)) {
                 alert("Ebből a készülékből összesen nincsen ennyi darab a raktáron!");
-            }else if(parseFloat(amount) === 0 || parseFloat(amount) < 0){
+            }else if(parseFloat(amount) === 0 || parseFloat(amount) < 0 || amount.length == 0){
                 alert("Rossz darabszámot adott meg! 0-nál nagyobb kell a hozzáadáshoz!");
             }else if(maxAmount === 0 || maxAmount < 0){
                 alert("Ebből a készülékből nincsen több a raktáron!");
@@ -279,7 +280,7 @@
                 document.getElementById("numberofdevice").value = "";
                 document.getElementById("price").value = "";
                 tempPrice =  tempPrice + parseInt(amount * salePrice);
-                document.getElementById("fullPrice").innerHTML = tempPrice;
+                document.getElementById("fullPrice").innerHTML = new Intl.NumberFormat().format(tempPrice);
             }
         }
 
