@@ -51,13 +51,6 @@ class UserModel implements UserModelInterface
         }return false;
     }
 
-    public function loginAction(Request $request, User $user): bool
-    {
-        if($user){
-            return true;
-        }else return false;
-    }
-
     public function updateUser(Request $request, int $userId): bool
     {
         $user = $this->securityService->getOneUserById($userId);

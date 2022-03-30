@@ -96,10 +96,8 @@ class UserController extends AbstractController
     public function loginAction(Request $request): Response{
         /** @var User $user */
         $user = $this->getUser();
-        if($request->isMethod("POST")){
-            if ($this->userModel->loginAction($request,$user) === true) {
-                return $this->redirectToRoute("main");
-            }else return $this->render("user/login.html.twig", ["resultMessage" => "Hibás felhasználónév, vagy jelszó!"]);
+        if($user){
+            return $this->redirectToRoute("main");
         }else return $this->render("user/login.html.twig", ["resultMessage" => ""]);
     }
     /**
