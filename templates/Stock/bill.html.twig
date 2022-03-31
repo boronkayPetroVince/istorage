@@ -26,7 +26,7 @@
         {% set clientVat = data.clientID.vatNumber %}
         {% set orderNumber = data.orderNumber %}
     {% endfor %}
-    <div class="container" >
+    <div class="container-fluid" >
         <div class="row">
             <div class="col">
                 <a href="{{ path('billPDF') }}" class="btn btn-primary buttonDesign" style="border-radius: 0;" type="button">PDF</a>
@@ -142,7 +142,7 @@
             </div>
             <div class="row" style="margin:auto;">
                 <div class="col d-flex justify-content-end align-items-center">
-                    <p>+0% VAT: 0 Ft</p>
+                    <p>+0% ÁFA: 0 Ft</p>
                 </div>
             </div>
             <div class="row" style="margin:auto;">

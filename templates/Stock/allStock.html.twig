@@ -47,8 +47,8 @@
                         {% for stock in stocks %}
                             {% if stock.amount > 0 %}
                                 <tr>
-                                    <td>{{ stock.amount }}</td>
-                                    <td>{{ stock.purchasePrice }}</td>
+                                    <td>{{ stock.amount }} db</td>
+                                    <td>{{ stock.purchasePrice }} Ft</td>
                                     <td>
                                         <span>{{ stock.phoneID.brandID.brandName }} </span>
                                         <span>{{ stock.phoneID.modelID.modelName }} </span>
@@ -87,7 +87,7 @@
                                         <div class="col col-12">
                                             <label class="form-label" for="clientName"><strong>Ügyfél</strong></label>
                                             <div class="input-group mb-3">
-                                                <select name="clientName" id="clientName" class="form-select orderSelect" required></select>
+                                                <select name="clientName" id="clientName" class="form-select orderSelect" onfocus='this.size=3;' onblur='this.size=1;' required></select>
                                                 <div class="input-group-append">
                                                     <button type="button" style="border-radius: 0 !important;" class="btn buttonDesign" data-bs-target="#addClient" data-bs-toggle="modal">+</button>
                                                 </div>

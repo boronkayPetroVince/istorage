@@ -48,8 +48,8 @@
                             {% if stock.statusID.status == "Megrendelve" %}
                                 <tr id="{{ counter }}">
                                     <td class="d-none" id="id{{ counter }}">{{ stock.id }}</td>
-                                    <td id="amount{{ counter }}">{{ stock.amount }}</td>
-                                    <td id="purchasePrice{{ counter }}">{{ stock.purchasePrice }}</td>
+                                    <td><span id="amount{{ counter }}">{{ stock.amount }}</span> db</td>
+                                    <td><span id="purchasePrice{{ counter }}">{{ stock.purchasePrice }}</span> Ft</td>
                                     <td>
                                         <span id="brand{{ counter }}">{{ stock.phoneID.brandID.brandName }} </span>
                                             <span class="d-none" id="brandID{{ counter }}">{{ stock.phoneID.brandID.id }}</span>
@@ -105,7 +105,7 @@
                                         <div class="col col-12">
                                             <label class="form-label" for="updateClient"><strong>Ügyfél</strong></label>
                                             <div class="input-group mb-3">
-                                                <select name="updateClient" id="updateClient" class="form-select orderSelect" required></select>
+                                                <select name="updateClient" id="updateClient" class="form-select orderSelect" onfocus='this.size=3;' onblur='this.size=1;' required></select>
                                                 <div class="input-group-append">
 
                                                 </div>
@@ -187,7 +187,7 @@
                                     <div class="col col-12">
                                         <label class="form-label" for="clientName"><strong>Ügyfél</strong></label>
                                         <div class="input-group mb-3">
-                                            <select name="clientName" id="clientName" class="form-select orderSelect" required>
+                                            <select name="clientName" id="clientName" class="form-select orderSelect" onfocus='this.size=3;' onblur='this.size=1;' required>
                                                 <option value="">Válassz ügyfelet!</option>
                                             </select>
                                             <div class="input-group-append">
