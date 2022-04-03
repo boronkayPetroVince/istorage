@@ -1,21 +1,25 @@
 <?php
-header("Access-Control-Allow-Origin: *");
 use App\Kernel;
+
+//try{
+//    $dbh = new pdo( 'mysql:host=130.61.174.6:3306;dbname=istorage',
+//        'effi',
+//        '123',
+//        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+//    die(json_encode(array('outcome' => true)));
+//}
+//catch(PDOException $ex){
+//    die(json_encode(array('outcome' => false, 'message' => $ex->getMessage())));
+//}
+//return;
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
+$_SERVER['APP_ENV']='dev';
+$_SERVER['DATABASE_URL']='mysql://effi:123@130.61.174.6:3306/istorage?serverVersion=5.7';
+
+
 return function (array $context) {
-    header('Access-Control-Allow-Origin: *');
-    header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
-    header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-    header("Allow: GET, POST, OPTIONS, PUT, DELETE");
-    $method = $_SERVER['REQUEST_METHOD'];
-    if ($method == "OPTIONS") {
-        die();
-    }
 
     return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
-
-
-
 };
