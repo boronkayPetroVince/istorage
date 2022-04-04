@@ -245,7 +245,7 @@ class StockModel implements StockModelInterface
     public function checkCapacity(Warehouse $warehouse, int $amount):bool{
         $capacity = $warehouse->getCapacity();
         if($capacity > 0){
-            if($capacity > $amount){
+            if($capacity >= $amount){
                 $diff = $capacity - $amount;
                 $warehouse->setCapacity($diff);
                 $this->warehouseService->updateWarehouse($warehouse->getId());
