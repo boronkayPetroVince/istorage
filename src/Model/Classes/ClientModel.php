@@ -7,6 +7,7 @@ namespace App\Model\Classes;
 use App\Entity\Client;
 use App\Entity\Contact;
 use App\Entity\Delivery_address;
+use App\Entity\Settlement;
 use App\Entity\User;
 use App\Model\Interfaces\ClientModelInterface;
 use App\Service\Interfaces\ClientServiceInterface;
@@ -63,7 +64,7 @@ class ClientModel implements ClientModelInterface
     public function addClient(Request $request, User $user): bool
     {
         $vatNumber = $request->request->get("newVatNumber");
-        if($request && $this->checkVat($vatNumber)){
+        if($request && $this->checkVat($vatNumber) && $this->checkPostalCode($request->request->get("postCode"))){
             $client = new Client();
             if($this->checkClient($request->request->get("newClientName"))){
                 $client->setClientName($request->request->get("newClientName"));
@@ -96,7 +97,7 @@ class ClientModel implements ClientModelInterface
     {
         $client = $this->clientService->getOneClientById($clientId);
         $vatNumber = $request->request->get("vatNumber");
-        if($this->checkVat($vatNumber)){
+        if($this->checkVat($vatNumber) && $this->checkPostalCode($request->request->get("postalCode"))){
             if($this->checkClient($request->request->get("clientName"))){
                 $client->setClientName($request->request->get("clientName"));
             }
@@ -211,6 +212,15 @@ class ClientModel implements ClientModelInterface
             return $vatResult->isValid();
         }
         return true;
+    }
+
+    public function checkPostalCode(string $postalCode): bool{
+        /** @var Settlement[] $postal */
+        $postal = $this->settlementService->getAllSettlement();
+        foreach($postal as $code){
+            if($postalCode == $code->getPostalCode()) return true;
+        }
+        return false;
     }
 
 }

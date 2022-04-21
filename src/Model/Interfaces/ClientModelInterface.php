@@ -25,4 +25,6 @@ interface ClientModelInterface
     public function clientsExcel();
 
     public function checkClient(string $clientName): bool;
+
+    public function checkPostalCode(string $postalCode): bool;
 }

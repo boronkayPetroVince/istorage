@@ -62,7 +62,7 @@ class ClientController extends AbstractController
                 return $this->render("Client/clients.html.twig", [
                     "clients" => $this->clientService->getAllClient(),
                     "user" => $this->getUser(),
-                    "resultMessage"=> "Sikertelen hozzáadás! Az ügyfél neve már létezik, vagy érvénytelen adószámot adott meg!",
+                    "resultMessage"=> "Sikertelen hozzáadás! Az ügyfél neve már létezik, vagy érvénytelen adószámot/irányítószámot adott meg!",
                     "resultColor" => "danger"
                 ]);
             }
@@ -95,7 +95,7 @@ class ClientController extends AbstractController
                 return $this->render("Client/clients.html.twig", [
                     "clients" => $this->clientService->getAllClient(),
                     "user" => $this->getUser(),
-                    "resultMessage"=> "Sikertelen módosítás! Érvénytelen adószámot adott meg!",
+                    "resultMessage"=> "Sikertelen módosítás! Érvénytelen adószámot/ irányítószámot adott meg!",
                     "resultColor" => "danger"
                 ]);
             }
